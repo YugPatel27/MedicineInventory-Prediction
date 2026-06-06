@@ -81,3 +81,4 @@ npm run lint
 ## 🎯 Vision
 
 MIPS is built to modernize medicine inventory management with intelligent forecasting, streamlined workflows, and actionable analytics — helping healthcare providers operate more efficiently while minimizing stock loss and supply risks.
+<img width="1908" height="946" alt="MIPS" src="https://github.com/user-attachments/assets/ed64c368-5dfa-4fad-9a68-80a3ed0ade3f" />
