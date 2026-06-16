@@ -1,0 +1,24 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby="mipsLogoTitle">
+  <title id="mipsLogoTitle">MIPS logo</title>
+  <defs>
+    <linearGradient id="mipsGradient" x1="44" y1="28" x2="212" y2="224" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0EA5E9" />
+      <stop offset="0.52" stop-color="#2563EB" />
+      <stop offset="1" stop-color="#14B8A6" />
+    </linearGradient>
+    <linearGradient id="mipsGlow" x1="128" y1="56" x2="128" y2="200" gradientUnits="userSpaceOnUse">
+      <stop stop-color="white" stop-opacity="0.95" />
+      <stop offset="1" stop-color="white" stop-opacity="0.65" />
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="224" height="224" rx="52" fill="#08111F" />
+  <rect x="16" y="16" width="224" height="224" rx="52" fill="url(#mipsGradient)" fill-opacity="0.18" />
+  <path d="M68 88C68 71.4315 81.4315 58 98 58H158C174.569 58 188 71.4315 188 88V168C188 184.569 174.569 198 158 198H98C81.4315 198 68 184.569 68 168V88Z" fill="#0F172A" stroke="url(#mipsGradient)" stroke-width="6" />
+  <path d="M94 86H162V111H94V86Z" fill="url(#mipsGlow)" />
+  <path d="M94 124H130V149H94V124Z" fill="url(#mipsGlow)" />
+  <path d="M142 124H162V149H142V124Z" fill="url(#mipsGlow)" />
+  <path d="M94 160H162" stroke="url(#mipsGlow)" stroke-width="10" stroke-linecap="round" />
+  <path d="M52 116H80C84.4183 116 88 119.582 88 124V132C88 136.418 84.4183 140 80 140H52" stroke="url(#mipsGradient)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M204 116H176C171.582 116 168 119.582 168 124V132C168 136.418 171.582 140 176 140H204" stroke="url(#mipsGradient)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+  <circle cx="128" cy="82" r="8" fill="#FFFFFF" fill-opacity="0.9" />
+</svg>

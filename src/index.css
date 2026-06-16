@@ -1,0 +1,204 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+@layer base {
+  :root {
+    /* White background with black + red accents */
+    --background: 0 0% 100%;
+    --foreground: 210 15% 9%;
+ 
+    --card: 0 0% 100%;
+    --card-foreground: 210 15% 9%;
+ 
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 15% 9%;
+ 
+    --primary: 203 89% 53%; /* sky-blue theme */
+    --primary-foreground: 0 0% 100%;
+ 
+    --secondary: 210 15% 10%; /* nearly black */
+    --secondary-foreground: 0 0% 100%;
+ 
+    --muted: 0 0% 94%;
+    --muted-foreground: 210 15% 20%;
+ 
+    --accent: 0 78% 50%;
+    --accent-foreground: 0 0% 100%;
+ 
+    --destructive: 210 90% 55%;
+    --destructive-foreground: 0 0% 100%;
+ 
+    --border: 210 15% 85%;
+    --input: 0 0% 96%;
+    --ring: 0 78% 50%;
+    --radius: 0.5rem;
+  }
+ 
+  .dark {
+    /* Keep dark state consistent with red & black palette */
+    --background: 0 0% 12%;
+    --foreground: 0 0% 96%;
+
+    --card: 0 0% 14%;
+    --card-foreground: 0 0% 96%;
+
+    --popover: 0 0% 14%;
+    --popover-foreground: 0 0% 96%;
+
+    --primary: 210 88% 48%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 30% 12%;
+    --secondary-foreground: 0 0% 96%;
+
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 72%;
+
+    --accent: 0 78% 48%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 210 88% 48%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 16%;
+    --input: 0 0% 14%;
+    --ring: 0 78% 48%;
+  }
+
+  /* Ensure elements that use explicit white backgrounds are toned down in dark mode
+     so content remains legible instead of transparent or washed-out. */
+  .dark [class*="bg-white"] {
+    background-color: hsl(var(--card)) !important;
+    color: hsl(var(--card-foreground)) !important;
+  }
+  .dark [class*="bg-background"] {
+    background-color: hsl(var(--background)) !important;
+    color: hsl(var(--foreground)) !important;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    min-height: 100vh;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    /* White base with subtle red and black accents */
+    background-image:
+      radial-gradient(circle at top left, hsl(var(--primary) / 0.08), transparent 30%),
+      radial-gradient(circle at top right, hsl(var(--secondary) / 0.04), transparent 24%);
+    background-attachment: fixed;
+  }
+
+  /* App load fade-in (will be toggled by App component) */
+  body:not(.app-visible) {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 360ms ease, transform 360ms ease;
+  }
+  body.app-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Themed scrollbar for supported browsers */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--primary)) hsl(var(--card));
+  }
+
+  /* WebKit scrollbar styles */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--card));
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, hsl(var(--primary)), hsl(var(--secondary)));
+    border-radius: 999px;
+    border: 3px solid hsl(var(--card));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    filter: brightness(0.92);
+  }
+
+  /* Hover and toggle utility classes that use the theme palette */
+  .hoverable {
+    transition: transform 0.14s ease, box-shadow 0.14s ease, background-color 0.12s ease;
+  }
+  .hoverable:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  }
+
+  .btn-theme {
+    transition: background-color 0.12s ease, color 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
+    border-radius: 0.75rem;
+    cursor: pointer;
+  }
+  .btn-theme:hover {
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    transform: translateY(-2px);
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08);
+  }
+
+  button,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  [role="button"],
+  .cursor-pointer {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  input[type="button"]:disabled,
+  input[type="submit"]:disabled,
+  input[type="reset"]:disabled {
+    cursor: not-allowed;
+  }
+
+  button,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+  }
+
+  button:hover:not(:disabled),
+  input[type="button"]:hover:not(:disabled),
+  input[type="submit"]:hover:not(:disabled),
+  input[type="reset"]:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+
+  /* Gentle backdrop scroll effect on large screens */
+  @media (min-width: 768px) {
+    body {
+      background-attachment: fixed;
+      background-position: center top;
+    }
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

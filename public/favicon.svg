@@ -1,0 +1,16 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby="mipsLogoTitle">
+  <title id="mipsLogoTitle">MIPS favicon</title>
+  <defs>
+    <linearGradient id="mipsGradient" x1="44" y1="28" x2="212" y2="224" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0EA5E9" />
+      <stop offset="0.52" stop-color="#2563EB" />
+      <stop offset="1" stop-color="#14B8A6" />
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="224" height="224" rx="52" fill="#08111F" />
+  <rect x="68" y="58" width="120" height="140" rx="30" fill="#0F172A" stroke="url(#mipsGradient)" stroke-width="6" />
+  <path d="M94 86H162V111H94V86Z" fill="white" fill-opacity="0.92" />
+  <path d="M94 124H130V149H94V124Z" fill="white" fill-opacity="0.88" />
+  <path d="M142 124H162V149H142V124Z" fill="white" fill-opacity="0.82" />
+  <path d="M94 160H162" stroke="white" stroke-opacity="0.85" stroke-width="10" stroke-linecap="round" />
+</svg>
