@@ -9,9 +9,8 @@ MIPS simplifies medicine inventory management with **smart stock tracking, expir
 ## 📸 Preview
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/ed64c368-5dfa-4fad-9a68-80a3ed0ade3f" alt="MIPS Dashboard" width="100%">
+  <img src="https://github.com/user-attachments/assets/3d8d6eb4-7265-4db0-8098-4c337e3b0495" alt="MIPS Dashboard" width="100%">
 </p>
-
 ---
 
 ## ✨ Features
