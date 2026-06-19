@@ -6,67 +6,38 @@
 
 @layer base {
   :root {
-    /* White background with black + red accents */
-    --background: 0 0% 100%;
-    --foreground: 210 15% 9%;
- 
-    --card: 0 0% 100%;
-    --card-foreground: 210 15% 9%;
- 
-    --popover: 0 0% 100%;
-    --popover-foreground: 210 15% 9%;
- 
-    --primary: 203 89% 53%; /* sky-blue theme */
+    /* Sky-blue + white theme */
+    --background: 210 100% 100%; /* pure white */
+    --foreground: 210 15% 12%; /* dark slate */
+
+    --card: 210 100% 100%;
+    --card-foreground: 210 15% 12%;
+
+    --popover: 210 100% 100%;
+    --popover-foreground: 210 15% 12%;
+
+    --primary: 203 90% 50%; /* sky-blue */
     --primary-foreground: 0 0% 100%;
- 
-    --secondary: 210 15% 10%; /* nearly black */
-    --secondary-foreground: 0 0% 100%;
- 
-    --muted: 0 0% 94%;
-    --muted-foreground: 210 15% 20%;
- 
-    --accent: 0 78% 50%;
+
+    --secondary: 210 50% 95%; /* subtle light */
+    --secondary-foreground: 210 15% 25%;
+
+    --muted: 210 100% 98%;
+    --muted-foreground: 210 15% 45%;
+
+    --accent: 203 85% 55%;
     --accent-foreground: 0 0% 100%;
- 
-    --destructive: 210 90% 55%;
+
+    --destructive: 0 78% 56%;
     --destructive-foreground: 0 0% 100%;
- 
-    --border: 210 15% 85%;
-    --input: 0 0% 96%;
-    --ring: 0 78% 50%;
+
+    --border: 210 100% 92%;
+    --input: 210 100% 98%;
+    --ring: 203 90% 60%;
     --radius: 0.5rem;
   }
  
-  .dark {
-    /* Keep dark state consistent with red & black palette */
-    --background: 0 0% 12%;
-    --foreground: 0 0% 96%;
-
-    --card: 0 0% 14%;
-    --card-foreground: 0 0% 96%;
-
-    --popover: 0 0% 14%;
-    --popover-foreground: 0 0% 96%;
-
-    --primary: 210 88% 48%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 210 30% 12%;
-    --secondary-foreground: 0 0% 96%;
-
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 72%;
-
-    --accent: 0 78% 48%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 210 88% 48%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 0 0% 16%;
-    --input: 0 0% 14%;
-    --ring: 0 78% 48%;
-  }
+  /* dark theme removed - app uses light theme only */
 
   /* Ensure elements that use explicit white backgrounds are toned down in dark mode
      so content remains legible instead of transparent or washed-out. */
@@ -91,10 +62,8 @@
     min-height: 100vh;
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
-    /* White base with subtle red and black accents */
-    background-image:
-      radial-gradient(circle at top left, hsl(var(--primary) / 0.08), transparent 30%),
-      radial-gradient(circle at top right, hsl(var(--secondary) / 0.04), transparent 24%);
+    /* Clean white background with soft sky-blue accent */
+    background-image: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background)) 100%);
     background-attachment: fixed;
   }
 
@@ -135,23 +104,24 @@
 
   /* Hover and toggle utility classes that use the theme palette */
   .hoverable {
-    transition: transform 0.14s ease, box-shadow 0.14s ease, background-color 0.12s ease;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
   }
   .hoverable:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(14,165,233,0.08);
   }
 
   .btn-theme {
     transition: background-color 0.12s ease, color 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
     border-radius: 0.75rem;
     cursor: pointer;
-  }
-  .btn-theme:hover {
     background-color: hsl(var(--primary));
     color: hsl(var(--primary-foreground));
-    transform: translateY(-2px);
-    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08);
+  }
+  .btn-theme:hover {
+    filter: brightness(0.98);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 30px rgba(14,165,233,0.08);
   }
 
   button,

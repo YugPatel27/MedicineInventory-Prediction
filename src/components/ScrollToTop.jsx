@@ -17,13 +17,18 @@ export function ScrollToTop() {
   }, []);
 
   const scrollToTop = () => {
-    // Implementing gradually increasing speed custom scroll
-    const c = document.documentElement.scrollTop || document.body.scrollTop;
-    if (c > 0) {
-      // Ease-out logic
-      window.requestAnimationFrame(scrollToTop);
-      window.scrollTo(0, c - c / 8); 
-    }
+    // Accelerating scroll: increase velocity each frame for a snappier feel
+    let velocity = 8;
+    const step = () => {
+      const c = document.documentElement.scrollTop || document.body.scrollTop;
+      if (c <= 0) return;
+      // accelerate velocity and move upwards
+      velocity = Math.min(2000, velocity * 1.18 + 1);
+      const next = Math.max(0, Math.round(c - velocity));
+      window.scrollTo(0, next);
+      if (next > 0) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
   };
 
   if (!isVisible) return null;

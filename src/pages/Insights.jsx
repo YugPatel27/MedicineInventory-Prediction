@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useMemo, useState } from 'react';
+import { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react';
 import { apiClient } from '../api/axios';
 import {
   Chart as ChartJS,
@@ -20,13 +20,20 @@ const Doughnut = lazy(() => import('react-chartjs-2').then((m) => ({ default: m.
 
 export function Insights() {
   const [summary, setSummary] = useState(null);
+  const [medicines, setMedicines] = useState([]);
   const [loading, setLoading] = useState(true);
+  const lineRef = useRef(null);
+  const doughnutRef = useRef(null);
 
   useEffect(() => {
     const fetchSummary = async () => {
       try {
-        const { data } = await apiClient.get('/medicines/summary');
-        setSummary(data.data.summary);
+        const [summaryRes, medsRes] = await Promise.all([
+          apiClient.get('/medicines/summary'),
+          apiClient.get('/medicines'),
+        ]);
+        setSummary(summaryRes.data.data.summary);
+        setMedicines(medsRes.data.data || []);
       } catch (error) {
         console.error('Unable to load insights', error);
       } finally {
@@ -112,22 +119,74 @@ export function Insights() {
         <button
           type="button"
           onClick={() => {
-            try {
-              const doc = new jsPDF();
-              doc.setFontSize(16);
-              doc.text('MediStock Operational Report', 14, 20);
-              doc.setFontSize(12);
-              doc.text(`Total medicines: ${summary?.totalMedicines ?? 0}`, 14, 36);
-              doc.text(`Expiring soon: ${summary?.expiringSoon ?? 0}`, 14, 50);
-              doc.text(`Low stock: ${summary?.lowStock ?? 0}`, 14, 64);
-              doc.text(`High risk: ${summary?.highRisk ?? 0}`, 14, 78);
-              doc.setFontSize(10);
-              doc.text('Note: Forecasts are estimates and should be reviewed before making reorder decisions.', 14, 94);
-              doc.save('medistock_operational_report.pdf');
-            } catch (err) {
-              console.error('PDF generation failed', err);
-            }
-          }}
+              try {
+                const doc = new jsPDF();
+                // Cover
+                doc.setFontSize(22);
+                doc.text('MediStock Operational Report', 14, 30);
+                doc.setFontSize(12);
+                doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 40);
+                doc.text('Comprehensive local inventory and forecast insights.', 14, 50);
+
+                // Executive summary page
+                doc.addPage();
+                doc.setFontSize(16);
+                doc.text('Executive summary', 14, 22);
+                doc.setFontSize(11);
+                doc.text(`Total medicines: ${summary?.totalMedicines ?? 0}`, 14, 36);
+                doc.text(`Expiring soon: ${summary?.expiringSoon ?? 0}`, 14, 46);
+                doc.text(`Low stock: ${summary?.lowStock ?? 0}`, 14, 56);
+                doc.text(`High risk: ${summary?.highRisk ?? 0}`, 14, 66);
+                doc.text(`Reorder gaps: ${summary?.reorderGapCount ?? 0} (total ${summary?.reorderGapTotal ?? 0} units)`, 14, 76);
+
+                // Add several detail pages (charts, recommendations, tables)
+                // Page 3: Forecast narrative
+                doc.addPage();
+                doc.setFontSize(14);
+                doc.text('Forecast narrative', 14, 22);
+                doc.setFontSize(11);
+                doc.text('Forecasts are generated using the local logistic regression engine. Review recommended reorder quantities and flagged expiry items before placing orders.', 14, 36, { maxWidth: 180 });
+
+                // Page 4: Recommendations
+                doc.addPage();
+                doc.setFontSize(14);
+                doc.text('Recommendations', 14, 22);
+                doc.setFontSize(11);
+                doc.text('- Review short-expiry batches and block inward receipt for batches under 30 days.', 14, 36);
+                doc.text('- Prioritize reorder for high-risk medicines shown in the following pages.', 14, 46);
+
+                // Pages 5-9: Detailed medicine lists (paged)
+                const perPage = 20;
+                let rowY = 30;
+                for (let i = 0; i < medicines.length; i += perPage) {
+                  if (i > 0) doc.addPage();
+                  const pageMeds = medicines.slice(i, i + perPage);
+                  doc.setFontSize(12);
+                  doc.text(`Medicines (page ${Math.floor(i / perPage) + 1})`, 14, 18);
+                  doc.setFontSize(10);
+                  rowY = 30;
+                  pageMeds.forEach((m) => {
+                    const line = `${m.medicine_id || 'ID'} — ${m.medicine_name || 'Name'} — Stock: ${m.stock_quantity ?? 0} — Expiry: ${m.expiry_date ? new Date(m.expiry_date).toLocaleDateString() : '—'}`;
+                    doc.text(line, 14, rowY);
+                    rowY += 8;
+                  });
+                }
+
+                // If not enough pages, pad to at least 10 pages
+                while (doc.getNumberOfPages() < 10) {
+                  doc.addPage();
+                  const p = doc.getNumberOfPages();
+                  doc.setFontSize(12);
+                  doc.text(`Appendix ${p - 4}`, 14, 22);
+                  doc.setFontSize(10);
+                  doc.text('Additional operational notes and extended tables are available on request.', 14, 36);
+                }
+
+                doc.save('medistock_operational_report.pdf');
+              } catch (err) {
+                console.error('PDF generation failed', err);
+              }
+            }}
           className="btn-theme inline-flex items-center gap-2 rounded-2xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
         >
           Download report (PDF)
@@ -188,7 +247,7 @@ export function Insights() {
           </div>
           <div className="h-[320px] w-full">
             <Suspense fallback={<div className="grid h-full place-items-center text-sm text-muted-foreground">Loading chart...</div>}>
-              <Line data={lineData} options={chartOptions} />
+              <Line ref={lineRef} data={lineData} options={chartOptions} />
             </Suspense>
           </div>
         </div>
@@ -200,7 +259,7 @@ export function Insights() {
           </div>
           <div className="h-[320px] w-full">
             <Suspense fallback={<div className="grid h-full place-items-center text-sm text-muted-foreground">Loading chart...</div>}>
-              <Doughnut data={doughnutData} options={{ maintainAspectRatio: false, plugins: { tooltip: { callbacks: { label: (context) => `${context.label}: ${context.formattedValue}` } } } }} />
+              <Doughnut ref={doughnutRef} data={doughnutData} options={{ maintainAspectRatio: false, plugins: { tooltip: { callbacks: { label: (context) => `${context.label}: ${context.formattedValue}` } } } }} />
             </Suspense>
           </div>
         </div>

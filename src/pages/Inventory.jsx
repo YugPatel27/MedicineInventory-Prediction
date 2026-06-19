@@ -1,6 +1,7 @@
 ﻿import { useEffect, useMemo, useState } from 'react';
 import { apiClient } from '../api/axios';
 import Alert from '../components/Alert';
+import ReorderModal from '../components/ReorderModal';
 import { SmartMedicineEntry } from '../components/SmartMedicineEntry';
 import { Download, FileText, RefreshCcw, Plus, Search } from '../components/Icons';
 
@@ -25,6 +26,7 @@ export function Inventory() {
   const [search, setSearch] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [editMedicine, setEditMedicine] = useState(null);
+  const [reorderMedicine, setReorderMedicine] = useState(null);
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState('');
   const [notification, setNotification] = useState(null);
@@ -135,6 +137,40 @@ export function Inventory() {
       doc.setFontSize(10);
       doc.text('Generated from local inventory data.', 14, 26);
       setNotification({ type: 'info', message: 'Building the inventory PDF report, please wait...' });
+      // Create an offscreen chart for embedding (top 5 medicines by stock)
+      try {
+        const Chart = (await import('chart.js/auto')).default || (await import('chart.js/auto'));
+        const canvas = document.createElement('canvas');
+        canvas.width = 800;
+        canvas.height = 320;
+        const ctx = canvas.getContext('2d');
+        const top = filteredMedicines.slice(0, 5);
+        const labels = top.map((m) => m.medicine_name || m.medicine_id || 'N/A');
+        const dataPoints = top.map((m) => m.stock_quantity || 0);
+        // eslint-disable-next-line no-unused-vars
+        const chart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [
+              {
+                label: 'Stock quantity',
+                data: dataPoints,
+                backgroundColor: '#38BDF8',
+              },
+            ],
+          },
+          options: { responsive: false, animation: false, plugins: { legend: { display: false } } },
+        });
+
+        const imgData = canvas.toDataURL('image/png');
+        doc.addImage(imgData, 'PNG', 14, 36, 180, 80);
+        // destroy chart if possible
+        try { chart.destroy(); } catch (e) {}
+      } catch (e) {
+        console.warn('Chart embedding failed', e);
+      }
+
       autoTable(doc, {
         startY: 36,
         head: [['ID', 'Name', 'Category', 'Stock', 'Status', 'Expiry Date']],
@@ -316,6 +352,13 @@ export function Inventory() {
                         >
                           Delete
                         </button>
+                        <button
+                          type="button"
+                          onClick={() => setReorderMedicine(medicine)}
+                          className="rounded-2xl border border-border bg-primary/10 px-3 py-2 text-xs font-semibold text-primary hover:bg-primary/20"
+                        >
+                          Reorder
+                        </button>
                       </td>
                     </tr>
                   );
@@ -360,6 +403,17 @@ export function Inventory() {
             setEditMedicine(null);
           }}
           initialData={editMedicine}
+        />
+      )}
+      {reorderMedicine && (
+        <ReorderModal
+          open={!!reorderMedicine}
+          onClose={() => setReorderMedicine(null)}
+          medicine={reorderMedicine}
+          onSuccess={(qty) => {
+            setNotification({ type: 'success', message: `Reorder request submitted (${qty} units).` });
+            fetchMedicines();
+          }}
         />
       )}
     </div>

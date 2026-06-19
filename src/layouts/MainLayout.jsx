@@ -1,14 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useTheme } from '../context/useTheme';
+// theme switching removed; app will use light theme only
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../store/slices/authSlice';
 import { apiClient } from '../api/axios';
 import { BrandMark } from '../components/BrandMark';
 import {
   Menu,
-  Sun,
-  Moon,
   Bell,
   LogOut,
   Home,
@@ -43,7 +41,7 @@ export function MainLayout() {
   const [dismissedNotifications, setDismissedNotifications] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
-  const { theme, setTheme } = useTheme();
+  
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
 
@@ -88,7 +86,7 @@ export function MainLayout() {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <div>
-        <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-xl px-5 py-4 shadow-sm">
+        <header className="sticky top-0 z-40 border-b border-border bg-background px-5 py-4 shadow-sm">
           <div className="mx-auto flex max-w-7xl flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-wrap items-center gap-4">
               <BrandMark />
@@ -99,10 +97,10 @@ export function MainLayout() {
                     <Link
                       key={item.name}
                       to={item.href}
-                      className={`rounded-2xl px-4 py-3 text-sm font-medium transition ${
+                      className={`rounded-2xl px-4 py-3 text-sm font-medium transform-gpu transition-colors transition-transform duration-150 ${
                         isActive
-                          ? 'bg-primary/10 text-primary shadow-sm'
-                          : 'text-muted-foreground hover:bg-primary/5 hover:text-foreground'
+                          ? 'bg-primary/10 text-primary shadow-sm ring-1 ring-primary/10'
+                          : 'text-muted-foreground hover:bg-primary/5 hover:text-foreground hover:scale-105'
                       }`}
                     >
                       {item.name}
@@ -130,13 +128,7 @@ export function MainLayout() {
               >
                 <LogOut className="h-5 w-5" />
               </button>
-              <button
-                type="button"
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className="rounded-2xl border border-border bg-card p-2 text-muted-foreground hover:bg-primary/5"
-              >
-                {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-              </button>
+              {/* Theme toggle removed; app uses light theme */}
               <div className="relative">
                 <button
                   type="button"
@@ -225,10 +217,10 @@ export function MainLayout() {
                       key={item.name}
                       to={item.href}
                       onClick={() => setSidebarOpen(false)}
-                      className={`block rounded-2xl px-4 py-3 text-sm font-medium transition ${
+                      className={`block rounded-2xl px-4 py-3 text-sm font-medium transform-gpu transition duration-150 ${
                         isActive
                           ? 'bg-primary/10 text-primary'
-                          : 'text-muted-foreground hover:bg-primary/5 hover:text-foreground'
+                          : 'text-muted-foreground hover:bg-primary/5 hover:text-foreground hover:scale-105'
                       }`}
                     >
                       {item.name}
@@ -246,7 +238,7 @@ export function MainLayout() {
               <Outlet />
             </div>
           </main>
-          <footer className="border-t border-border bg-background/95 px-5 py-4 text-sm text-muted-foreground">
+          <footer className="border-t border-border bg-background px-5 py-4 text-sm text-muted-foreground">
             <div className="max-w-6xl mx-auto flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div>© {new Date().getFullYear()} MediStock — Secure local medicine inventory.</div>
               <div className="flex items-center gap-3">

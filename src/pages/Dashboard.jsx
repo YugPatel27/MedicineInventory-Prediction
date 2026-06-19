@@ -1,6 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, Suspense, lazy } from 'react';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Filler, Title, Tooltip, Legend } from 'chart.js';
-import { Line, Bar, Doughnut } from 'react-chartjs-2';
+const Line = lazy(() => import('react-chartjs-2').then((m) => ({ default: m.Line })));
+const Bar = lazy(() => import('react-chartjs-2').then((m) => ({ default: m.Bar })));
+const Doughnut = lazy(() => import('react-chartjs-2').then((m) => ({ default: m.Doughnut })));
 import { apiClient } from '../api/axios';
 import { SEO } from '../components/SEO';
 import { ArrowRight, ShieldCheck, TrendingUp, Clock3, Database } from '../components/Icons';
@@ -41,6 +43,56 @@ export function Dashboard() {
   useEffect(() => {
     fetchDashboardData();
   }, []);
+
+  const handleExportDashboard = async () => {
+    try {
+      const { jsPDF } = await import('jspdf');
+      const doc = new jsPDF({ compress: true });
+      doc.setFontSize(18);
+      doc.text('MediStock Dashboard Report', 14, 18);
+      doc.setFontSize(12);
+      doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 28);
+
+      // create offscreen line chart
+      try {
+        const Chart = (await import('chart.js/auto')).default || (await import('chart.js/auto'));
+        const canvas = document.createElement('canvas');
+        canvas.width = 800;
+        canvas.height = 320;
+        const ctx = canvas.getContext('2d');
+        const forecastItems = predictions.length > 0 ? predictions.slice(0, 4) : [];
+        const labels = forecastItems.length > 0 ? forecastItems.map((item) => item.name || item.medicine_id) : ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+        const dataPoints = forecastItems.length > 0 ? forecastItems.map((item) => item.predicted_demand || 0) : [18, 22, 19, 24];
+        const chart = new Chart(ctx, { type: 'line', data: { labels, datasets: [{ label: 'Demand forecast', data: dataPoints, borderColor: '#0EA5E9', backgroundColor: 'rgba(14,165,233,0.18)', fill: true }] }, options: { responsive: false, animation: false } });
+        const img = canvas.toDataURL('image/png');
+        doc.addImage(img, 'PNG', 14, 36, 180, 80);
+        try { chart.destroy(); } catch (e) {}
+      } catch (e) { console.warn('Line chart embed failed', e); }
+
+      // create offscreen bar chart for top medicines
+      try {
+        const Chart = (await import('chart.js/auto')).default || (await import('chart.js/auto'));
+        const canvas2 = document.createElement('canvas');
+        canvas2.width = 800;
+        canvas2.height = 320;
+        const ctx2 = canvas2.getContext('2d');
+        const top = topMedicines.slice(0, 6);
+        const labels2 = top.map((m) => m.medicine_name || m.medicine_id || 'N/A');
+        const data2 = top.map((m) => m.stock_quantity || 0);
+        const chart2 = new Chart(ctx2, { type: 'bar', data: { labels: labels2, datasets: [{ label: 'Stock quantity', data: data2, backgroundColor: '#38BDF8' }] }, options: { responsive: false, animation: false } });
+        const img2 = canvas2.toDataURL('image/png');
+        doc.addPage();
+        doc.setFontSize(14);
+        doc.text('Top medicines', 14, 20);
+        doc.addImage(img2, 'PNG', 14, 30, 180, 80);
+        try { chart2.destroy(); } catch (e) {}
+      } catch (e) { console.warn('Bar chart embed failed', e); }
+
+      doc.save('medistock_dashboard_report.pdf');
+    } catch (err) {
+      console.error('Dashboard export failed', err);
+    }
+  };
 
   const runForecast = async () => {
     setForecasting(true);
@@ -126,6 +178,8 @@ export function Dashboard() {
     );
   }
 
+  const hasData = predictions.length > 0;
+
   return (
     <div className="space-y-8">
       <SEO title="Dashboard — MediStock" description="Review medicine inventory health, expiry risk, and demand forecast insights in MediStock." url="/dashboard" />
@@ -191,6 +245,14 @@ export function Dashboard() {
             <button onClick={runForecast} disabled={forecasting} className="btn-theme inline-flex items-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground">
               {forecasting ? 'Running…' : 'Run forecast'}
             </button>
+            <button
+              onClick={handleExportDashboard}
+              disabled={!hasData || forecasting}
+              title={!hasData ? 'Run forecast to enable report download' : forecasting ? 'Forecast running' : 'Download dashboard report'}
+              className={`btn-theme inline-flex items-center gap-2 rounded-2xl border border-border bg-background px-4 py-3 text-sm font-semibold text-foreground ${!hasData || forecasting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary/5'}`}
+            >
+              Download report (PDF)
+            </button>
           </div>
         </div>
 
@@ -236,7 +298,10 @@ export function Dashboard() {
         )}
       </section>
 
-      <div className="grid gap-6 xl:grid-cols-[1.4fr_0.8fr]">
+      {hasData ? (
+        <>
+        <div className="grid gap-6 xl:grid-cols-[1.4fr_0.8fr]">
+        {predictions.length > 0 && (
         <section className="rounded-[2rem] border border-border bg-card p-6 shadow-sm">
           <div className="flex items-center justify-between gap-3">
             <div>
@@ -245,11 +310,15 @@ export function Dashboard() {
             </div>
             <span className="rounded-full bg-primary/10 px-3 py-2 text-xs font-semibold text-primary">Logistic Regression</span>
           </div>
-          <div className="mt-6 h-[320px]">
-            <Line data={lineChartData} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
+              <div className="mt-6 h-[320px]">
+            <Suspense fallback={<div className="grid h-full place-items-center text-sm text-muted-foreground">Loading chart...</div>}>
+              <Line data={lineChartData} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
+            </Suspense>
           </div>
         </section>
+        )}
 
+        {topMedicines.length > 0 && (
         <section className="rounded-[2rem] border border-border bg-card p-6 shadow-sm">
           <div className="flex items-center justify-between gap-3">
             <div>
@@ -259,9 +328,12 @@ export function Dashboard() {
             <span className="rounded-full bg-secondary/10 px-3 py-2 text-xs font-semibold text-secondary">Live stock</span>
           </div>
           <div className="mt-6 h-[320px]">
-            <Bar data={barChartData} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
+            <Suspense fallback={<div className="grid h-full place-items-center text-sm text-muted-foreground">Loading chart...</div>}>
+              <Bar data={barChartData} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
+            </Suspense>
           </div>
         </section>
+        )}
       </div>
 
       <section className="grid gap-4 lg:grid-cols-3">
@@ -315,6 +387,13 @@ export function Dashboard() {
           </p>
         </div>
       </section>
+      </>
+      ) : (
+        <div className="rounded-[2rem] border border-border bg-card p-6 shadow-sm text-center">
+          <p className="text-lg font-semibold text-foreground">Run the forecast to populate dashboard content</p>
+          <p className="mt-2 text-sm text-muted-foreground">Click "Run forecast" above to generate predictions and enable the full dashboard.</p>
+        </div>
+      )}
     </div>
   );
 }

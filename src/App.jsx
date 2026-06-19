@@ -25,7 +25,9 @@ function AppRoutes() {
   return (
       <Routes location={location} key={location.pathname}>
         <Route path="/login" element={<Login />} />
-        <Route path="/legal" element={<Legal />} />
+        <Route element={<MainLayout />}>
+          <Route path="/legal" element={<Legal />} />
+        </Route>
         <Route path="/privacy" element={<Navigate to="/legal" replace />} />
         <Route path="/terms" element={<Navigate to="/legal" replace />} />
         <Route path="/" element={<Navigate to="/dashboard" replace />} />

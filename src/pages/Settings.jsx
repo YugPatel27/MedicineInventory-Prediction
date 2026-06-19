@@ -31,12 +31,8 @@ export function Settings() {
 
       <div className="bg-card shadow-sm border rounded-xl p-8 space-y-8">
         <section>
-          <h3 className="text-lg font-semibold text-foreground mb-4">Appearance (Theme)</h3>
-          <div className="flex gap-3">
-            <button onClick={() => safeSetTheme('light')} className={`p-3 rounded border ${theme === 'light' ? 'border-primary' : ''}`}>Light</button>
-            <button onClick={() => safeSetTheme('dark')} className={`p-3 rounded border ${theme === 'dark' ? 'border-primary' : ''}`}>Dark</button>
-            <button onClick={() => safeSetTheme('system')} className={`p-3 rounded border ${theme === 'system' ? 'border-primary' : ''}`}>System</button>
-          </div>
+          <h3 className="text-lg font-semibold text-foreground mb-4">Appearance</h3>
+          <p className="text-sm text-muted-foreground">Light theme enforced. Dark mode has been removed.</p>
         </section>
 
         <hr className="border-border" />

@@ -1,16 +1,16 @@
 import React, { createContext, useEffect, useState } from 'react';
 
 export const ThemeContext = createContext({
-  theme: 'system',
+  theme: 'light',
   setTheme: () => {},
   textSize: 'base',
   setTextSize: () => {},
 });
 
-export function ThemeProvider({ children, defaultTheme = 'system', storageKey = 'mips-ui-theme', ...props }) {
+export function ThemeProvider({ children, defaultTheme = 'light', storageKey = 'mips-ui-theme', ...props }) {
   const [theme, setThemeState] = useState(() => {
     const raw = typeof window !== 'undefined' ? localStorage.getItem(storageKey) : null;
-    if (raw === 'light' || raw === 'dark' || raw === 'system') return raw;
+    if (raw === 'light') return raw;
     return defaultTheme;
   });
 
@@ -23,14 +23,8 @@ export function ThemeProvider({ children, defaultTheme = 'system', storageKey = 
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
-
-    if (theme === 'system') {
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      root.classList.add(prefersDark ? 'dark' : 'light');
-      return;
-    }
-
-    root.classList.add(theme);
+    // Force light theme only — dark mode removed per request
+    root.classList.add('light');
   }, [theme]);
 
   useEffect(() => {
@@ -40,7 +34,8 @@ export function ThemeProvider({ children, defaultTheme = 'system', storageKey = 
   }, [textSize]);
 
   const setTheme = (t) => {
-    const allowed = ['light', 'dark', 'system'].includes(t) ? t : 'system';
+    // Theme switching disabled: keep light theme persistent
+    const allowed = 'light';
     localStorage.setItem(storageKey, allowed);
     setThemeState(allowed);
   };
