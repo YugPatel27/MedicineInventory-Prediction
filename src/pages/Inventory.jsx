@@ -147,7 +147,6 @@ export function Inventory() {
         const top = filteredMedicines.slice(0, 5);
         const labels = top.map((m) => m.medicine_name || m.medicine_id || 'N/A');
         const dataPoints = top.map((m) => m.stock_quantity || 0);
-        // eslint-disable-next-line no-unused-vars
         const chart = new Chart(ctx, {
           type: 'bar',
           data: {

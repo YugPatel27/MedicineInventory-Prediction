@@ -1,91 +1,52 @@
-# 💊 MIPS — Medicine Intelligence Platform
+# Medicine Inventory Prediction
 
-A modern **local-first healthcare inventory platform** for pharmacies, clinics, hospitals, and medical distributors.
+Medicine Inventory Prediction is a local-first healthcare inventory app for pharmacies, clinics, hospitals, and medical distributors.
 
-MIPS simplifies medicine inventory management with **smart stock tracking, expiry monitoring, AI-assisted demand forecasting, and interactive analytics**. It helps reduce medicine waste, prevent stock shortages, and improve inventory decisions through real-time insights.
+It uses free and open-source tools only:
+- React
+- Vite
+- Express
+- MongoDB
+- Chart.js
+- Axios
+- JWT
+- jsPDF
+- XLSX utilities
 
----
+There are no paid APIs required for the default setup. The frontend uses the local `/api` proxy in development, and the server uses a local MongoDB instance by default.
 
-## 📸 Preview
+## Features
 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/3d8d6eb4-7265-4db0-8098-4c337e3b0495" alt="MIPS Dashboard" width="100%">
-</p>
----
+- Medicine inventory management
+- Expiry and stock alerts
+- Supplier, purchase, and report workflows
+- CSV/XLSX import and export
+- PDF report preview and download
+- Local forecasting and dashboard charts
+- Email verification flow backed by the local API
 
-## ✨ Features
-
-### 📦 Smart Inventory Management
-
-* Manage medicine inventory with a searchable interface
-* Real-time stock availability and low-stock alerts
-* Fast filtering and pagination
-* Export inventory reports to CSV and PDF
-
-### 📥 Bulk Import
-
-* Import medicines using CSV or XLSX
-* Automatic data validation
-* Preview records before importing
-
-### ⏳ Expiry Monitoring
-
-* Track upcoming medicine expiries
-* Reduce wastage with proactive alerts
-* Identify critical inventory risks
-
-### 📈 AI Forecasting
-
-* AI-assisted demand forecasting
-* Stock shortage and overstock prediction
-* Intelligent inventory recommendations
-
-### 📊 Analytics Dashboard
-
-* Interactive dashboard with inventory insights
-* Trend analysis and performance metrics
-* Risk monitoring and reporting
-
-### 🎨 User Experience
-
-* Responsive modern interface
-* Light, Dark, and Auto themes
-* Adjustable text size
-
-### 🔐 Security
-
-* Secure local authentication
-* JWT-based route and API protection
-* Backend validation
-
----
-
-## 🚀 Run Locally
+## Run Locally
 
 ```bash
 npm install
-npm run dev -- --host
+npm run dev
 ```
 
----
-
-## 🛠 Build
+## Validation
 
 ```bash
 npm run build
+npm run lint
 ```
 
----
+## Configuration
 
-## ⚙️ Tech Stack
+```env
+NODE_ENV=development
+PORT=5002
+MONGO_URI=mongodb://localhost:27017/smart_medicine_db
+JWT_ACCESS_SECRET=your_access_secret
+JWT_REFRESH_SECRET=your_refresh_secret
+```
 
-* Vite
-* TypeScript
-* JWT Authentication
-* CSV/XLSX Processing & Validation
-
----
-
-## 🎯 Vision
-
-MIPS is built to modernize medicine inventory management with intelligent forecasting, streamlined workflows, and actionable analytics, helping healthcare providers reduce stock loss and improve operational efficiency.
+If you want to point the frontend to a different backend, set `VITE_API_URL`. Otherwise, it stays on the local `/api` route.

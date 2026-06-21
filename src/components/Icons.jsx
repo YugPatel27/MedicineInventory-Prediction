@@ -86,6 +86,48 @@ export const UploadCloud = (props) => (
   </SvgWrapper>
 );
 
+export const Calendar = (props) => (
+  <SvgWrapper {...props}>
+    <rect x="3" y="5" width="18" height="16" rx="2" />
+    <path d="M8 3v4M16 3v4M3 11h18" />
+  </SvgWrapper>
+);
+
+export const Filter = (props) => (
+  <SvgWrapper {...props}>
+    <path d="M4 5h16l-6 7v5l-4 2v-7L4 5z" />
+  </SvgWrapper>
+);
+
+export const Edit2 = (props) => (
+  <SvgWrapper {...props}>
+    <path d="M4 20h4l10.5-10.5a1.5 1.5 0 000-2.1l-1.9-1.9a1.5 1.5 0 00-2.1 0L4 16v4z" />
+    <path d="M13.5 6.5l4 4" />
+  </SvgWrapper>
+);
+
+export const Trash2 = (props) => (
+  <SvgWrapper {...props}>
+    <path d="M3 6h18" />
+    <path d="M8 6V4h8v2" />
+    <path d="M6 6l1 14h10l1-14" />
+    <path d="M10 11v5M14 11v5" />
+  </SvgWrapper>
+);
+
+export const Phone = (props) => (
+  <SvgWrapper {...props}>
+    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.12.88.33 1.75.62 2.59a2 2 0 01-.45 2.11L8 9a16 16 0 006 6l.58-.3a2 2 0 012.11-.45c.84.29 1.71.5 2.59.62A2 2 0 0122 16.92z" />
+  </SvgWrapper>
+);
+
+export const Mail = (props) => (
+  <SvgWrapper {...props}>
+    <rect x="3" y="5" width="18" height="14" rx="2" />
+    <path d="M3 7l9 6 9-6" />
+  </SvgWrapper>
+);
+
 export const Settings = (props) => (
   <SvgWrapper {...props}>
     <path d="M12 15.5A3.5 3.5 0 1112 8.5a3.5 3.5 0 010 7z" />
@@ -194,6 +236,12 @@ export default {
   TrendingUp,
   BarChart3,
   UploadCloud,
+  Calendar,
+  Filter,
+  Edit2,
+  Trash2,
+  Phone,
+  Mail,
   Settings,
   Info,
   Sparkles,

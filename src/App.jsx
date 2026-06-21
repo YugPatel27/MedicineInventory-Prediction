@@ -11,10 +11,16 @@ import { Insights } from './pages/Insights';
 import { Predictions } from './pages/Predictions';
 import { Import } from './pages/Import';
 import { Login } from './pages/Login';
+import { Reports } from './pages/Reports';
+import { VerifyEmail } from './pages/VerifyEmail';
 import { Legal } from './pages/Legal';
 import { Sitemap } from './pages/Sitemap';
 import { Settings } from './pages/Settings';
 import { Admin } from './pages/Admin';
+import { Medicines } from './pages/Medicines';
+import { Categories } from './pages/Categories';
+import { Suppliers } from './pages/Suppliers';
+import { Purchases } from './pages/Purchases';
 import { ScrollToTop } from './components/ScrollToTop';
 import { CookieBanner } from './components/CookieBanner';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -25,6 +31,7 @@ function AppRoutes() {
   return (
       <Routes location={location} key={location.pathname}>
         <Route path="/login" element={<Login />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route element={<MainLayout />}>
           <Route path="/legal" element={<Legal />} />
         </Route>
@@ -36,8 +43,13 @@ function AppRoutes() {
           <Route element={<MainLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/inventory" element={<Inventory />} />
+            <Route path="/medicines" element={<Medicines />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/suppliers" element={<Suppliers />} />
+            <Route path="/purchases" element={<Purchases />} />
             <Route path="/insights" element={<Insights />} />
             <Route path="/predictions" element={<Predictions />} />
+            <Route path="/reports" element={<Reports />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/import" element={<Import />} />
             <Route path="/sitemap" element={<Sitemap />} />
