@@ -20,7 +20,7 @@ There are no paid APIs required for the default setup. The frontend uses the loc
 - Medicine inventory management
 - Expiry and stock alerts
 - Supplier, purchase, and report workflows
-- CSV/XLSX import and export
+- CSV/XLSX import & export
 - PDF report preview and download
 - Local forecasting and dashboard charts
 - Email verification flow backed by the local API
