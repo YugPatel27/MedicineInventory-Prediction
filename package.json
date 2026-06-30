@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"vite\" \"nodemon --watch server --exec node server/index.js\"",
+    "dev": "node --no-deprecation node_modules/concurrently/dist/bin/concurrently.js \"node --no-deprecation node_modules/vite/bin/vite.js\" \"node --no-deprecation node_modules/nodemon/bin/nodemon.js --watch server --exec \\\"node --no-deprecation\\\" server/index.js\"",
     "build": "vite build",
-    "test": "npm run build",
+    "test": "node --no-deprecation tests/prediction.test.js && node --no-deprecation tests/load.test.js",
     "lint": "eslint . --ext .js,.jsx",
-    "start": "node server/index.js",
-    "seed": "node server/seed/seedData.js"
+    "start": "node --no-deprecation server/index.js",
+    "seed": "node --no-deprecation server/seed/seedData.js"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",

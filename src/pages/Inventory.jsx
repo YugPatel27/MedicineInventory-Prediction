@@ -1,9 +1,10 @@
-﻿import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { apiClient } from '../api/axios';
 import Alert from '../components/Alert';
 import ReorderModal from '../components/ReorderModal';
 import { SmartMedicineEntry } from '../components/SmartMedicineEntry';
-import { Download, FileText, RefreshCcw, Plus, Search } from '../components/Icons';
+import { Download, FileText, RefreshCcw, Plus, Search, UploadCloud } from '../components/Icons';
 
 const formatDisplayDate = (value) => {
   if (!value) return '—';
@@ -31,6 +32,38 @@ export function Inventory() {
   const [error, setError] = useState('');
   const [notification, setNotification] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [importFile, setImportFile] = useState(null);
+  const [importLoading, setImportLoading] = useState(false);
+  const [importResult, setImportResult] = useState(null);
+  const [importError, setImportError] = useState('');
+  const navigate = useNavigate();
+
+  const handleImportUpload = async () => {
+    if (!importFile) {
+      setImportError('Please select a file first.');
+      return;
+    }
+    const formData = new FormData();
+    formData.append('file', importFile);
+    setImportLoading(true);
+    setImportError('');
+    setImportResult(null);
+
+    try {
+      const { data } = await apiClient.post('/import/bulk-insert', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setImportResult(data.data || null);
+      setNotification({ type: 'success', message: `Import completed: ${data.data?.inserted || 0} rows inserted.` });
+      fetchMedicines();
+    } catch (uploadError) {
+      console.error('Import failed', uploadError);
+      setImportError(uploadError?.response?.data?.message || 'Upload failed.');
+    } finally {
+      setImportLoading(false);
+    }
+  };
   const pageSize = 20;
 
   const fetchMedicines = async () => {
@@ -212,6 +245,10 @@ export function Inventory() {
             <button onClick={handleExportCSV} className="inline-flex items-center gap-2 rounded-2xl border border-border bg-background px-4 py-3 text-sm font-semibold text-foreground hover:bg-primary/5">
               <Download className="h-4 w-4" />
               Export CSV
+            </button>
+            <button onClick={() => setShowImportModal(true)} className="inline-flex items-center gap-2 rounded-2xl border border-border bg-background px-4 py-3 text-sm font-semibold text-foreground hover:bg-primary/5">
+              <UploadCloud className="h-4 w-4" />
+              Import CSV/XLSX
             </button>
             <button onClick={() => {
               setSyncing(true);
@@ -414,6 +451,111 @@ export function Inventory() {
             fetchMedicines();
           }}
         />
+      )}
+
+      {showImportModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl">
+            <div className="flex items-center justify-between border-b pb-3">
+              <h2 className="text-lg font-semibold">Import Medicine Inventory</h2>
+              <button
+                onClick={() => {
+                  setShowImportModal(false);
+                  setImportFile(null);
+                  setImportResult(null);
+                  setImportError('');
+                }}
+                className="text-muted-foreground hover:text-foreground text-sm font-semibold"
+              >
+                Close
+              </button>
+            </div>
+
+            {!importResult ? (
+              <div className="mt-4 space-y-4">
+                <p className="text-sm text-slate-500">
+                  Select a CSV or XLSX file containing medicine data. The file must match columns such as ID, Name, Category, Stock, and Expiry.
+                </p>
+                <div className="rounded-2xl border border-dashed border-border bg-slate-50 p-6 text-center">
+                  <UploadCloud className="mx-auto h-10 w-10 text-muted-foreground" />
+                  <input
+                    type="file"
+                    accept=".csv,.xlsx,.xls"
+                    onChange={(e) => {
+                      setImportFile(e.target.files?.[0] || null);
+                      setImportError('');
+                    }}
+                    className="mt-4 w-full text-sm text-slate-600 file:mr-4 file:rounded-xl file:border-0 file:bg-primary/10 file:px-4 file:py-2 file:text-xs file:font-semibold file:text-primary hover:file:bg-primary/20"
+                  />
+                  {importFile && (
+                    <p className="mt-2 text-xs text-muted-foreground font-semibold">
+                      Selected: {importFile.name} ({(importFile.size / 1024).toFixed(1)} KB)
+                    </p>
+                  )}
+                </div>
+
+                {importError && (
+                  <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs text-rose-800">
+                    {importError}
+                  </div>
+                )}
+
+                <div className="flex gap-2 justify-end pt-2">
+                  <button
+                    onClick={() => {
+                      setShowImportModal(false);
+                      setImportFile(null);
+                      setImportError('');
+                    }}
+                    className="rounded-xl border border-border bg-background px-4 py-2 text-sm"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleImportUpload}
+                    disabled={importLoading || !importFile}
+                    className="rounded-xl bg-primary px-4 py-2 text-sm text-white font-semibold disabled:opacity-50"
+                  >
+                    {importLoading ? 'Importing...' : 'Upload & Process'}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-4 space-y-4">
+                <div className="rounded-xl bg-green-50 border border-green-200 p-4 text-sm text-green-800">
+                  <p className="font-semibold">Import completed successfully!</p>
+                  <p className="mt-1">{importResult.inserted} rows inserted. {importResult.failed} rows failed.</p>
+                </div>
+
+                <div className="flex flex-col gap-2 pt-2">
+                  <button
+                    onClick={() => {
+                      setShowImportModal(false);
+                      setImportFile(null);
+                      setImportResult(null);
+                      setImportError('');
+                      navigate('/predictions?run=true');
+                    }}
+                    className="w-full rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-primary/90"
+                  >
+                    Run Forecast & Predictions on Imported Data
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowImportModal(false);
+                      setImportFile(null);
+                      setImportResult(null);
+                      setImportError('');
+                    }}
+                    className="w-full rounded-xl border border-border px-4 py-2 text-sm hover:bg-slate-50"
+                  >
+                    Back to Inventory List
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );

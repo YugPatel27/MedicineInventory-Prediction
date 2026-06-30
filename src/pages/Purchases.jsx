@@ -36,7 +36,7 @@ export function Purchases() {
         supplier_name: ['MedSupply Co', 'PharmaCorp', 'HealthLabs'][idx % 3],
         medicine_name: med.medicine_name || med.name || 'Medicine',
         quantity: Math.floor(Math.random() * 100) + 10,
-        unit_price: parseFloat((Math.random() * 50 + 5).toFixed(2)),
+        unit_price: parseFloat((Math.random() * 400 + 50).toFixed(2)),
         total_cost: 0,
         status: ['pending', 'confirmed', 'shipped', 'received'][idx % 4],
         expected_delivery: new Date(Date.now() + Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
@@ -196,7 +196,7 @@ export function Purchases() {
                     <td className="px-6 py-3">{purchase.medicine_name}</td>
                     <td className="px-6 py-3">{purchase.supplier_name}</td>
                     <td className="px-6 py-3">{purchase.quantity}</td>
-                    <td className="px-6 py-3 font-semibold text-primary">${purchase.total_cost.toFixed(2)}</td>
+                    <td className="px-6 py-3 font-semibold text-primary">₹{purchase.total_cost.toFixed(2)}</td>
                     <td className="px-6 py-3">
                       <select
                         value={purchase.status}
@@ -274,7 +274,7 @@ export function Purchases() {
               />
               <input
                 type="number"
-                placeholder="Unit Price"
+                placeholder="Unit Price (INR)"
                 step="0.01"
                 value={formData.unit_price}
                 onChange={(e) => setFormData({ ...formData, unit_price: parseFloat(e.target.value) })}

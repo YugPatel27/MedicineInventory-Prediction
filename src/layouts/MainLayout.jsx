@@ -48,7 +48,7 @@ export function MainLayout() {
   };
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-background text-foreground">
       <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-center gap-4">
@@ -129,7 +129,7 @@ export function MainLayout() {
         )}
       </header>
 
-      <main className="min-h-[calc(100vh-84px)] p-5 md:p-6 lg:p-8">
+      <main className="flex-1 p-5 md:p-6 lg:p-8">
         <div className="mx-auto max-w-7xl">
           <Outlet />
         </div>
