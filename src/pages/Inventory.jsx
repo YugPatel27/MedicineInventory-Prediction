@@ -4,6 +4,7 @@ import { apiClient } from '../api/axios';
 import Alert from '../components/Alert';
 import ReorderModal from '../components/ReorderModal';
 import { SmartMedicineEntry } from '../components/SmartMedicineEntry';
+import TransactionModal from '../components/TransactionModal';
 import { Download, FileText, RefreshCcw, Plus, Search, UploadCloud } from '../components/Icons';
 
 const formatDisplayDate = (value) => {
@@ -28,6 +29,7 @@ export function Inventory() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editMedicine, setEditMedicine] = useState(null);
   const [reorderMedicine, setReorderMedicine] = useState(null);
+  const [transactionMedicine, setTransactionMedicine] = useState(null);
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState('');
   const [notification, setNotification] = useState(null);
@@ -395,6 +397,13 @@ export function Inventory() {
                         >
                           Reorder
                         </button>
+                        <button
+                          type="button"
+                          onClick={() => setTransactionMedicine(medicine)}
+                          className="rounded-2xl border border-border bg-sky-50 px-3 py-2 text-xs font-semibold text-sky-700 hover:bg-sky-100"
+                        >
+                          Daily Log
+                        </button>
                       </td>
                     </tr>
                   );
@@ -449,6 +458,16 @@ export function Inventory() {
           onSuccess={(qty) => {
             setNotification({ type: 'success', message: `Reorder request submitted (${qty} units).` });
             fetchMedicines();
+          }}
+        />
+      )}
+      {transactionMedicine && (
+        <TransactionModal
+          medicine={transactionMedicine}
+          onClose={() => setTransactionMedicine(null)}
+          onSuccess={() => {
+            fetchMedicines();
+            setNotification({ type: 'success', message: 'Daily stock and sales log processed successfully.' });
           }}
         />
       )}

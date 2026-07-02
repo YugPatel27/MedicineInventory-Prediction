@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { apiClient } from '../api/axios';
 import { SEO } from '../components/SEO';
 import Alert from '../components/Alert';
@@ -8,6 +8,8 @@ export function Admin() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('');
+
+  const [expandedLogId, setExpandedLogId] = useState(null);
 
   useEffect(() => {
     document.title = 'Admin Panel — MediStock';
@@ -103,14 +105,47 @@ export function Admin() {
                 </tr>
               ) : (
                 filteredLogs.map((log) => (
-                  <tr key={log._id} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-4 py-4 text-slate-700">{new Date(log.createdAt).toLocaleString()}</td>
-                    <td className="px-4 py-4 text-slate-600">{log.user?.name || log.userEmail || 'System'}</td>
-                    <td className="px-4 py-4 text-slate-600">{log.action}</td>
-                    <td className="px-4 py-4 text-slate-600">{log.target || 'N/A'}</td>
-                    <td className="px-4 py-4 text-slate-600">{log.ip}</td>
-                    <td className="px-4 py-4 text-slate-600 truncate max-w-[18rem]">{JSON.stringify(log.details || {})}</td>
-                  </tr>
+                  <React.Fragment key={log._id}>
+                    <tr
+                      className="hover:bg-slate-50 transition-colors cursor-pointer"
+                      onClick={() => setExpandedLogId(expandedLogId === log._id ? null : log._id)}
+                    >
+                      <td className="px-4 py-4 text-slate-700">{new Date(log.createdAt).toLocaleString()}</td>
+                      <td className="px-4 py-4 text-slate-600">{log.user?.name || log.userEmail || 'System'}</td>
+                      <td className="px-4 py-4 text-slate-600">
+                        <span className="rounded-full bg-sky-50 px-2.5 py-1 text-xs font-semibold text-sky-800 border border-sky-100">
+                          {log.action}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 text-slate-600">{log.target || 'N/A'}</td>
+                      <td className="px-4 py-4 text-slate-600 font-mono text-xs">{log.ip}</td>
+                      <td className="px-4 py-4 text-slate-600 max-w-[18rem]">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="truncate block font-mono text-xs bg-slate-50 p-1 rounded border border-slate-100 flex-1">
+                            {JSON.stringify(log.details || {})}
+                          </span>
+                          <button
+                            type="button"
+                            className="text-xs font-semibold text-primary hover:underline shrink-0"
+                          >
+                            {expandedLogId === log._id ? 'Hide' : 'View'}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    {expandedLogId === log._id && (
+                      <tr className="bg-slate-50/50">
+                        <td colSpan={6} className="px-6 py-4">
+                          <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-inner">
+                            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Full Audit Payload</p>
+                            <pre className="text-xs text-slate-800 overflow-x-auto whitespace-pre-wrap font-mono p-3 bg-slate-50 rounded-xl border">
+                              {JSON.stringify(log, null, 2)}
+                            </pre>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                 ))
               )}
             </tbody>

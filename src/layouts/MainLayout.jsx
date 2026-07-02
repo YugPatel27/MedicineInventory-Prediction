@@ -17,6 +17,7 @@ const navigationItems = [
   { name: 'Reports', href: '/reports', icon: BarChart3, roles: ['Admin', 'Manager', 'Pharmacist'] },
   { name: 'Prediction Insights', href: '/insights', icon: TrendingUp, roles: ['Admin', 'Manager', 'Pharmacist'] },
   { name: 'Forecast', href: '/predictions', icon: Database, roles: ['Admin', 'Manager', 'Pharmacist'] },
+  { name: 'Admin Panel', href: '/admin', icon: Settings, roles: ['Admin'] },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
