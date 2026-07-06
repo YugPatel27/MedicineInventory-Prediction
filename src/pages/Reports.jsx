@@ -44,16 +44,13 @@ async function buildPdfBlob(reportType, summary, rows, dateRange) {
   const tableRows = rows.map((row) => ({
     id: row.medicine_id || '',
     name: row.medicine_name || '',
-    category: row.category || '',
-    batch: row.batch_number || '',
-    stock: String(row.stock_quantity ?? 0),
-    expiry: row.expiry_date ? new Date(row.expiry_date).toLocaleDateString() : '',
+
   }));
 
   autoTable(doc, {
     startY: 100,
-    head: [['ID', 'Name', 'Category', 'Batch', 'Stock', 'Expiry']],
-    body: tableRows.map((row) => [row.id, row.name, row.category, row.batch, row.stock, row.expiry]),
+    head: [['ID', 'Name', 'Batch', 'Stock', 'Expiry']],
+    body: tableRows.map((row) => [row.id, row.name, row.batch, row.stock, row.expiry]),
     styles: { fontSize: 8 },
     headStyles: { fillColor: [14, 165, 233] },
   });
@@ -142,9 +139,9 @@ export function Reports() {
             <button
               onClick={generateReport}
               disabled={loading || medicines.length === 0}
-              className="inline-flex items-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-white hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-70"
+              className="inline-flex items-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-Black hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-70"
             >
-              <BarChart3 className="h-4 w-4" />
+              <BarChart3 className="h-4 w-4 text-black" />
               {loading ? 'Generating...' : 'Generate report'}
             </button>
             <button
@@ -168,7 +165,6 @@ export function Reports() {
             className="mt-3 w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm"
           >
             <option value="inventory">Inventory</option>
-            <option value="suppliers">Suppliers</option>
             <option value="audit">Audit</option>
           </select>
         </div>
@@ -267,7 +263,7 @@ export function Reports() {
                   <tr>
                     <th className="px-4 py-3">ID</th>
                     <th className="px-4 py-3">Name</th>
-                    <th className="px-4 py-3">Category</th>
+                    <th className="px-4 py-3">Batch</th>
                     <th className="px-4 py-3">Stock</th>
                   </tr>
                 </thead>
@@ -276,7 +272,7 @@ export function Reports() {
                     <tr key={medicine._id || medicine.medicine_id} className="border-b border-border/60">
                       <td className="px-4 py-3 text-muted-foreground">{medicine.medicine_id}</td>
                       <td className="px-4 py-3 text-muted-foreground">{medicine.medicine_name}</td>
-                      <td className="px-4 py-3 text-muted-foreground">{medicine.category || 'General'}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{medicine.batch_number || 'N/A'}</td>
                       <td className="px-4 py-3 text-muted-foreground">{medicine.stock_quantity ?? 0}</td>
                     </tr>
                   ))}

@@ -3,19 +3,26 @@ import { apiClient } from '../api/axios';
 import Alert from './Alert';
 
 export default function TransactionModal({ medicine, onClose, onSuccess }) {
-  const [addedUnits, setAddedUnits] = useState(0);
-  const [soldUnits, setSoldUnits] = useState(0);
+  const [addedUnits, setAddedUnits] = useState('');
+  const [soldUnits, setSoldUnits] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [successResult, setSuccessResult] = useState(null);
+
+  const medicineId = medicine?._id || medicine?.id || medicine?.medicine_id;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccessResult(null);
 
-    const added = Number(addedUnits) || 0;
-    const sold = Number(soldUnits) || 0;
+    if (!medicineId) {
+      setError('Selected medicine data is invalid.');
+      return;
+    }
+
+    const added = Number(addedUnits || 0);
+    const sold = Number(soldUnits || 0);
 
     if (added < 0 || sold < 0) {
       setError('Units must be non-negative values.');
@@ -29,17 +36,27 @@ export default function TransactionModal({ medicine, onClose, onSuccess }) {
 
     setSubmitting(true);
     try {
-      const { data } = await apiClient.post(`/medicines/${medicine._id}/transaction`, {
+      const token = localStorage.getItem('mips-access-token');
+      if (!token) {
+        setError('Not authenticated. Please log in before submitting.');
+        setSubmitting(false);
+        window.location.href = '/login';
+        return;
+      }
+      const { data } = await apiClient.post(`/medicines/${medicineId}/transaction`, {
         addedUnits: added,
-        soldUnits: sold
+        soldUnits: sold,
       });
+      // data.data is the transaction result from server
       setSuccessResult(data.data);
-      if (onSuccess) {
-        onSuccess();
+      if (onSuccess && typeof onSuccess === 'function') {
+        try { onSuccess(data.data); } catch (e) { console.error('onSuccess handler failed', e); }
       }
     } catch (err) {
-      console.error(err);
-      setError(err?.response?.data?.message || err?.message || 'Transaction processing failed.');
+      console.error('Transaction error', err);
+      // Try to extract meaningful server error message or fallback to full response
+      const serverMsg = err?.response?.data?.message || err?.response?.data || err?.message;
+      setError(typeof serverMsg === 'string' ? serverMsg : JSON.stringify(serverMsg));
     } finally {
       setSubmitting(false);
     }
@@ -66,10 +83,6 @@ export default function TransactionModal({ medicine, onClose, onSuccess }) {
                   <span className="text-muted-foreground">Current Stock:</span>
                   <span className="font-semibold text-foreground">{medicine.stock_quantity} units</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Reorder Level:</span>
-                  <span className="font-semibold text-foreground">{medicine.reorder_level} units</span>
-                </div>
               </div>
 
               <div>
@@ -77,9 +90,10 @@ export default function TransactionModal({ medicine, onClose, onSuccess }) {
                 <input
                   type="number"
                   min="0"
+                  step="1"
                   value={addedUnits}
-                  onChange={(e) => setAddedUnits(parseInt(e.target.value) || 0)}
-                  className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  onChange={(e) => setAddedUnits(e.target.value)}
+                  className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
                 />
                 <p className="text-xs text-muted-foreground mt-1">Units received from suppliers or inventory imports.</p>
               </div>
@@ -89,25 +103,26 @@ export default function TransactionModal({ medicine, onClose, onSuccess }) {
                 <input
                   type="number"
                   min="0"
+                  step="1"
                   value={soldUnits}
-                  onChange={(e) => setSoldUnits(parseInt(e.target.value) || 0)}
-                  className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  onChange={(e) => setSoldUnits(e.target.value)}
+                  className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
                 />
                 <p className="text-xs text-muted-foreground mt-1">Units sold or dispensed to patients.</p>
               </div>
 
-              <div className="pt-2 flex justify-end gap-3">
+              <div className="pt-2 flex flex-col gap-3 sm:flex-row sm:justify-end">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="rounded-2xl border border-slate-200 bg-background px-5 py-3 text-sm font-semibold text-foreground hover:bg-slate-50"
+                  className="rounded-2xl border border-slate-200 bg-slate-100 px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-200 w-full sm:w-auto"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-50"
+                  className="rounded-2xl bg-sky-600 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-700 disabled:opacity-50 w-full sm:w-auto"
                 >
                   {submitting ? 'Processing...' : 'Post Stock Log'}
                 </button>
@@ -117,6 +132,7 @@ export default function TransactionModal({ medicine, onClose, onSuccess }) {
             <div className="space-y-4">
               <div className="rounded-2xl border border-green-200 bg-green-50 p-4 text-sm text-green-800 space-y-2">
                 <p className="font-bold">Transaction completed successfully!</p>
+                <p className="text-xs text-slate-700">This daily stock log was stored and will be used by the prediction engine.</p>
                 <div className="text-xs space-y-1 mt-2">
                   <div className="flex justify-between">
                     <span>Initial Stock:</span>

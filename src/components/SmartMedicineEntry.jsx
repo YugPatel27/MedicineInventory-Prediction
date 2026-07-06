@@ -5,11 +5,10 @@ export function SmartMedicineEntry({ onClose = () => {}, onSuccess = () => {}, i
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
-  const [formData, setFormData] = useState({
+  const createDefaultFormData = () => ({
     medicine_id: `MED-${Math.floor(Math.random() * 10000)}`,
     medicine_name: '',
     generic_name: '',
-    category: '',
     dosage: '',
     manufacturer: '',
     batch_number: `BAT-${Math.floor(Math.random() * 10000)}`,
@@ -21,10 +20,34 @@ export function SmartMedicineEntry({ onClose = () => {}, onSuccess = () => {}, i
     storage_requirements: 'Room Temperature',
   });
 
-  // If `initialData` is provided (edit mode), populate the form so data is visible
+  const [formData, setFormData] = useState(createDefaultFormData());
+  const isEditing = Boolean(initialData && initialData._id);
+
+  const formatDateValue = (value) => {
+    if (!value) return '';
+    const date = value instanceof Date ? value : new Date(value);
+    if (Number.isNaN(date.getTime())) return '';
+    return date.toISOString().slice(0, 10);
+  };
+
   React.useEffect(() => {
     if (initialData) {
-      setFormData((p) => ({ ...p, ...initialData }));
+      setFormData({
+        medicine_id: initialData.medicine_id || `MED-${Math.floor(Math.random() * 10000)}`,
+        medicine_name: initialData.medicine_name || '',
+        generic_name: initialData.generic_name || '',
+        dosage: initialData.dosage || '',
+        manufacturer: initialData.manufacturer || '',
+        batch_number: initialData.batch_number || `BAT-${Math.floor(Math.random() * 10000)}`,
+        stock_quantity: Number(initialData.stock_quantity || 0),
+        expiry_date: formatDateValue(initialData.expiry_date),
+        unit_cost: Number(initialData.unit_cost || 0),
+        dosage_form: initialData.dosage_form || '',
+        strength: initialData.strength || '',
+        storage_requirements: initialData.storage_requirements || 'Room Temperature',
+      });
+    } else {
+      setFormData(createDefaultFormData());
     }
   }, [initialData]);
 

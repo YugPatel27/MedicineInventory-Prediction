@@ -1,12 +1,12 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, Suspense, lazy } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { apiClient } from '../api/axios';
 import Alert from '../components/Alert';
 
 function normalizeRecommendation(value) {
   const rawValue = String(value || '').toUpperCase();
-  if (rawValue.includes('URGENT')) return 'Urgent reorder';
-  if (rawValue.includes('PLAN')) return 'Plan reorder';
+  if (rawValue.includes('URGENT')) return 'Urgent restock';
+  if (rawValue.includes('PLAN')) return 'Plan restock';
   if (rawValue.includes('SUFFICIENT') || rawValue.includes('SUSTAIN')) return 'Sufficient stock';
   return value || 'Review stock';
 }
@@ -24,6 +24,9 @@ function sanitizePrediction(raw) {
     days_until_expiry: Number(raw.days_until_expiry || 0),
   };
 }
+
+const Line = lazy(() => import('react-chartjs-2').then((m) => ({ default: m.Line })));
+const Doughnut = lazy(() => import('react-chartjs-2').then((m) => ({ default: m.Doughnut })));
 
 export function Predictions() {
   const [predictions, setPredictions] = useState([]);
@@ -69,8 +72,8 @@ export function Predictions() {
   const counts = useMemo(() => {
     return predictions.reduce(
       (acc, item) => {
-        if (item.recommendation === 'Urgent reorder') acc.urgent += 1;
-        else if (item.recommendation === 'Plan reorder') acc.plan += 1;
+        if (item.recommendation === 'Urgent restock') acc.urgent += 1;
+        else if (item.recommendation === 'Plan restock') acc.plan += 1;
         else acc.sufficient += 1;
         return acc;
       },
@@ -120,7 +123,7 @@ export function Predictions() {
                     doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 32);
                     autoTable(doc, {
                       startY: 44,
-                      head: [['Medicine ID', 'Name', 'Predicted Demand', 'Risk', 'Reorder Gap', 'Expiry (d)', 'Recommendation']],
+                      head: [['Medicine ID', 'Name', 'Predicted Demand', 'Risk', 'Stock gap', 'Expiry (d)', 'Recommendation']],
                       body: predictions.map((p) => [p.medicine_id, p.name, p.predicted_demand, `${p.risk_score}%`, p.reorder_gap || '—', p.days_until_expiry, p.recommendation]),
                       styles: { fontSize: 8 },
                     });
@@ -147,18 +150,52 @@ export function Predictions() {
           </div>
         )}
         {errorMsg && <div className="mt-4 rounded-3xl border border-sky-200 bg-sky-50 p-4 text-sm text-sky-800">{errorMsg}</div>}
+        {/* Charts: demand distribution and recommendations breakdown */}
+        {predictions.length > 0 && (
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <div className="rounded-2xl border border-border bg-white p-4">
+              <h3 className="text-sm font-semibold text-foreground">Predicted demand (top items)</h3>
+              <div className="h-48 mt-3">
+                <Suspense fallback={<div className="grid h-full place-items-center text-sm text-muted-foreground">Loading chart...</div>}>
+                  <Line
+                    data={{
+                      labels: predictions.slice(0, 10).map((p) => p.medicine_id || p.name),
+                      datasets: [{ label: 'Predicted demand', data: predictions.slice(0, 10).map((p) => p.predicted_demand || 0), backgroundColor: 'rgba(56,189,248,0.6)', borderColor: 'rgba(14,165,233,1)' }],
+                    }}
+                    options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }}
+                  />
+                </Suspense>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-border bg-white p-4">
+              <h3 className="text-sm font-semibold text-foreground">Recommendation breakdown</h3>
+              <div className="h-48 mt-3">
+                <Suspense fallback={<div className="grid h-full place-items-center text-sm text-muted-foreground">Loading chart...</div>}>
+                  <Doughnut
+                    data={{
+                      labels: ['Urgent restock', 'Plan restock', 'Sufficient stock'],
+                      datasets: [{ data: [counts.urgent, counts.plan, counts.sufficient], backgroundColor: ['#ef4444', '#f59e0b', '#0ea5e9'] }],
+                    }}
+                    options={{ maintainAspectRatio: false }}
+                  />
+                </Suspense>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
       <section className="grid gap-4 md:grid-cols-4">
         <div className="rounded-3xl border border-border bg-slate-50 p-5 shadow-sm">
           <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Urgent</p>
           <p className="mt-3 text-3xl font-semibold text-rose-600">{counts.urgent}</p>
-          <p className="mt-2 text-sm text-slate-500">Needs reorder immediately</p>
+          <p className="mt-2 text-sm text-slate-500">Needs restock immediately</p>
         </div>
         <div className="rounded-3xl border border-border bg-slate-50 p-5 shadow-sm">
           <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Planned</p>
           <p className="mt-3 text-3xl font-semibold text-amber-600">{counts.plan}</p>
-          <p className="mt-2 text-sm text-slate-500">Good candidate for reorder planning</p>
+          <p className="mt-2 text-sm text-slate-500">Good candidate for restock planning</p>
         </div>
         <div className="rounded-3xl border border-border bg-slate-50 p-5 shadow-sm">
           <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Sufficient</p>
@@ -189,7 +226,7 @@ export function Predictions() {
                 <th className="px-5 py-4">Name</th>
                 <th className="px-5 py-4">Demand</th>
                 <th className="px-5 py-4">Risk</th>
-                <th className="px-5 py-4">Reorder gap</th>
+                  <th className="px-5 py-4">Stock gap</th>
                 <th className="px-5 py-4">Expiry risk</th>
                 <th className="px-5 py-4">Recommendation</th>
               </tr>
@@ -203,7 +240,7 @@ export function Predictions() {
                 pageItems.map((prediction, index) => (
                   <tr
                     key={`${prediction.medicine_id}-${index}`}
-                    className={`border-b border-slate-100 ${prediction.recommendation === 'Urgent reorder' ? 'bg-rose-50' : prediction.recommendation === 'Plan reorder' ? 'bg-amber-50' : 'hover:bg-slate-50'} transition-colors`}
+                    className={`border-b border-slate-100 ${prediction.recommendation === 'Urgent restock' ? 'bg-rose-50' : prediction.recommendation === 'Plan restock' ? 'bg-amber-50' : 'hover:bg-slate-50'} transition-colors`}
                   >
                     <td className="px-5 py-4 font-medium text-slate-700">{prediction.medicine_id}</td>
                     <td className="px-5 py-4 text-slate-600">{prediction.name}</td>

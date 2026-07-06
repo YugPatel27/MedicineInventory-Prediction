@@ -9,6 +9,18 @@ export const apiClient = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('mips-access-token');
+    // If there is no access token, avoid sending protected requests that will 401.
+    // Redirect to login for user to re-authenticate.
+    const url = config.url || '';
+    const isAuthEndpoint = url.includes('/auth/') || url.includes('/public/') || url.includes('/health');
+    if (!token && !isAuthEndpoint) {
+      // Redirect to login and cancel the request to prevent server 401 logs.
+      try {
+        window.location.href = '/login';
+      } catch (e) {}
+      return Promise.reject(new Error('No access token available'));
+    }
+
     if (token) {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;

@@ -9,10 +9,8 @@ import { ScrollToTop } from '../components/ScrollToTop';
 
 const navigationItems = [
   { name: 'Dashboard', href: '/dashboard', icon: Home },
-  { name: 'Medicines', href: '/medicines', icon: Box, roles: ['Admin', 'Manager', 'Pharmacist'] },
+  
   { name: 'Inventory', href: '/inventory', icon: Database, roles: ['Admin', 'Manager', 'Pharmacist'] },
-  { name: 'Categories', href: '/categories', icon: BarChart3, roles: ['Admin', 'Manager', 'Pharmacist'] },
-  { name: 'Suppliers', href: '/suppliers', icon: UploadCloud, roles: ['Admin', 'Manager', 'Pharmacist'] },
   { name: 'Purchases', href: '/purchases', icon: UploadCloud, roles: ['Admin', 'Manager'] },
   { name: 'Reports', href: '/reports', icon: BarChart3, roles: ['Admin', 'Manager', 'Pharmacist'] },
   { name: 'Prediction Insights', href: '/insights', icon: TrendingUp, roles: ['Admin', 'Manager', 'Pharmacist'] },

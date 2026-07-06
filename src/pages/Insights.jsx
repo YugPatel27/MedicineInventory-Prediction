@@ -21,29 +21,31 @@ const Doughnut = lazy(() => import('react-chartjs-2').then((m) => ({ default: m.
 export function Insights() {
   const [summary, setSummary] = useState(null);
   const [medicines, setMedicines] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const lineRef = useRef(null);
   const doughnutRef = useRef(null);
 
-  useEffect(() => {
-    const fetchSummary = async () => {
-      try {
-        const [summaryRes, medsRes] = await Promise.all([
-          apiClient.get('/medicines/summary'),
-          apiClient.get('/medicines'),
-        ]);
-        setSummary(summaryRes.data.data.summary);
-        setMedicines(medsRes.data.data || []);
-      } catch (error) {
-        console.error('Unable to load insights', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const [started, setStarted] = useState(false);
 
-    fetchSummary();
+  useEffect(() => {
     document.title = 'Insights — MediStock';
   }, []);
+
+  const fetchSummary = async () => {
+    setLoading(true);
+    try {
+      const [summaryRes, medsRes] = await Promise.all([
+        apiClient.get('/medicines/summary'),
+        apiClient.get('/medicines'),
+      ]);
+      setSummary(summaryRes.data.data.summary);
+      setMedicines(medsRes.data.data || []);
+    } catch (error) {
+      console.error('Unable to load insights', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const insightPoints = useMemo(() => {
     if (!summary) return [];
@@ -115,6 +117,27 @@ export function Insights() {
 
   return (
     <div className="space-y-8">
+      {!started ? (
+        <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-semibold">Operational insights</h2>
+              <p className="mt-2 text-sm text-muted-foreground">Start the insights visualizer to fetch data and render charts.</p>
+            </div>
+            <div>
+              <button
+                onClick={async () => {
+                  setStarted(true);
+                  await fetchSummary();
+                }}
+                className="rounded-2xl bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90"
+              >
+                Start insights
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
       <div className="flex justify-end">
         <button
           type="button"

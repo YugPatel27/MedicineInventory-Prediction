@@ -2,10 +2,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiClient } from '../api/axios';
 import Alert from '../components/Alert';
-import ReorderModal from '../components/ReorderModal';
 import { SmartMedicineEntry } from '../components/SmartMedicineEntry';
 import TransactionModal from '../components/TransactionModal';
 import { Download, FileText, RefreshCcw, Plus, Search, UploadCloud } from '../components/Icons';
+import { useSelector } from 'react-redux';
 
 const formatDisplayDate = (value) => {
   if (!value) return '—';
@@ -23,12 +23,11 @@ const escapeCsvValue = (value) => `"${String(value ?? '').replace(/"/g, '""')}"`
 
 export function Inventory() {
   const [medicines, setMedicines] = useState([]);
-  const [summary, setSummary] = useState({ totalMedicines: 0, expiringSoon: 0, lowStock: 0, outOfStock: 0, reorderGapCount: 0, reorderGapTotal: 0 });
+  const [summary, setSummary] = useState({ totalMedicines: 0, expiringSoon: 0, lowStock: 0, outOfStock: 0 });
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [editMedicine, setEditMedicine] = useState(null);
-  const [reorderMedicine, setReorderMedicine] = useState(null);
   const [transactionMedicine, setTransactionMedicine] = useState(null);
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState('');
@@ -36,10 +35,74 @@ export function Inventory() {
   const [currentPage, setCurrentPage] = useState(1);
   const [showImportModal, setShowImportModal] = useState(false);
   const [importFile, setImportFile] = useState(null);
+  const [latestStoredUpload, setLatestStoredUpload] = useState(null);
   const [importLoading, setImportLoading] = useState(false);
   const [importResult, setImportResult] = useState(null);
+  const [storedUploadResult, setStoredUploadResult] = useState(null);
   const [importError, setImportError] = useState('');
   const navigate = useNavigate();
+  const role = useSelector((s) => s.auth.user?.role || 'User');
+
+  const fetchLatestStoredUpload = async () => {
+    try {
+      const { data } = await apiClient.get('/import/uploads/latest');
+      setLatestStoredUpload(data.data?.latest || null);
+    } catch (err) {
+      console.warn('Unable to load latest stored upload', err);
+      setLatestStoredUpload(null);
+    }
+  };
+
+  const handleStoreUpload = async () => {
+    if (!importFile) {
+      setImportError('Please select a file first.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', importFile);
+    setImportLoading(true);
+    setImportError('');
+    setImportResult(null);
+    setStoredUploadResult(null);
+
+    try {
+      const { data } = await apiClient.post('/import/store-upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setStoredUploadResult(data.data || null);
+      setLatestStoredUpload(data.data || null);
+      setNotification({ type: 'success', message: 'File stored successfully and is available in inventory.' });
+    } catch (uploadError) {
+      console.error('Store upload failed', uploadError);
+      setImportError(uploadError?.response?.data?.message || 'Store upload failed.');
+    } finally {
+      setImportLoading(false);
+    }
+  };
+
+  const handleProcessStoredUpload = async (filename = latestStoredUpload?.filename) => {
+    if (!filename) {
+      setImportError('No stored upload is available to process.');
+      return;
+    }
+
+    setImportLoading(true);
+    setImportError('');
+    setImportResult(null);
+
+    try {
+      const { data } = await apiClient.post('/import/process-upload', { filename });
+      setImportResult(data.data || null);
+      setNotification({ type: 'success', message: `Stored upload processed: ${data.data?.inserted || 0} rows inserted.` });
+      fetchMedicines();
+    } catch (uploadError) {
+      console.error('Process stored upload failed', uploadError);
+      setImportError(uploadError?.response?.data?.message || 'Processing stored upload failed.');
+    } finally {
+      setImportLoading(false);
+    }
+  };
 
   const handleImportUpload = async () => {
     if (!importFile) {
@@ -88,13 +151,14 @@ export function Inventory() {
   useEffect(() => {
     document.title = 'Inventory — MediStock';
     fetchMedicines();
+    fetchLatestStoredUpload();
   }, []);
 
   const filteredMedicines = useMemo(() => {
     const normalized = search.trim().toLowerCase();
     if (!normalized) return medicines;
     return medicines.filter((medicine) =>
-      [medicine.medicine_name, medicine.medicine_id, medicine.category]
+      [medicine.medicine_name, medicine.medicine_id]
         .map((value) => String(value ?? '').toLowerCase())
         .some((field) => field.includes(normalized))
     );
@@ -119,12 +183,6 @@ export function Inventory() {
         highlight: true,
       },
       {
-        label: 'Reorder gap items',
-        value: summary.reorderGapCount,
-        caption: `Gap total: ${summary.reorderGapTotal}`,
-        highlight: true,
-      },
-      {
         label: 'Out of stock',
         value: summary.outOfStock,
         highlight: true,
@@ -141,11 +199,10 @@ export function Inventory() {
 
   const handleExportCSV = () => {
     setNotification({ type: 'success', message: 'Inventory CSV export started successfully.' });
-    const headers = ['ID', 'Name', 'Category', 'Stock', 'Status', 'Expiry'];
+    const headers = ['ID', 'Name', 'Stock', 'Status', 'Expiry'];
     const rows = filteredMedicines.map((medicine) => [
       medicine.medicine_id ?? '',
       medicine.medicine_name ?? '',
-      medicine.category ?? '',
       medicine.stock_quantity ?? 0,
       medicine.status ?? '',
       formatExportDate(medicine.expiry_date),
@@ -207,11 +264,10 @@ export function Inventory() {
 
       autoTable(doc, {
         startY: 36,
-        head: [['ID', 'Name', 'Category', 'Stock', 'Status', 'Expiry Date']],
+        head: [['ID', 'Name', 'Stock', 'Status', 'Expiry Date']],
         body: filteredMedicines.map((medicine) => [
           medicine.medicine_id ?? '',
           medicine.medicine_name ?? '',
-          medicine.category ?? '',
           medicine.stock_quantity ?? 0,
           medicine.status ?? '',
           formatExportDate(medicine.expiry_date),
@@ -236,7 +292,7 @@ export function Inventory() {
             <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Inventory</p>
             <h1 className="mt-3 text-4xl font-semibold text-foreground">Medicine inventory management</h1>
             <p className="mt-3 max-w-3xl text-sm leading-7 text-muted-foreground">
-              Track medicine stock, expiry, and reorder status with fast local reporting. MediStock aligns pharmacy procurement, shelf mapping, expiry controls, billing, and inventory movement in one dashboard.
+              Track medicine stock, expiry, and inventory status with fast local reporting. MediStock aligns pharmacy procurement, shelf mapping, expiry controls, billing, and inventory movement in one dashboard.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -248,10 +304,21 @@ export function Inventory() {
               <Download className="h-4 w-4" />
               Export CSV
             </button>
-            <button onClick={() => setShowImportModal(true)} className="inline-flex items-center gap-2 rounded-2xl border border-border bg-background px-4 py-3 text-sm font-semibold text-foreground hover:bg-primary/5">
-              <UploadCloud className="h-4 w-4" />
-              Import CSV/XLSX
-            </button>
+            {['Admin', 'Manager'].includes(role) && (
+              <button onClick={() => setShowImportModal(true)} className="inline-flex items-center gap-2 rounded-2xl border border-border bg-background px-4 py-3 text-sm font-semibold text-foreground hover:bg-primary/5">
+                <UploadCloud className="h-4 w-4" />
+                Import CSV/XLSX
+              </button>
+            )}
+            {latestStoredUpload && ['Admin', 'Manager'].includes(role) && (
+              <button
+                onClick={() => handleProcessStoredUpload()}
+                className="inline-flex items-center gap-2 rounded-2xl border border-border bg-background px-4 py-3 text-sm font-semibold text-foreground hover:bg-primary/5"
+              >
+                <FileText className="h-4 w-4" />
+                Process latest stored upload
+              </button>
+            )}
             <button onClick={() => {
               setSyncing(true);
               setNotification({ type: 'info', message: 'Refreshing inventory records...' });
@@ -260,13 +327,15 @@ export function Inventory() {
               <RefreshCcw className="h-4 w-4" />
               Refresh
             </button>
-            <button onClick={() => {
-              setNotification({ type: 'info', message: 'Opening medicine entry modal...' });
-              setShowAddModal(true);
-            }} className="inline-flex items-center gap-2 rounded-2xl bg-secondary px-4 py-3 text-sm font-semibold text-secondary-foreground hover:bg-secondary/90">
-              <Plus className="h-4 w-4" />
-              Add medicine
-            </button>
+            {['Admin', 'Manager'].includes(role) && (
+              <button onClick={() => {
+                setNotification({ type: 'info', message: 'Opening medicine entry modal...' });
+                setShowAddModal(true);
+              }} className="inline-flex items-center gap-2 rounded-2xl bg-secondary px-4 py-3 text-sm font-semibold text-secondary-foreground hover:bg-secondary/90">
+                <Plus className="h-4 w-4" />
+                Add medicine
+              </button>
+            )}
           </div>
         </div>
         {notification && (
@@ -274,6 +343,26 @@ export function Inventory() {
             <Alert type={notification.type} title={notification.type === 'danger' ? 'Notice' : undefined}>
               {notification.message}
             </Alert>
+          </div>
+        )}
+        {latestStoredUpload && (
+          <div className="mt-6 rounded-[2rem] border border-border bg-background p-5 shadow-sm">
+            <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Pending stored import</p>
+            <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="font-semibold text-foreground">{latestStoredUpload.originalName}</p>
+                <p className="text-sm text-muted-foreground">Uploaded {new Date(latestStoredUpload.uploadedAt).toLocaleString()}</p>
+              </div>
+              {['Admin', 'Manager'].includes(role) && (
+                <button
+                  type="button"
+                  onClick={() => handleProcessStoredUpload(latestStoredUpload.filename)}
+                  className="inline-flex items-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-white hover:bg-primary/90"
+                >
+                  Process stored file
+                </button>
+              )}
+            </div>
           </div>
         )}
         {error && <div className="mt-6 rounded-3xl border border-sky-200 bg-sky-50 p-4 text-sm text-sky-800">{error}</div>}
@@ -310,7 +399,7 @@ export function Inventory() {
                 setSearch(e.target.value);
                 setCurrentPage(1);
               }}
-              placeholder="Search by name, ID, or category"
+              placeholder="Search by name or ID"
               className="w-full bg-transparent text-foreground outline-none placeholder:text-muted-foreground"
             />
           </div>
@@ -324,10 +413,10 @@ export function Inventory() {
               <tr>
                 <th className="px-4 py-4 font-medium">ID</th>
                 <th className="px-4 py-4 font-medium">Name</th>
-                <th className="px-4 py-4 font-medium">Category</th>
                 <th className="px-4 py-4 font-medium">Stock</th>
                 <th className="px-4 py-4 font-medium">Status</th>
                 <th className="px-4 py-4 font-medium">Expiry</th>
+                <th className="px-4 py-4 font-medium">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -351,7 +440,6 @@ export function Inventory() {
                     <tr key={medicine._id ?? medicine.medicine_id} className="hover:bg-slate-50 transition-colors">
                       <td className="px-4 py-4 font-medium">{medicine.medicine_id}</td>
                       <td className="px-4 py-4 text-muted-foreground">{medicine.medicine_name}</td>
-                      <td className="px-4 py-4 text-muted-foreground">{medicine.category}</td>
                       <td className="px-4 py-4 font-semibold text-foreground">{medicine.stock_quantity}</td>
                       <td className="px-4 py-4">
                         <span className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${statusClass}`}>
@@ -360,46 +448,44 @@ export function Inventory() {
                       </td>
                       <td className="px-4 py-4 text-muted-foreground">{formatDisplayDate(medicine.expiry_date)}</td>
                       <td className="px-4 py-4 flex flex-wrap gap-2">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setEditMedicine(medicine);
-                            setShowAddModal(true);
-                          }}
-                          className="rounded-2xl border border-border bg-background px-3 py-2 text-xs font-semibold text-foreground hover:bg-primary/5"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          type="button"
-                          onClick={async () => {
-                            if (!window.confirm('Delete this medicine?')) return;
-                            try {
-                              setSyncing(true);
-                              await apiClient.delete(`/medicines/${medicine._id}`);
-                              setNotification({ type: 'success', message: 'Medicine removed from inventory.' });
-                              fetchMedicines();
-                            } catch (err) {
-                              console.error('Delete failed', err);
-                              setNotification({ type: 'danger', message: 'Unable to delete medicine.' });
-                            } finally {
-                              setSyncing(false);
-                            }
-                          }}
-                          className="rounded-2xl border border-border bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-100"
-                        >
-                          Delete
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setReorderMedicine(medicine)}
-                          className="rounded-2xl border border-border bg-primary/10 px-3 py-2 text-xs font-semibold text-primary hover:bg-primary/20"
-                        >
-                          Reorder
-                        </button>
+                        {['Admin', 'Manager'].includes(role) && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditMedicine(medicine);
+                              setShowAddModal(true);
+                            }}
+                            className="rounded-2xl border border-border bg-background px-3 py-2 text-xs font-semibold text-foreground hover:bg-primary/5"
+                          >
+                            Edit
+                          </button>
+                        )}
+                        {role === 'Admin' && (
+                          <button
+                            type="button"
+                            onClick={async () => {
+                              if (!window.confirm('Delete this medicine?')) return;
+                              try {
+                                setSyncing(true);
+                                await apiClient.delete(`/medicines/${medicine._id}`);
+                                setNotification({ type: 'success', message: 'Medicine removed from inventory.' });
+                                fetchMedicines();
+                              } catch (err) {
+                                console.error('Delete failed', err);
+                                setNotification({ type: 'danger', message: 'Unable to delete medicine.' });
+                              } finally {
+                                setSyncing(false);
+                              }
+                            }}
+                            className="rounded-2xl border border-border bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-100"
+                          >
+                            Delete
+                          </button>
+                        )}
                         <button
                           type="button"
                           onClick={() => setTransactionMedicine(medicine)}
+                          title="Record same-day stock additions and sales"
                           className="rounded-2xl border border-border bg-sky-50 px-3 py-2 text-xs font-semibold text-sky-700 hover:bg-sky-100"
                         >
                           Daily Log
@@ -450,24 +536,32 @@ export function Inventory() {
           initialData={editMedicine}
         />
       )}
-      {reorderMedicine && (
-        <ReorderModal
-          open={!!reorderMedicine}
-          onClose={() => setReorderMedicine(null)}
-          medicine={reorderMedicine}
-          onSuccess={(qty) => {
-            setNotification({ type: 'success', message: `Reorder request submitted (${qty} units).` });
-            fetchMedicines();
-          }}
-        />
-      )}
       {transactionMedicine && (
         <TransactionModal
           medicine={transactionMedicine}
           onClose={() => setTransactionMedicine(null)}
-          onSuccess={() => {
-            fetchMedicines();
-            setNotification({ type: 'success', message: 'Daily stock and sales log processed successfully.' });
+          onSuccess={(result) => {
+            // Update local medicines state optimistically using returned transaction result
+            if (result) {
+              setMedicines((prev) => prev.map((m) => {
+                if (!m) return m;
+                const matches = (m._id && String(m._id) === String(result.id)) || (m.medicine_id && String(m.medicine_id) === String(result.medicine_id));
+                if (!matches) return m;
+                return {
+                  ...m,
+                  stock_quantity: result.final_stock,
+                  avg_monthly_consumption: result.updated_consumption ?? m.avg_monthly_consumption,
+                  last_updated: new Date().toISOString(),
+                  status: result.status ?? m.status,
+                };
+              }));
+              setNotification({ type: 'success', message: 'Daily stock and sales log processed successfully.' });
+            } else {
+              // Fallback: refresh from server
+              fetchMedicines();
+              setNotification({ type: 'success', message: 'Daily stock and sales log processed successfully.' });
+            }
+            setTransactionMedicine(null);
           }}
         />
       )}
@@ -493,7 +587,7 @@ export function Inventory() {
             {!importResult ? (
               <div className="mt-4 space-y-4">
                 <p className="text-sm text-slate-500">
-                  Select a CSV or XLSX file containing medicine data. The file must match columns such as ID, Name, Category, Stock, and Expiry.
+                  Select a CSV or XLSX file containing medicine data. The file must match columns such as ID, Name, Stock, and Expiry.
                 </p>
                 <div className="rounded-2xl border border-dashed border-border bg-slate-50 p-6 text-center">
                   <UploadCloud className="mx-auto h-10 w-10 text-muted-foreground" />
@@ -503,6 +597,7 @@ export function Inventory() {
                     onChange={(e) => {
                       setImportFile(e.target.files?.[0] || null);
                       setImportError('');
+                      setStoredUploadResult(null);
                     }}
                     className="mt-4 w-full text-sm text-slate-600 file:mr-4 file:rounded-xl file:border-0 file:bg-primary/10 file:px-4 file:py-2 file:text-xs file:font-semibold file:text-primary hover:file:bg-primary/20"
                   />
@@ -516,6 +611,30 @@ export function Inventory() {
                 {importError && (
                   <div className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs text-rose-800">
                     {importError}
+                  </div>
+                )}
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <button
+                    onClick={handleStoreUpload}
+                    disabled={importLoading || !importFile}
+                    className="rounded-xl bg-secondary px-4 py-3 text-sm font-semibold text-secondary-foreground disabled:opacity-50"
+                  >
+                    {importLoading ? 'Saving...' : 'Store Uploaded File'}
+                  </button>
+                  <button
+                    onClick={handleImportUpload}
+                    disabled={importLoading || !importFile}
+                    className="rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white disabled:opacity-50"
+                  >
+                    {importLoading ? 'Processing...' : 'Process Uploaded File'}
+                  </button>
+                </div>
+
+                {storedUploadResult && (
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+                    <p className="font-semibold">Stored file is ready.</p>
+                    <p className="mt-1">{storedUploadResult.originalName} has been saved for later processing.</p>
                   </div>
                 )}
 

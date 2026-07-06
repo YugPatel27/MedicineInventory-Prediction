@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { apiClient } from '../api/axios';
 import Alert from '../components/Alert';
 import { Plus } from '../components/Icons';
@@ -99,6 +100,8 @@ export function Purchases() {
     };
   }, [purchases]);
 
+  const role = useSelector((s) => s.auth.user?.role || 'User');
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -112,8 +115,8 @@ export function Purchases() {
             onClick={() => setShowModal(true)}
             className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 w-fit"
           >
-            <Plus className="w-4 h-4" />
-            New Purchase
+            <Plus className="w-4 h-4 text-black" />
+            <p className="text-black">New Purchase</p>
           </button>
         </div>
       </section>
@@ -248,7 +251,14 @@ export function Purchases() {
       {/* New Purchase Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="w-full max-w-lg rounded-lg bg-white p-6 shadow-xl">
+          <div className="w-full max-w-lg rounded-lg bg-white p-6 shadow-xl relative">
+            <button
+              aria-label="Close"
+              onClick={() => setShowModal(false)}
+              className="absolute right-4 top-4 rounded-md px-2 py-1 text-sm text-muted-foreground hover:text-foreground"
+            >
+              ✕
+            </button>
             <h2 className="text-lg font-semibold mb-4">New Purchase Order</h2>
             <div className="space-y-4">
               <input
@@ -289,7 +299,7 @@ export function Purchases() {
               <div className="flex gap-2 justify-end">
                 <button
                   onClick={() => setShowModal(false)}
-                  className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold hover:bg-slate-50"
+                  className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-foreground hover:bg-slate-50"
                 >
                   Cancel
                 </button>
