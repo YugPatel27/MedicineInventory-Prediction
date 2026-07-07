@@ -42,9 +42,11 @@ async function buildPdfBlob(reportType, summary, rows, dateRange) {
   });
 
   const tableRows = rows.map((row) => ({
-    id: row.medicine_id || '',
-    name: row.medicine_name || '',
-
+    id: row.medicine_id || row._id || '',
+    name: row.medicine_name || row.name || '',
+    batch: row.batch_number || row.batch || '',
+    stock: row.stock_quantity ?? row.stock ?? '',
+    expiry: row.expiry_date || row.expiry || '',
   }));
 
   autoTable(doc, {
@@ -114,14 +116,11 @@ export function Reports() {
   };
 
   const downloadPdf = async () => {
-    if (medicines.length === 0) return;
-    const blob = await buildPdfBlob(reportType, summary, medicines, dateRange);
-    const url = URL.createObjectURL(blob);
+    if (!pdfUrl) return;
     const link = document.createElement('a');
-    link.href = url;
+    link.href = pdfUrl;
     link.download = `medistock_${reportType}_${Date.now()}.pdf`;
     link.click();
-    URL.revokeObjectURL(url);
   };
 
   return (
@@ -139,14 +138,14 @@ export function Reports() {
             <button
               onClick={generateReport}
               disabled={loading || medicines.length === 0}
-              className="inline-flex items-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-Black hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-70"
+              className="inline-flex items-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-black hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-70"
             >
-              <BarChart3 className="h-4 w-4 text-black" />
+              <BarChart3 className="h-4 w-4" />
               {loading ? 'Generating...' : 'Generate report'}
             </button>
             <button
               onClick={downloadPdf}
-              disabled={medicines.length === 0}
+              disabled={!pdfUrl}
               className="inline-flex items-center gap-2 rounded-2xl border border-border bg-background px-4 py-3 text-sm font-semibold text-foreground hover:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-70"
             >
               <Download className="h-4 w-4" />
@@ -165,6 +164,7 @@ export function Reports() {
             className="mt-3 w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm"
           >
             <option value="inventory">Inventory</option>
+            <option value="suppliers">Suppliers</option>
             <option value="audit">Audit</option>
           </select>
         </div>

@@ -130,7 +130,7 @@ export function Insights() {
                   setStarted(true);
                   await fetchSummary();
                 }}
-                className="rounded-2xl bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90"
+                className="rounded-2xl bg-primary px-4 py-2 text-sm text-black font-semibold hover:bg-primary/90"
               >
                 Start insights
               </button>
