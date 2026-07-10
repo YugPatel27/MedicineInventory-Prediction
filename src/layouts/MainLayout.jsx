@@ -8,15 +8,15 @@ import { Menu, LogOut, Home, Box, BarChart3, UploadCloud, Settings, TrendingUp, 
 import { ScrollToTop } from '../components/ScrollToTop';
 
 const navigationItems = [
-  { name: 'Dashboard', href: '/dashboard', icon: Home },
-  
-  { name: 'Inventory', href: '/inventory', icon: Database, roles: ['Admin', 'Manager', 'Pharmacist'] },
-  { name: 'Purchases', href: '/purchases', icon: UploadCloud, roles: ['Admin', 'Manager'] },
-  { name: 'Reports', href: '/reports', icon: BarChart3, roles: ['Admin', 'Manager', 'Pharmacist'] },
-  { name: 'Prediction Insights', href: '/insights', icon: TrendingUp, roles: ['Admin', 'Manager', 'Pharmacist'] },
-  { name: 'Forecast', href: '/predictions', icon: Database, roles: ['Admin', 'Manager', 'Pharmacist'] },
+  { name: 'Dashboard', href: '/dashboard', icon: Home, roles: ['Admin', 'Manager', 'Pharmacist', 'User'] },
+  { name: 'Inventory', href: '/inventory', icon: Database, roles: ['Admin', 'Manager', 'Pharmacist', 'User'] },
+  { name: 'Purchases', href: '/purchases', icon: UploadCloud, roles: ['Admin', 'Manager', 'Pharmacist', 'User'] },
+  { name: 'Reports', href: '/reports', icon: BarChart3, roles: ['Admin', 'Manager', 'Pharmacist', 'User'] },
+  { name: 'Prediction Insights', href: '/insights', icon: TrendingUp, roles: ['Admin', 'Manager', 'Pharmacist', 'User'] },
+  { name: 'Forecast', href: '/predictions', icon: Database, roles: ['Admin', 'Manager', 'Pharmacist', 'User'] },
+  { name: 'Import', href: '/import', icon: UploadCloud, roles: ['Admin', 'Manager', 'Pharmacist', 'User'] },
   { name: 'Admin Panel', href: '/admin', icon: Settings, roles: ['Admin'] },
-  { name: 'Settings', href: '/settings', icon: Settings },
+  { name: 'Settings', href: '/settings', icon: Settings, roles: ['Admin', 'Manager', 'Pharmacist', 'User'] },
 ];
 
 export function MainLayout() {
