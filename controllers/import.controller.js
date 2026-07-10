@@ -3,6 +3,11 @@ import fs from 'fs';
 import path from 'path';
 import Medicine from '../models/Medicine.js';
 
+const UPLOAD_DIR = path.resolve('uploads');
+if (!fs.existsSync(UPLOAD_DIR)) {
+  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+}
+
 const normalizeHeader = (header) => {
   if (!header) return '';
   return String(header)
@@ -23,22 +28,15 @@ const mapFieldName = (header) => {
     name: 'medicine_name',
     medicinename: 'medicine_name',
     drug_name: 'medicine_name',
-    category: 'category',
-    type: 'category',
     batch_number: 'batch_number',
     batchno: 'batch_number',
     batch: 'batch_number',
-    supplier_email: 'supplier_email',
-    supplieremail: 'supplier_email',
-    email: 'supplier_email',
     stock_quantity: 'stock_quantity',
     stock: 'stock_quantity',
     quantity: 'stock_quantity',
     minimum_stock: 'minimum_stock',
     minimumstock: 'minimum_stock',
     min_stock: 'minimum_stock',
-    reorder_level: 'reorder_level',
-    reorderlevel: 'reorder_level',
     safety_stock: 'safety_stock',
     safetystock: 'safety_stock',
     lead_time_days: 'lead_time_days',
@@ -69,6 +67,87 @@ const extractRowValues = (row, headers) => {
   return values;
 };
 
+const loadRawDataFromFile = (filePath, extension) => {
+  if (extension === '.json') {
+    const raw = fs.readFileSync(filePath, 'utf8');
+    const parsed = JSON.parse(raw);
+    const rawData = Array.isArray(parsed) ? parsed : parsed.records || [];
+    if (!Array.isArray(rawData)) {
+      throw new Error('JSON must contain an array of records');
+    }
+    return rawData;
+  }
+
+  const workbook = xlsx.readFile(filePath, { cellDates: true, raw: false });
+  const sheetName = workbook.SheetNames[0];
+  if (!sheetName) {
+    throw new Error('Spreadsheet is empty');
+  }
+  return xlsx.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: '' });
+};
+
+const prepareMedicinesFromRawData = (rawData) => {
+  const requiredFields = ['medicine_id', 'medicine_name', 'batch_number'];
+  const errors = [];
+
+  const medicines = rawData
+    .map((row, index) => {
+      const values = extractRowValues(row, Object.keys(row));
+      const expiryRaw = values.expiry_date ?? values.expirydate ?? values.expiry ?? values.expiration_date ?? values.expirationdate ?? '';
+      const expiry = new Date(String(expiryRaw));
+
+      for (const field of requiredFields) {
+        const value = values[field];
+        if (value === undefined || value === null || String(value).trim() === '') {
+          errors.push({ row: index + 2, message: `${field} is required` });
+          return null;
+        }
+      }
+
+      if (Number.isNaN(expiry.getTime())) {
+        errors.push({ row: index + 2, message: 'Invalid expiry date' });
+        return null;
+      }
+
+      return {
+        medicine_id: String(values.medicine_id ?? ''),
+        medicine_name: String(values.medicine_name ?? ''),
+        batch_number: String(values.batch_number ?? ''),
+        stock_quantity: Number(values.stock_quantity ?? values.stock ?? values.quantity ?? 0),
+        minimum_stock: Number(values.minimum_stock ?? values.min_stock ?? values.minimumstock ?? 0),
+        safety_stock: Number(values.safety_stock ?? values.safetystock ?? 0),
+        lead_time_days: Number(values.lead_time_days ?? values.leadtimedays ?? 0),
+        expiry_date: expiry,
+        unit_cost: Number(values.unit_cost ?? values.unitcost ?? values.cost ?? 0),
+      };
+    })
+    .filter((item) => item !== null);
+
+  return {
+    medicines,
+    errors,
+    totalRows: rawData.length,
+  };
+};
+
+const processStoredFile = async (filePath, extension) => {
+  const rawData = loadRawDataFromFile(filePath, extension);
+  const { medicines, errors, totalRows } = prepareMedicinesFromRawData(rawData);
+
+  let inserted = 0;
+  if (medicines.length > 0) {
+    const result = await Medicine.insertMany(medicines, { ordered: false });
+    inserted = result.length;
+  }
+
+  return {
+    total_rows: totalRows,
+    inserted,
+    failed: totalRows - inserted,
+    errors,
+  };
+};
+
 export const bulkInsert = async (req, res) => {
   try {
     if (!req.file) {
@@ -76,77 +155,12 @@ export const bulkInsert = async (req, res) => {
     }
 
     const extension = path.extname(req.file.originalname || '').toLowerCase();
-    let rawData = [];
-
-    if (extension === '.json') {
-      const raw = fs.readFileSync(req.file.path, 'utf8');
-      const parsed = JSON.parse(raw);
-      rawData = Array.isArray(parsed) ? parsed : parsed.records || [];
-      if (!Array.isArray(rawData)) {
-        return res.status(400).json({ status: 'error', message: 'JSON must contain an array of records' });
-      }
-    } else {
-      const workbook = xlsx.readFile(req.file.path, { cellDates: true, raw: false });
-      const sheetName = workbook.SheetNames[0];
-      if (!sheetName) {
-        return res.status(400).json({ status: 'error', message: 'Spreadsheet is empty' });
-      }
-      rawData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: '' });
-    }
-
-    const requiredFields = ['medicine_id', 'medicine_name', 'category', 'batch_number', 'supplier_email'];
-    const errors = [];
-    const medicines = rawData
-      .map((row, index) => {
-        const values = extractRowValues(row, Object.keys(row));
-        const expiryRaw = values.expiry_date ?? values.expirydate ?? values.expiry ?? values.expiration_date ?? values.expirationdate ?? '';
-        const expiry = new Date(String(expiryRaw));
-
-        for (const field of requiredFields) {
-          const value = values[field];
-          if (value === undefined || value === null || String(value).trim() === '') {
-            errors.push({ row: index + 2, message: `${field} is required` });
-            return null;
-          }
-        }
-
-        if (Number.isNaN(expiry.getTime())) {
-          errors.push({ row: index + 2, message: 'Invalid expiry date' });
-          return null;
-        }
-
-        return {
-          medicine_id: String(values.medicine_id ?? ''),
-          medicine_name: String(values.medicine_name ?? ''),
-          category: String(values.category ?? ''),
-          batch_number: String(values.batch_number ?? ''),
-          supplier_email: String(values.supplier_email ?? ''),
-          stock_quantity: Number(values.stock_quantity ?? values.stock ?? values.quantity ?? 0),
-          minimum_stock: Number(values.minimum_stock ?? values.min_stock ?? values.minimumstock ?? 0),
-          reorder_level: Number(values.reorder_level ?? values.reorderlevel ?? 0),
-          safety_stock: Number(values.safety_stock ?? values.safetystock ?? 0),
-          lead_time_days: Number(values.lead_time_days ?? values.leadtimedays ?? 0),
-          expiry_date: expiry,
-          unit_cost: Number(values.unit_cost ?? values.unitcost ?? values.cost ?? 0),
-        };
-      })
-      .filter((item) => item !== null);
-
-    let inserted = 0;
-    if (medicines.length > 0) {
-      const result = await Medicine.insertMany(medicines, { ordered: false });
-      inserted = result.length;
-    }
+    const result = await processStoredFile(req.file.path, extension);
 
     res.status(200).json({
       status: 'success',
       message: 'Imported successfully',
-      data: {
-        total_rows: rawData.length,
-        inserted,
-        failed: rawData.length - inserted,
-        errors,
-      },
+      data: result,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Internal Server Error';
@@ -159,5 +173,71 @@ export const bulkInsert = async (req, res) => {
         // ignore cleanup errors
       }
     }
+  }
+};
+
+export const storeUpload = async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ status: 'error', message: 'Upload file is required' });
+  }
+
+  const storedFile = {
+    filename: path.basename(req.file.path),
+    originalName: req.file.originalname,
+    size: req.file.size,
+    mimeType: req.file.mimetype,
+    uploadedAt: new Date().toISOString(),
+  };
+
+  res.status(200).json({ status: 'success', message: 'File stored successfully', data: storedFile });
+};
+
+export const getLatestUpload = async (req, res) => {
+  try {
+    const uploads = fs.readdirSync(UPLOAD_DIR)
+      .filter((file) => ['.csv', '.xlsx', '.xls', '.json'].includes(path.extname(file).toLowerCase()))
+      .map((file) => {
+        const stats = fs.statSync(path.join(UPLOAD_DIR, file));
+        const originalName = file.replace(/^[0-9]+-[0-9]+-/, '');
+        return {
+          filename: file,
+          originalName,
+          size: stats.size,
+          uploadedAt: stats.mtime.toISOString(),
+        };
+      })
+      .sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
+
+    const latest = uploads[0] || null;
+    res.status(200).json({ status: 'success', data: { latest } });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Internal Server Error';
+    res.status(500).json({ status: 'error', message });
+  }
+};
+
+export const processStoredUpload = async (req, res) => {
+  try {
+    const { filename } = req.body;
+    if (!filename) {
+      return res.status(400).json({ status: 'error', message: 'Filename is required' });
+    }
+
+    const safeFilename = path.basename(filename);
+    const filePath = path.join(UPLOAD_DIR, safeFilename);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ status: 'error', message: 'Stored file not found' });
+    }
+
+    const extension = path.extname(filePath).toLowerCase();
+    if (!['.csv', '.xlsx', '.xls', '.json'].includes(extension)) {
+      return res.status(400).json({ status: 'error', message: 'Unsupported stored file type' });
+    }
+
+    const result = await processStoredFile(filePath, extension);
+    res.status(200).json({ status: 'success', message: 'Stored upload processed successfully', data: result });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Internal Server Error';
+    res.status(500).json({ status: 'error', message });
   }
 };

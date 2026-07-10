@@ -7,5 +7,7 @@ const router = Router();
 router.use(verifyToken, requireAdmin);
 
 router.get('/logs', adminController.getAuditLogs);
+router.delete('/logs/:id', adminController.deleteAuditLog);
+router.delete('/logs', adminController.clearAuditLogs);
 
 export default router;

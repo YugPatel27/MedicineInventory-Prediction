@@ -12,5 +12,6 @@ router.get('/:id', medicineController.getMedicineById);
 router.post('/', medicineController.createMedicine);
 router.put('/:id', medicineController.updateMedicine);
 router.delete('/:id', medicineController.deleteMedicine);
+router.post('/:id/transaction', medicineController.processStockTransaction);
 
 export default router;

@@ -1,5 +1,7 @@
 import Medicine from '../models/Medicine.js';
+import StockLog from '../models/StockLog.js';
 import { recordAudit } from '../utils/audit.js';
+import { manageStockTransaction } from '../utils/stockManager.js';
 
 const buildAlerts = (medicines) => {
   const today = new Date();
@@ -122,5 +124,50 @@ export const deleteMedicine = async (req, res) => {
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Internal Server Error';
     res.status(500).json({ status: 'error', message });
+  }
+};
+
+export const processStockTransaction = async (req, res) => {
+  try {
+    const { addedUnits, soldUnits } = req.body;
+    const medicineId = req.params.id;
+
+    const result = await manageStockTransaction({
+      medicineId,
+      addedUnits,
+      soldUnits
+    });
+
+    await StockLog.create({
+      medicine: result.id,
+      medicine_id: result.medicine_id,
+      added_units: result.added_units,
+      sold_units: result.sold_units,
+      net_change: result.net_change,
+      stock_before: result.initial_stock,
+      stock_after: result.final_stock,
+    });
+
+    try {
+      await recordAudit({
+        req,
+        action: 'stock_transaction',
+        target: result.medicine_id,
+        details: {
+          added_units: addedUnits,
+          sold_units: soldUnits,
+          initial_stock: result.initial_stock,
+          final_stock: result.final_stock,
+          net_change: result.net_change
+        }
+      });
+    } catch (e) {
+      console.warn('audit failed', e);
+    }
+
+    res.status(200).json({ status: 'success', data: result });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Bad Request';
+    res.status(400).json({ status: 'error', message });
   }
 };

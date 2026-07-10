@@ -6,12 +6,9 @@ const MedicineSchema = new Schema(
   {
     medicine_id: { type: String, required: true, unique: true },
     medicine_name: { type: String, required: true },
-    category: { type: String, required: true },
     batch_number: { type: String, required: true },
-    supplier_email: { type: String, required: true },
     stock_quantity: { type: Number, required: true },
     minimum_stock: { type: Number, required: true },
-    reorder_level: { type: Number, required: true },
     safety_stock: { type: Number, required: true },
     lead_time_days: { type: Number, required: true },
     expiry_date: { type: Date, required: true },
@@ -25,7 +22,7 @@ const MedicineSchema = new Schema(
   { timestamps: true }
 );
 
-MedicineSchema.pre('save', function (next) {
+MedicineSchema.pre('save', function () {
   if (this.stock_quantity <= 0) {
     this.status = 'Out of Stock';
   } else if (this.stock_quantity <= this.minimum_stock) {
@@ -33,7 +30,6 @@ MedicineSchema.pre('save', function (next) {
   } else {
     this.status = 'In Stock';
   }
-  next();
 });
 
 export default mongoose.model('Medicine', MedicineSchema);
