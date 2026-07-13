@@ -54,7 +54,7 @@ export function Admin() {
             <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Admin</p>
             <h1 className="mt-3 text-4xl font-semibold text-foreground">Activity logs & system audit</h1>
             <p className="mt-3 max-w-3xl text-sm leading-7 text-muted-foreground">
-              Review recent admin actions, API activity, and audit events for security and compliance.
+              Review recent admin actions, API activity, and audit events for security & compliance.
             </p>
           </div>
           <div className="rounded-3xl border border-border bg-white p-4 text-sm text-muted-foreground">

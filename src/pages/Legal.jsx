@@ -51,7 +51,7 @@ export function Legal() {
           </h1>
 
           <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
-            MediStock is designed for secure on-premise medicine management.
+            MediStock is designed for secure on-premise medicine inventory management.
             This page explains how we handle your preferences, data,
             and cookie consent in a way that aligns with GDPR, CCPA,
             and modern privacy best practices.
