@@ -7,9 +7,7 @@ import { MainLayout } from './layouts/MainLayout';
 
 import { Dashboard } from './pages/Dashboard';
 import { Inventory } from './pages/Inventory';
-import { Insights } from './pages/Insights';
 import { Predictions } from './pages/Predictions';
-import { Import } from './pages/Import';
 import { Login } from './pages/Login';
 import { Reports } from './pages/Reports';
 import { VerifyEmail } from './pages/VerifyEmail';
@@ -41,11 +39,9 @@ function AppRoutes() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/inventory" element={<Inventory />} />
             <Route path="/purchases" element={<Purchases />} />
-            <Route path="/insights" element={<Insights />} />
             <Route path="/predictions" element={<Predictions />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/admin" element={<Admin />} />
-            <Route path="/import" element={<Import />} />
             <Route path="/sitemap" element={<Sitemap />} />
             <Route path="/settings" element={<Settings />} />
           </Route>

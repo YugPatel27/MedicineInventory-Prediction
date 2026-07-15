@@ -10,9 +10,7 @@ export function Sitemap() {
     { path: '/', title: 'Home' },
     { path: '/dashboard', title: 'Dashboard' },
     { path: '/inventory', title: 'Inventory' },
-    { path: '/import', title: 'Import' },
     { path: '/predictions', title: 'Predictions' },
-    { path: '/insights', title: 'Insights' },
     { path: '/settings', title: 'Settings' },
     { path: '/login', title: 'Login' },
   ];

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../store/slices/authSlice';
 import { apiClient } from '../api/axios';
 import { BrandMark } from '../components/BrandMark';
-import { Menu, LogOut, Home, Box, BarChart3, UploadCloud, Settings, TrendingUp, Database } from '../components/Icons';
+import { Menu, LogOut, Home, Box, BarChart3, UploadCloud, Settings, Database } from '../components/Icons';
 import { ScrollToTop } from '../components/ScrollToTop';
 
 const navigationItems = [
@@ -12,9 +12,7 @@ const navigationItems = [
   { name: 'Inventory', href: '/inventory', icon: Database, roles: ['Admin', 'Manager', 'Pharmacist', 'User'] },
   { name: 'Purchases', href: '/purchases', icon: UploadCloud, roles: ['Admin', 'Manager', 'Pharmacist', 'User'] },
   { name: 'Reports', href: '/reports', icon: BarChart3, roles: ['Admin', 'Manager', 'Pharmacist', 'User'] },
-  { name: 'Prediction Insights', href: '/insights', icon: TrendingUp, roles: ['Admin', 'Manager', 'Pharmacist', 'User'] },
   { name: 'Forecast', href: '/predictions', icon: Database, roles: ['Admin', 'Manager', 'Pharmacist', 'User'] },
-  { name: 'Import', href: '/import', icon: UploadCloud, roles: ['Admin', 'Manager', 'Pharmacist', 'User'] },
   { name: 'Admin Panel', href: '/admin', icon: Settings, roles: ['Admin'] },
   { name: 'Settings', href: '/settings', icon: Settings, roles: ['Admin', 'Manager', 'Pharmacist', 'User'] },
 ];
@@ -90,10 +88,6 @@ export function MainLayout() {
             >
               <LogOut className="h-5 w-5" />
             </button>
-
-            <div className="hidden rounded-2xl border border-border bg-white px-4 py-3 text-sm text-sky-700 shadow-sm md:flex">
-              MediStock - Local medicine stock and reorder intelligence
-            </div>
           </div>
         </div>
 
