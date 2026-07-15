@@ -12,6 +12,9 @@ export function SmartMedicineEntry({ onClose = () => {}, onSuccess = () => {}, i
     dosage: '',
     manufacturer: '',
     batch_number: `BAT-${Math.floor(Math.random() * 10000)}`,
+    category: '',
+    purchase_date: '',
+    manufacturing_date: '',
     stock_quantity: 0,
     expiry_date: '',
     unit_cost: 0,
@@ -39,6 +42,9 @@ export function SmartMedicineEntry({ onClose = () => {}, onSuccess = () => {}, i
         dosage: initialData.dosage || '',
         manufacturer: initialData.manufacturer || '',
         batch_number: initialData.batch_number || `BAT-${Math.floor(Math.random() * 10000)}`,
+        category: initialData.category || '',
+        purchase_date: formatDateValue(initialData.purchase_date),
+        manufacturing_date: formatDateValue(initialData.manufacturing_date),
         stock_quantity: Number(initialData.stock_quantity || 0),
         expiry_date: formatDateValue(initialData.expiry_date),
         unit_cost: Number(initialData.unit_cost || 0),
@@ -115,12 +121,32 @@ export function SmartMedicineEntry({ onClose = () => {}, onSuccess = () => {}, i
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium">Stock Quantity</label>
-                <input type="number" name="stock_quantity" value={formData.stock_quantity} onChange={handleChange} className="w-full px-3 py-2 border rounded-md bg-white text-foreground" />
+                <label className="block text-sm font-medium">Category</label>
+                <input placeholder="e.g. acute, chronic, preventive" name="category" value={formData.category} onChange={handleChange} className="w-full px-3 py-2 border rounded-md bg-white text-foreground" />
               </div>
               <div>
                 <label className="block text-sm font-medium">Unit Cost</label>
                 <input type="number" step="0.01" name="unit_cost" value={formData.unit_cost} onChange={handleChange} className="w-full px-3 py-2 border rounded-md bg-white text-foreground" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium">Purchase Date</label>
+                <input type="date" name="purchase_date" value={formData.purchase_date} onChange={handleChange} className="w-full px-3 py-2 border rounded-md bg-white text-foreground" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Manufacturing Date</label>
+                <input type="date" name="manufacturing_date" value={formData.manufacturing_date} onChange={handleChange} className="w-full px-3 py-2 border rounded-md bg-white text-foreground" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium">Stock Quantity</label>
+                <input type="number" name="stock_quantity" value={formData.stock_quantity} onChange={handleChange} className="w-full px-3 py-2 border rounded-md bg-white text-foreground" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Batch Number</label>
+                <input name="batch_number" value={formData.batch_number} onChange={handleChange} className="w-full px-3 py-2 border rounded-md bg-white text-foreground" />
               </div>
             </div>
             <div className="flex justify-end gap-2">

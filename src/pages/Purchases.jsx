@@ -20,12 +20,17 @@ export function Purchases() {
     status: 'pending',
     expected_delivery: '',
   });
+  const [editPurchase, setEditPurchase] = useState(null);
+  const [editLoading, setEditLoading] = useState(false);
 
   const pageSize = 20;
 
   useEffect(() => {
     document.title = 'Purchases — MediStock';
     fetchPurchases();
+    const onInv = () => fetchPurchases();
+    window.addEventListener('inventory:changed', onInv);
+    return () => window.removeEventListener('inventory:changed', onInv);
   }, []);
 
   const fetchPurchases = async () => {
@@ -219,7 +224,12 @@ export function Purchases() {
                     </td>
                     <td className="px-6 py-3">{purchase.expected_delivery}</td>
                     <td className="px-6 py-3">
-                      <button className="text-primary hover:underline text-xs font-semibold">Edit</button>
+                      <button
+                        onClick={() => setEditPurchase(purchase)}
+                        className="text-primary hover:underline text-xs font-semibold"
+                      >
+                        Edit
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -308,6 +318,101 @@ export function Purchases() {
                   className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90"
                 >
                   Create Order
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {editPurchase && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="w-full max-w-lg rounded-lg bg-white p-6 shadow-xl relative">
+            <button
+              aria-label="Close"
+              onClick={() => setEditPurchase(null)}
+              className="absolute right-4 top-4 rounded-md px-2 py-1 text-sm text-muted-foreground hover:text-foreground"
+            >
+              ✕
+            </button>
+            <h2 className="text-lg font-semibold mb-4">Edit Purchase ({editPurchase.id})</h2>
+            <div className="space-y-4">
+              <input
+                type="text"
+                placeholder="Supplier Name"
+                value={editPurchase.supplier_name || ''}
+                onChange={(e) => setEditPurchase({ ...editPurchase, supplier_name: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm"
+              />
+              <input
+                type="text"
+                placeholder="Medicine Name"
+                value={editPurchase.medicine_name || ''}
+                onChange={(e) => setEditPurchase({ ...editPurchase, medicine_name: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm"
+              />
+              <input
+                type="number"
+                placeholder="Quantity"
+                value={editPurchase.quantity || 0}
+                onChange={(e) => setEditPurchase({ ...editPurchase, quantity: Number(e.target.value) })}
+                className="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm"
+              />
+              <input
+                type="number"
+                placeholder="Unit Price"
+                step="0.01"
+                value={editPurchase.unit_price || 0}
+                onChange={(e) => setEditPurchase({ ...editPurchase, unit_price: Number(e.target.value) })}
+                className="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm"
+              />
+              <input
+                type="date"
+                value={editPurchase.expected_delivery || ''}
+                onChange={(e) => setEditPurchase({ ...editPurchase, expected_delivery: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm"
+              />
+              <label className="inline-flex items-center gap-2 text-sm">
+                <input type="checkbox" onChange={(e) => setEditPurchase({ ...editPurchase, applyToInventory: e.target.checked })} />
+                <span>Apply received quantity to linked inventory (if found)</span>
+              </label>
+              <div className="flex gap-2 justify-end">
+                <button
+                  onClick={() => setEditPurchase(null)}
+                  className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-foreground hover:bg-slate-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={async () => {
+                    try {
+                      // update local purchases state
+                      setPurchases((prev) => prev.map((p) => (p.id === editPurchase.id ? { ...p, ...editPurchase, total_cost: (editPurchase.quantity || 0) * (editPurchase.unit_price || 0) } : p)));
+                      // optionally apply to inventory
+                      if (editPurchase.applyToInventory) {
+                        try {
+                          const { data } = await apiClient.get('/medicines');
+                          const list = Array.isArray(data?.data) ? data.data : [];
+                          const found = list.find((m) => String(m.medicine_name || '').toLowerCase() === String(editPurchase.medicine_name || '').toLowerCase());
+                          if (found) {
+                            const payload = { stock_quantity: Number(found.stock_quantity || 0) + Number(editPurchase.quantity || 0) };
+                            await apiClient.put(`/medicines/${found._id}`, payload);
+                            // notify other pages
+                            try { window.dispatchEvent(new CustomEvent('inventory:changed')); } catch (e) {}
+                          }
+                        } catch (err) {
+                          console.warn('Apply to inventory failed', err);
+                        }
+                      }
+                      setNotification('Purchase updated successfully.');
+                      setEditPurchase(null);
+                    } catch (err) {
+                      console.error('Update purchase failed', err);
+                      setNotification('Unable to update purchase.');
+                    }
+                  }}
+                  className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90"
+                >
+                  Save changes
                 </button>
               </div>
             </div>

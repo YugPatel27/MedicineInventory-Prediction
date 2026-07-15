@@ -53,6 +53,24 @@ export function Inventory() {
     }
   };
 
+  const handleDeleteStoredUpload = async (filename) => {
+    if (!filename) return;
+    if (!window.confirm('Remove stored uploaded file? This cannot be undone.')) return;
+    try {
+      setImportLoading(true);
+      await apiClient.delete(`/import/uploads/${filename}`);
+      setNotification({ type: 'success', message: 'Stored upload removed.' });
+      setLatestStoredUpload(null);
+      setStoredUploadResult(null);
+      fetchLatestStoredUpload();
+    } catch (err) {
+      console.error('Delete stored upload failed', err);
+      setNotification({ type: 'danger', message: err?.response?.data?.message || 'Unable to remove stored upload.' });
+    } finally {
+      setImportLoading(false);
+    }
+  };
+
   const handleStoreUpload = async () => {
     if (!importFile) {
       setImportError('Please select a file first.');
@@ -130,6 +148,7 @@ export function Inventory() {
     }
   };
   const pageSize = 20;
+  const actionBtnBase = 'inline-flex items-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold';
 
   const fetchMedicines = async () => {
     try {
@@ -169,6 +188,42 @@ export function Inventory() {
     const startIndex = (currentPage - 1) * pageSize;
     return filteredMedicines.slice(startIndex, startIndex + pageSize);
   }, [filteredMedicines, currentPage]);
+
+  const batchSegments = useMemo(() => {
+    const grouped = medicines.reduce((acc, medicine) => {
+      const key = String(medicine.medicine_id || medicine.medicine_name || 'unknown');
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(medicine);
+      return acc;
+    }, {});
+
+    return Object.entries(grouped).map(([key, entries]) => {
+      const sorted = [...entries].sort((a, b) => new Date(a.expiry_date || 0) - new Date(b.expiry_date || 0));
+      return {
+        key,
+        items: sorted,
+        earliestExpiry: sorted[0],
+      };
+    }).slice(0, 6);
+  }, [medicines]);
+
+  const getBatchAgeColor = (medicine) => {
+    const expiryDate = medicine.expiry_date ? new Date(medicine.expiry_date) : null;
+    if (!expiryDate || Number.isNaN(expiryDate.getTime())) return 'border-slate-200 bg-slate-50 text-slate-700';
+    const daysRemaining = Math.ceil((expiryDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+    if (daysRemaining <= 30) return 'border-rose-200 bg-rose-50 text-rose-800';
+    if (daysRemaining <= 90) return 'border-amber-200 bg-amber-50 text-amber-800';
+    return 'border-emerald-200 bg-emerald-50 text-emerald-700';
+  };
+
+  const getBatchBadge = (medicine) => {
+    const expiryDate = medicine.expiry_date ? new Date(medicine.expiry_date) : null;
+    if (!expiryDate || Number.isNaN(expiryDate.getTime())) return '—';
+    const daysRemaining = Math.ceil((expiryDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+    if (daysRemaining <= 30) return 'Critical';
+    if (daysRemaining <= 90) return 'Watch';
+    return 'Healthy';
+  };
 
   const summaryCards = useMemo(
     () => [
@@ -224,10 +279,29 @@ export function Inventory() {
       const { jsPDF } = await import('jspdf');
       const autoTable = (await import('jspdf-autotable')).default;
       const doc = new jsPDF({ compress: true });
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const addHeaderFooter = () => {
+        const pageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i += 1) {
+          doc.setPage(i);
+          doc.setFillColor(14, 116, 144);
+          doc.rect(0, 0, pageWidth, 24, 'F');
+          doc.setTextColor(255, 255, 255);
+          doc.setFontSize(18);
+          doc.text('MediStock', 14, 14);
+          doc.setFontSize(10);
+          doc.text('Inventory Report', 68, 14);
+          doc.setTextColor(100, 116, 139);
+          doc.setFontSize(9);
+          doc.text(`Page ${i} of ${pageCount}`, pageWidth - 24, pageHeight - 10);
+        }
+      };
       doc.setFontSize(18);
-      doc.text('MediStock Inventory Report', 14, 18);
+      doc.setTextColor(15, 23, 42);
+      doc.text('MediStock Inventory Report', 14, 32);
       doc.setFontSize(10);
-      doc.text('Generated from local inventory data.', 14, 26);
+      doc.text('Generated from local inventory data.', 14, 40);
       setNotification({ type: 'info', message: 'Building the inventory PDF report, please wait...' });
       // Create an offscreen chart for embedding (top 5 medicines by stock)
       try {
@@ -263,7 +337,7 @@ export function Inventory() {
       }
 
       autoTable(doc, {
-        startY: 36,
+        startY: 50,
         head: [['ID', 'Name', 'Stock', 'Status', 'Expiry Date']],
         body: filteredMedicines.map((medicine) => [
           medicine.medicine_id ?? '',
@@ -275,6 +349,7 @@ export function Inventory() {
         theme: 'grid',
         styles: { fontSize: 8 },
       });
+      addHeaderFooter();
       doc.save('medistock_inventory_report.pdf');
       setNotification({ type: 'success', message: 'Inventory PDF download is ready.' });
     } catch (err) {
@@ -295,35 +370,27 @@ export function Inventory() {
               Track medicine stock, expiry, and inventory status with fast local reporting. MediStock aligns pharmacy procurement, shelf mapping, expiry controls, billing, and inventory movement in one dashboard.
             </p>
           </div>
-          <div className="flex flex-wrap gap-3">
-            <button onClick={handleExportPDF} className="inline-flex items-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-white hover:bg-primary/90">
+          <div className="flex flex-nowrap items-center gap-3">
+            <button onClick={handleExportPDF} className={`${actionBtnBase} bg-primary text-white hover:bg-primary/90`}>
               <FileText className="h-4 w-4" />
               Export PDF
             </button>
-            <button onClick={handleExportCSV} className="inline-flex items-center gap-2 rounded-2xl border border-border bg-background px-4 py-3 text-sm font-semibold text-foreground hover:bg-primary/5">
+            <button onClick={handleExportCSV} className={`${actionBtnBase} border border-border bg-background text-foreground hover:bg-primary/5`}>
               <Download className="h-4 w-4" />
               Export CSV
             </button>
             {['Admin', 'Manager'].includes(role) && (
-              <button onClick={() => setShowImportModal(true)} className="inline-flex items-center gap-2 rounded-2xl border border-border bg-background px-4 py-3 text-sm font-semibold text-foreground hover:bg-primary/5">
+              <button onClick={() => setShowImportModal(true)} className={`${actionBtnBase} border border-border bg-background text-foreground hover:bg-primary/5`}>
                 <UploadCloud className="h-4 w-4" />
                 Import CSV/XLSX
               </button>
             )}
-            {latestStoredUpload && ['Admin', 'Manager'].includes(role) && (
-              <button
-                onClick={() => handleProcessStoredUpload()}
-                className="inline-flex items-center gap-2 rounded-2xl border border-border bg-background px-4 py-3 text-sm font-semibold text-foreground hover:bg-primary/5"
-              >
-                <FileText className="h-4 w-4" />
-                Process latest stored upload
-              </button>
-            )}
+            
             <button onClick={() => {
               setSyncing(true);
               setNotification({ type: 'info', message: 'Refreshing inventory records...' });
               fetchMedicines();
-            }} className="inline-flex items-center gap-2 rounded-2xl border border-border bg-background px-4 py-3 text-sm font-semibold text-foreground hover:bg-primary/5">
+            }} className={`${actionBtnBase} border border-border bg-background text-foreground hover:bg-primary/5`}>
               <RefreshCcw className="h-4 w-4" />
               Refresh
             </button>
@@ -331,8 +398,8 @@ export function Inventory() {
               <button onClick={() => {
                 setNotification({ type: 'info', message: 'Opening medicine entry modal...' });
                 setShowAddModal(true);
-              }} className="inline-flex items-center gap-2 rounded-2xl bg-secondary px-4 py-3 text-sm font-semibold text-secondary-foreground hover:bg-secondary/90">
-                <Plus className="h-4 w-4" />
+              }} className={`${actionBtnBase} bg-secondary text-secondary-foreground hover:bg-secondary/90`}>
+                <Plus className="h-4 w-4 " />
                 Add medicine
               </button>
             )}
@@ -362,6 +429,15 @@ export function Inventory() {
                   Process stored file
                 </button>
               )}
+              {role === 'Admin' && (
+                <button
+                  type="button"
+                  onClick={() => handleDeleteStoredUpload(latestStoredUpload.filename)}
+                  className="inline-flex items-center gap-2 rounded-2xl border border-border bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700 hover:bg-rose-100"
+                >
+                  Remove stored file
+                </button>
+              )}
             </div>
           </div>
         )}
@@ -383,6 +459,50 @@ export function Inventory() {
           ))}
         </div>
       </section>
+
+      {batchSegments.length > 0 && (
+        <section className="rounded-[2rem] border border-border bg-card p-6 shadow-sm">
+          <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Batch segmentation</p>
+              <h2 className="mt-2 text-2xl font-semibold text-foreground">Batch groups with FEFO visibility - First Expiry First Out</h2>
+            </div>
+          </div>
+          <div className="mt-5 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+            {batchSegments.map((segment) => {
+              const mainBatch = segment.earliestExpiry;
+              return (
+                <div key={segment.key} className="rounded-[1.5rem] border border-border bg-white p-4 shadow-sm">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="font-semibold text-foreground">{mainBatch?.medicine_name || segment.key}</p>
+                      <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">{segment.items.length} batches</p>
+                    </div>
+                    <span className="rounded-full bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-700">FEFO</span>
+                  </div>
+                  <div className="mt-4 space-y-2">
+                    {segment.items.map((batch) => (
+                      <div key={`${batch._id || batch.medicine_id}-${batch.batch_number}`} className={`rounded-2xl border px-3 py-2 text-sm ${getBatchAgeColor(batch)}`}>
+                        <div className="flex items-center justify-between gap-2">
+                          <span>{batch.batch_number || 'Batch'} • {batch.stock_quantity} units</span>
+                          {batch === mainBatch && <span className="font-semibold">⚠ Dispense First</span>}
+                        </div>
+                        <div className="mt-1 flex flex-wrap items-center gap-2 text-xs opacity-80">
+                          <span>Purchase: {formatDisplayDate(batch.purchase_date)}</span>
+                          <span>•</span>
+                          <span>Mfg: {formatDisplayDate(batch.manufacturing_date)}</span>
+                          <span>•</span>
+                          <span>Expiry: {formatDisplayDate(batch.expiry_date)}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       <section className="rounded-[2rem] border border-border bg-card p-6 shadow-sm">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -436,17 +556,40 @@ export function Inventory() {
                       : medicine.status === 'Low Stock'
                       ? 'border-sky-200 bg-sky-100 text-sky-800'
                       : 'border-sky-200 bg-sky-100 text-sky-800';
+                  const medicineBatchGroup = medicines.filter((item) => String(item.medicine_id || item.medicine_name || '') === String(medicine.medicine_id || medicine.medicine_name || ''));
+                  const sortedBatchGroup = [...medicineBatchGroup].sort((a, b) => new Date(a.expiry_date || 0) - new Date(b.expiry_date || 0));
+                  const isFefoBatch = medicineBatchGroup.length > 1 && sortedBatchGroup[0] && (String(sortedBatchGroup[0]._id ?? sortedBatchGroup[0].medicine_id ?? '') === String(medicine._id ?? medicine.medicine_id ?? ''));
                   return (
                     <tr key={medicine._id ?? medicine.medicine_id} className="hover:bg-slate-50 transition-colors">
                       <td className="px-4 py-4 font-medium">{medicine.medicine_id}</td>
-                      <td className="px-4 py-4 text-muted-foreground">{medicine.medicine_name}</td>
+                      <td className="px-4 py-4 text-muted-foreground">
+                        <div className="flex flex-col gap-1">
+                          <span>{medicine.medicine_name}</span>
+                          {medicine.batch_number && <span className="text-xs text-slate-500">Batch {medicine.batch_number}</span>}
+                        </div>
+                      </td>
                       <td className="px-4 py-4 font-semibold text-foreground">{medicine.stock_quantity}</td>
                       <td className="px-4 py-4">
                         <span className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${statusClass}`}>
                           {medicine.status}
                         </span>
                       </td>
-                      <td className="px-4 py-4 text-muted-foreground">{formatDisplayDate(medicine.expiry_date)}</td>
+                      <td className="px-4 py-4">
+                        <div className={`rounded-2xl border px-3 py-2 text-sm ${getBatchAgeColor(medicine)}`}>
+                          <div className="flex items-center justify-between gap-2">
+                            <span>{formatDisplayDate(medicine.expiry_date)}</span>
+                            <div className="flex items-center gap-2">
+                              {isFefoBatch && <span className="text-[11px] font-semibold text-rose-700">⚠ Dispense First</span>}
+                              {medicine.batch_number && <span className="text-[11px] font-semibold">{getBatchBadge(medicine)}</span>}
+                            </div>
+                          </div>
+                          {medicine.batch_number && (
+                            <div className="mt-1 text-[11px] opacity-80">
+                              Purchase {formatDisplayDate(medicine.purchase_date)} • Mfg {formatDisplayDate(medicine.manufacturing_date)}
+                            </div>
+                          )}
+                        </div>
+                      </td>
                       <td className="px-4 py-4 flex flex-wrap gap-2">
                         {['Admin', 'Manager'].includes(role) && (
                           <button
@@ -470,6 +613,7 @@ export function Inventory() {
                                 await apiClient.delete(`/medicines/${medicine._id}`);
                                 setNotification({ type: 'success', message: 'Medicine removed from inventory.' });
                                 fetchMedicines();
+                                try { window.dispatchEvent(new CustomEvent('inventory:changed')); } catch (e) {}
                               } catch (err) {
                                 console.error('Delete failed', err);
                                 setNotification({ type: 'danger', message: 'Unable to delete medicine.' });
