@@ -182,7 +182,7 @@ export function Dashboard() {
 
   return (
     <div className="space-y-8">
-      <SEO title="Dashboard — MediStock" description="Review medicine inventory health, expiry risk, and demand forecast insights in MediStock." url="/dashboard" />
+      <SEO title="Dashboard — MediStock" description="Review medicine inventory health, expiry risk, and demand forecast insights." url="/dashboard" />
 
       <section className="rounded-[2rem] border border-border bg-gradient-to-br from-primary/10 via-card to-white p-6 shadow-sm">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -195,7 +195,7 @@ export function Dashboard() {
           </div>
           <div className="rounded-3xl border border-border bg-white p-4 text-sm text-muted-foreground">
             <p className="font-semibold text-foreground">Local prediction engine</p>
-            <p className="mt-2">No paid APIs. No vendor lock-in. Predict demand from your own inventory data.</p>
+            <p className="mt-2">No paid APIs. Predict demand from your own inventory data.</p>
           </div>
         </div>
       </section>

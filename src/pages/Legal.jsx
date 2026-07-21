@@ -43,7 +43,7 @@ export function Legal() {
         <span className="text-primary font-medium">Trusted local privacy</span>
         <h1 className="mt-4 text-4xl font-bold text-foreground">Privacy, Consent & Transparency</h1>
         <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">
-          MediStock is a local-first medicine inventory and forecasting platform. Below we explain, in plain language, what data we collect,
+          MediStock is a local-first medicine inventory and forecasting platform. Below we explain, in simple language, what data we collect,
           how it is stored, how consent is handled, and the options you have as an administrator or user to control data and privacy.
         </p>
       </div>

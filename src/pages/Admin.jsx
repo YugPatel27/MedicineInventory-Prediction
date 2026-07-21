@@ -101,7 +101,7 @@ export function Admin() {
                 </tr>
               ) : filteredLogs.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-10 text-center text-muted-foreground">No activity found.</td>
+                  <td colSpan={6} className="px-4 py-10 text-center text-muted-foreground">No activities found.</td>
                 </tr>
               ) : (
                 filteredLogs.map((log) => (

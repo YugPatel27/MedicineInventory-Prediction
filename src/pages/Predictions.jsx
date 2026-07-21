@@ -475,7 +475,7 @@ export function Predictions() {
         <div className="flex items-center justify-between gap-4">
           <div>
             <h2 className="text-xl font-semibold">Prediction results</h2>
-            <p className="text-sm text-slate-500">Latest forecast output across inventory.</p>
+            <p className="text-sm text-slate-500">Latest forecast output across whole inventory.</p>
           </div>
           <span className="rounded-full bg-slate-100 px-3 py-2 text-sm text-slate-600">{predictions.length} items</span>
         </div>
