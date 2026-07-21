@@ -18,6 +18,7 @@ const upload = multer({ storage });
 router.post('/bulk-insert', upload.single('file'), importController.bulkInsert);
 router.post('/store-upload', upload.single('file'), importController.storeUpload);
 router.get('/uploads/latest', importController.getLatestUpload);
+router.delete('/uploads/:filename', importController.deleteStoredUpload);
 router.post('/process-upload', importController.processStoredUpload);
 
 export default router;

@@ -2,6 +2,7 @@ import Medicine from '../models/Medicine.js';
 import StockLog from '../models/StockLog.js';
 import { recordAudit } from '../utils/audit.js';
 import { trainShortageModel } from '../utils/logisticRegression.js';
+import { buildMonthlyForecastSeries, buildSeasonalForecast } from '../../shared/seasonalForecast.js';
 
 const getMonthlyConsumptionFromLogs = async (medicineId) => {
   const endDate = new Date();
@@ -64,7 +65,17 @@ export const runForecasting = async (req, res) => {
 
       // Reorder gap details
       const baseDemand = baseConsumption || Math.max(minimumStock, Math.ceil(minimumStock * 1.2));
-      const predictedDemand = Math.max(Math.ceil(baseDemand), reorderGap, 1);
+      const seasonalForecast = buildSeasonalForecast({
+        medicine_name: med.medicine_name,
+        category: med.category || '',
+        avg_monthly_consumption: baseConsumption || baseDemand,
+      }, today);
+      const monthlyForecast = buildMonthlyForecastSeries({
+        medicine_name: med.medicine_name,
+        category: med.category || '',
+        avg_monthly_consumption: baseConsumption || baseDemand,
+      }, today);
+      const predictedDemand = Math.max(seasonalForecast.predicted_demand, Math.ceil(baseDemand), reorderGap, 1);
 
       let recommendation = 'SUSTAIN_STOCK';
       if (riskScore > 75) recommendation = 'URGENT_REORDER';
@@ -82,6 +93,8 @@ export const runForecasting = async (req, res) => {
         expiry_date: med.expiry_date,
         days_until_expiry: daysUntilExpiry,
         avg_monthly_consumption: baseConsumption,
+        seasonal_forecast: seasonalForecast,
+        monthly_forecast: monthlyForecast,
       };
     });
 

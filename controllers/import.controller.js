@@ -31,6 +31,17 @@ const mapFieldName = (header) => {
     batch_number: 'batch_number',
     batchno: 'batch_number',
     batch: 'batch_number',
+    category: 'category',
+    medicine_category: 'category',
+    drug_category: 'category',
+    purchase_date: 'purchase_date',
+    purchasedate: 'purchase_date',
+    purchase: 'purchase_date',
+    manufacturing_date: 'manufacturing_date',
+    manufacture_date: 'manufacturing_date',
+    mfg_date: 'manufacturing_date',
+    mfgdate: 'manufacturing_date',
+    manufacturingdate: 'manufacturing_date',
     stock_quantity: 'stock_quantity',
     stock: 'stock_quantity',
     quantity: 'stock_quantity',
@@ -86,6 +97,12 @@ const loadRawDataFromFile = (filePath, extension) => {
   return xlsx.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: '' });
 };
 
+const parseDateValue = (value) => {
+  if (!value && value !== 0) return null;
+  const parsed = new Date(String(value));
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+};
+
 const prepareMedicinesFromRawData = (rawData) => {
   const requiredFields = ['medicine_id', 'medicine_name', 'batch_number'];
   const errors = [];
@@ -113,6 +130,9 @@ const prepareMedicinesFromRawData = (rawData) => {
         medicine_id: String(values.medicine_id ?? ''),
         medicine_name: String(values.medicine_name ?? ''),
         batch_number: String(values.batch_number ?? ''),
+        category: String(values.category ?? '').trim(),
+        purchase_date: parseDateValue(values.purchase_date ?? values.purchasedate ?? values.purchase),
+        manufacturing_date: parseDateValue(values.manufacturing_date ?? values.manufacture_date ?? values.mfg_date ?? values.mfgdate ?? values.manufacturingdate),
         stock_quantity: Number(values.stock_quantity ?? values.stock ?? values.quantity ?? 0),
         minimum_stock: Number(values.minimum_stock ?? values.min_stock ?? values.minimumstock ?? 0),
         safety_stock: Number(values.safety_stock ?? values.safetystock ?? 0),
@@ -236,6 +256,25 @@ export const processStoredUpload = async (req, res) => {
 
     const result = await processStoredFile(filePath, extension);
     res.status(200).json({ status: 'success', message: 'Stored upload processed successfully', data: result });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Internal Server Error';
+    res.status(500).json({ status: 'error', message });
+  }
+};
+
+export const deleteStoredUpload = async (req, res) => {
+  try {
+    const { filename } = req.params;
+    if (!filename) return res.status(400).json({ status: 'error', message: 'Filename is required' });
+
+    const safeFilename = path.basename(filename);
+    const filePath = path.join(UPLOAD_DIR, safeFilename);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ status: 'error', message: 'Stored file not found' });
+    }
+
+    fs.unlinkSync(filePath);
+    return res.status(200).json({ status: 'success', message: 'Stored upload removed' });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Internal Server Error';
     res.status(500).json({ status: 'error', message });
