@@ -50,3 +50,18 @@ JWT_REFRESH_SECRET=your_refresh_secret
 ```
 
 If you want to point the frontend to a different backend, set `VITE_API_URL`. Otherwise, it stays on the local `/api` route.
+
+## Vercel Environment Variables
+
+In the Vercel project, open **Settings > Environment Variables** and add these variables for **Production**:
+
+```env
+NODE_ENV=production
+MONGO_URI=<your MongoDB Atlas connection string>
+JWT_ACCESS_SECRET=<long random secret>
+JWT_REFRESH_SECRET=<different long random secret>
+```
+
+Leave `VITE_API_URL` unset when the frontend and API use the same Vercel project. If the API is hosted separately, add `VITE_API_URL` with the backend URL, for example `https://api.example.com/api`.
+
+After saving the variables, redeploy the project. See `.env.example` for the local variable names; never commit real secrets.
