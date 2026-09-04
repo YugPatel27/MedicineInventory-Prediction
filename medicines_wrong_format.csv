@@ -1,0 +1,212 @@
+Medicine_ID,Mediicne_Name,Generic_Name,Catgory,Manufacturer,Dosage_Form,Strenght,Unit_Price_INR,Pack_Size,Quantity_In_Stock,Reorder_Level,Batch_Number,Manufacturing_Date,Expiry_Date,Prescription_Required,Schedule,Storage_Condition,Description,Extra_Column
+
+,,,,,,,,,,,,,,,,,
+MED0003	Paracip	Diclofenac Sodium	Anticoagulant	Biocon Ltd.	Ointment	25mg	745.51	200ml	1960	190	JW8088	2025-09-27	2029-03-20	No	X	Store below 30°C away from light	Diclofenac Sodium 25mg Ointment used for treatment
+MED0004;Calpol;Mefenamic Acid;Antipsychotic;Ipca Labs;Drops;250mg;862.07;100ml;1001;73;XQ7004;2025-04-18;2027-07-21;No;OTC;Protect from moisture and light;Mefenamic Acid 250mg Drops used for treatment
+MED0005,Combiflam,Aceclofenac,,
+MED0006,Saridon,Aspirin,Opioid Analgesic,AstraZeneca,Syrup,75mg,253.82,15,631,169,TS5156,2024-04-14,2028-08-07,Yes,X,Refrigerate at 2-8°C,Aspirin 75mg Syrup used for treatment,extra1,extra2,extra3
+,Disprin,Azithromycin,Anticonvulsant,Ipca Labs,Injection,75mg,779.36,100ml,2734,170,ZH3548,2025-03-04,2027-02-16,Yes,X,Store below 30°C away from light,Azithromycin 75mg Injection used for treatment
+MED0008,Ecosprin,Amoxicillin,Bronchodilator,Alkem Labs,Injection,1%,-200.33,20,3909,170,FL9146,2024-09-28,2027-05-12,No,X,Store at room temperature (15-30°C),Amoxicillin 1% Injection used for treatment
+MED0009,Aspirin,Amoxicillin+Clavulanate,Corticosteroid,Natco Pharma,Suppository,5ml,FREE,100ml,1606,70,DW6529,2025-01-17,2029-05-17,No,OTC,Store in cool and dry place,Amoxicillin+Clavulanate 5ml Suppository used for treatment
+MED0010,Brufen,Ciprofloxacin,Antitubercular,Hetero Labs,Suspension,400mg,67.91,15,-50,152,LA5877,2024-10-07,2029-05-13,Yes,H,Store below 30°C away from light,Ciprofloxacin 400mg Suspension used for treatment
+MED0011,Ibugesic,Norfloxacin,Vitamin,Hetero Labs,Capsule,7.5mg,777.01,100,1322,103,OG6708,2025-06-15,2024-01-10,No,H,Store at room temperature (15-30°C),Norfloxacin 7.5mg Capsule used for treatment
+MED0012,Voveran,Ofloxacin,Statin,Biocon Ltd.,Syrup,200mg,880.35,200ml,202,117,VU6888,15/06/2025,10/01/2028,No,OTC,Keep in a dry place away from sunlight,Ofloxacin 200mg Syrup used for treatment
+MED0013,Diclomol,Levofloxacin,Statin,Ipca Labs,Patch,500mg,263.43,30,4928,155,LA6386,06-15-2025,01-10-2028,No,X,Protect from moisture and light,Levofloxacin 500mg Patch used for treatment
+MED0014,Flexon,Metronidazole,Antidepressant,Ipca Labs,Powder,75mg,814.88,20,591,16,CJ9974,2025-13-45,2028-00-00,No,H1,Store below 30°C away from light,Metronidazole 75mg Powder used for treatment
+MED0015,Meftal,Tinidazole,Anticonvulsant,Bayer India,Drops,15ml,724.95,15,2645,160,IN8506,not-a-date,tomorrow,Yes,G,Store below 30°C away from light,Tinidazole 15ml Drops used for treatment
+MED0016,Ponstan,Fluconazole,Analgesic, Pain Relief,Cipla Ltd.,Capsule,200ml,696.92,200ml,264,130,TP7038,2025-01-15,2027-05-09,No,X,Store below 30°C away from light,Fluconazole 200ml Capsule used for treatment
+MED0017,"Azithral,Clotrimazole,Antiemetic,Intas Pharma,Syrup,7.5mg,768.51,100ml,949,11,CF6957,2024-12-17,2027-03-04,No,H,Store below 25°C in a dry place,Clotrimazole 7.5mg Syrup used for treatment
+MED0018,<script>alert('xss')</script>,Itraconazole,Iron Supplement,Sun Pharma,Ointment,100ml,680.48,100,1328,91,VR4125,2024-04-26,2028-08-27,No,H,Store at room temperature (15-30°C),Itraconazole 100ml Ointment used for treatment
+MED0019,'; DROP TABLE medicines;--,Griseofulvin,NSAID,GSK Pharma,Ointment,12.5mg,976.10,30,1600,83,KU9319,2024-10-20,2026-12-21,Yes,G,Store in cool and dry place,Griseofulvin 12.5mg Ointment used for treatment
+MED0020,Médícîné™®©,Fexofenadine,Antidepressant,Emcure Pharma,Patch,300mg,518.86,20,2398,169,IU3511,2025-11-23,2029-11-19,No,X,Store at room temperature (15-30°C),Fexofenadine 300mg Patch used for treatment
+MED0021,Mox,Cetirizine HCl,Vitamin,AstraZeneca,Suppository,25mg,460.41,20,3734,66,WS6980,2024-05-11,2027-07-10,Maybe,OTC,Store in cool and dry place,Cetirizine HCl 25mg Suppository used for treatment
+MED0001,Augmentin,Montelukast,Antiparasitic,Hetero Labs,Injection,500mg,485.64,100ml,401,115,OU5298,2024-04-18,2029-05-13,Yes,H,Protect from moisture and light,Montelukast 500mg Injection used for treatment
+  MED0023  ,  Clavam  ,  Levocetirizine  ,  PPI  ,  Wockhardt Ltd.  ,  Powder  ,  400mg  ,  657.38  ,  30  ,  587  ,  100  ,  ZG4245  ,  2024-10-09  ,  2027-01-26  ,  Yes  ,  H1  ,  Store below 25°C in a dry place  ,  Levocetirizine 400mg Powder used for treatment  
+MED0024,Ciproflox
+(continued),Triprolidine+Pseudoephedrine,Opioid Analgesic,Lupin Ltd.,Suppository,200mg,458.98,15,3157,34,YS7993,2025-03-18,2028-04-15,Yes,H,Refrigerate at 2-8°C,Triprolidine+Pseudoephedrine 200mg Suppository used for treatment
+NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
+N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A
+27,Oflomac,Theophylline+Etofylline,Bronchodilator,Wockhardt Ltd.,Ointment,2%,519.23,60,3865,175,DL1250,2025-10-16,2028-11-05,No,H1,Refrigerate at 2-8°C,Theophylline+Etofylline 2% Ointment used for treatment
+MED0028,Levoflox,Formoterol+Budesonide,Iron Supplement,Alkem Labs,Drops,0.5%,₹177.65,20,945,196,FB4965,2025-07-07,2026-01-21,No,H1,Store in cool and dry place,Formoterol+Budesonide 0.5% Drops used for treatment
+MED0029,Metrogyl,Salmeterol+Fluticasone,Antipsychotic,Ajanta Pharma,Inhaler,2%,727.77,200ml,45.7,110,GX6142,2024-03-25,2028-06-02,Yes,G,Protect from moisture and light,Salmeterol+Fluticasone 2% Inhaler used for treatment
+MED0030,AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,Budesonide,Antiparasitic,Natco Pharma,Suppository,20mg,468.63,100,2485,156,WO4660,2025-08-24,2026-12-25,Yes,OTC,Store in cool and dry place,Budesonide 20mg Suppository used for treatment
+MED0031, Tiniba ,Ipratropium+Levosalbutamol,ANTICOAGULANT,Natco Pharma,suppository,20mg,735.76,20,1417,186,JW4210,2025-06-05,2027-11-02,Yes,X,Store at room temperature (15-30°C),Ipratropium+Levosalbutamol 20mg Suppository used for treatment
+MED0032, Fluconazole ,Pantoprazole,CALCIUM SUPPLEMENT,Cipla Ltd.,suppository,5mg,547.40,15,2285,127,IP9216,2024-10-02,2029-01-20,No,G,Store below 30°C away from light,Pantoprazole 5mg Suppository used for treatment
+MED0033,Candid,Pantoprazole+Domperidone,Antipyretic,Pfizer India,Ointment,37.5mg,740.04,200ml,3538,86,NM3113,2025-12-01,2029-07-08,FALSE,H,Store in cool and dry place,Pantoprazole+Domperidone 37.5mg Ointment used for treatment
+MED0034, Itraconazole ,Omeprazole,IRON SUPPLEMENT,Dr. Reddy's,inhaler,650mg,680.74,15,459,180,KU7429,2024-10-08,2028-01-11,Yes,X,Refrigerate at 2-8°C,Omeprazole 650mg Inhaler used for treatment
+MED0035,Grisovin,Ranitidine HCl,,Bayer India,Powder,,137.02,20,4781,,GH7101,2024-07-26,2026-04-07,Yes,,Store in cool and dry place,
+MED0036,Allegra,Famotidine,Antidepressant,Cadila Healthcare,Capsule,10ml,147.02,30,538,135,DV8163,2025-11-25,2028-12-23,no,X,Keep in a dry place away from sunlight,Famotidine 10ml Capsule used for treatment
+MED0037, Cetirizine ,Sucralfate,ANXIOLYTIC,Sanofi India,gel,400mg,121.43,100,3788,198,GU6458,2025-08-08,2026-04-04,Yes,H,Protect from moisture and light,Sucralfate 400mg Gel used for treatment
+MED0038, Zyrtec ,Aluminium+Magnesium Hydroxide,ANTIPYRETIC,Novartis India,powder,200mg,178.15,200ml,1595,48,PV9373,2024-09-24,2027-03-08,No,H,Store below 30°C away from light,Aluminium+Magnesium Hydroxide 200mg Powder used for treatment
+MED0039,Montair,Sodium Alginate,Bronchodilator,AstraZeneca,Patch,5ml,766.67,200ml,3042,14,TZ3075,2025-10-07,2026-03-28,yes,X,Store below 25°C in a dry place,Sodium Alginate 5ml Patch used for treatment
+MED0040,Levocet,Metformin HCl,Statin,Torrent Pharma,Injection,50mg,158.33,10,2947,58,JV2155,15-Jun-2025,15.06.2025,No,OTC,Store at room temperature (15-30°C),Metformin HCl 50mg Injection used for treatment
+MED0041, Sinarest ,Glimepiride,VITAMIN,Cadila Healthcare,syrup,5%,879.36,200ml,4679,200,NW6206,2025-10-22,2026-01-26,No,X,Store at room temperature (15-30°C),Glimepiride 5% Syrup used for treatment
+MED0042,Benadryl,Sitagliptin,,Bayer India,Patch,,299.69,20,2316,,QC8211,2024-12-02,2026-03-17,No,,Protect from moisture and light,
+MED0043, Asthalin ,Vildagliptin,ANXIOLYTIC,Ajanta Pharma,drops,200ml,201.35,20,4820,150,FN7149,2025-04-13,2026-11-07,No,OTC,Refrigerate at 2-8°C,Vildagliptin 200ml Drops used for treatment
+MED0044, Deriphyllin ,Linagliptin,ANTITUBERCULAR,Cadila Healthcare,patch,500mg,784.42,200ml,4767,16,KC4328,2025-11-02,2028-03-26,Yes,X,Store below 25°C in a dry place,Linagliptin 500mg Patch used for treatment
+MED0045,Foracort,Empagliflozin,Antihistamine,FDC Ltd.,Ointment,200mg,728.19,30,4683,169,JY1487,2024-08-15,2026-05-24,Yes,H1,Protect from moisture and light,Empagliflozin 200mg Ointment used for treatment,,,,
+MED0046, Seroflo ,Canagliflozin,ANTIFUNGAL,Abbott India,syrup,7.5mg,762.15,15,2879,190,XK5905,2025-12-24,2028-02-24,Yes,H,Store in cool and dry place,Canagliflozin 7.5mg Syrup used for treatment
+MED0047, Budecort ,Insulin Human,THYROID,Mankind Pharma,drops,50mg,48.35,30,2643,90,GS6855,2025-02-05,2028-09-02,Yes,H1,Store at room temperature (15-30°C),Insulin Human 50mg Drops used for treatment
+MED0048,Duolin,Insulin Glargine,Antipyretic,Sun Pharma,Ointment,300mg,152.30,10,1942,47,UF9298,2024-09-20,2028-01-09,0,G,Store below 25°C in a dry place,Insulin Glargine 300mg Ointment used for treatment
+MED0049,Ventolin,Amlodipine Besylate,,Bayer India,Injection,,278.30,10,3769,,KS8152,2025-02-03,2028-06-04,Yes,,Protect from moisture and light,
+MED0050,Salbutamol,Telmisartan,Antiparasitic,Intas Pharma,Patch,1g,743.65,100,664,125,XM5382,15.06.2025,15-Jun-2025,No,X,Store below 25°C in a dry place,Telmisartan 1g Patch used for treatment
+MED0051,Pantop,Losartan Potassium,Corticosteroid,Dr. Reddy's,Drops,10mg,223.99,15,2526,119,FG5449,2025-06-10,2029-06-01,yes,X,Store at room temperature (15-30°C),Losartan Potassium 10mg Drops used for treatment
+MED0052, Pan-D ,Enalapril Maleate,ANTIFUNGAL,Dr. Reddy's,patch,300mg,297.07,20,3309,127,DD6247,2024-05-16,2026-10-10,No,H1,Keep in a dry place away from sunlight,Enalapril Maleate 300mg Patch used for treatment
+MED0053, Omez ,Ramipril,ANTICONVULSANT,Torrent Pharma,cream,200ml,278.22,60,1834,26,BZ8537,2024-06-24,2028-10-26,No,G,Store below 25°C in a dry place,Ramipril 200ml Cream used for treatment
+MED0054,Ranitidine,Atenolol,Analgesic,Cadila Healthcare,Cream,2%,204.04,20,4033,164,LT5694,2024-12-01,2029-09-18,FALSE,H,Refrigerate at 2-8°C,Atenolol 2% Cream used for treatment
+MED0055,Rantac,Metoprolol Succinate,Vitamin,Aurobindo Pharma,Drops,200ml,331.64,100ml,2294,90,GP9927,2025-03-23,2026-06-13,Yes,H,Keep in a dry place away from sunlight,Metoprolol Succinate 200ml Drops used for treatment,,,,
+MED0056,Famotidine,Bisoprolol,,Hetero Labs,Gel,,343.55,15,3619,,TA2311,2025-12-10,2026-07-10,Yes,,Store below 25°C in a dry place,
+MED0057,Sucralfate,Carvedilol,Antiemetic,Intas Pharma,Suppository,300mg,479.77,30,4011,101,PS9141,2025-09-10,2029-10-26,N,H,Protect from moisture and light,Carvedilol 300mg Suppository used for treatment
+MED0058, Gelusil ,Clopidogrel Bisulfate,ANTIPSYCHOTIC,Bayer India,solution,37.5mg,25.04,20,2728,55,KI3665,2025-08-20,2028-08-05,Yes,G,Store in cool and dry place,Clopidogrel Bisulfate 37.5mg Solution used for treatment
+MED0059, Digene ,Warfarin Sodium,ANTICONVULSANT,Sun Pharma,cream,650mg,81.19,30,889,73,YI7605,2025-02-28,2028-09-03,Yes,H1,Store in cool and dry place,Warfarin Sodium 650mg Cream used for treatment
+MED0060,Gaviscon,Enoxaparin Sodium,Anxiolytic,Sun Pharma,Gel,1%,494.22,10,3331,123,RN3449,June 15 2025,15.06.2025,No,G,Refrigerate at 2-8°C,Enoxaparin Sodium 1% Gel used for treatment
+MED0061, Metformin ,Atorvastatin Calcium,NSAID,Natco Pharma,capsule,800mg,95.88,100ml,406,18,XX1773,2025-02-25,2029-07-22,No,H1,Keep in a dry place away from sunlight,Atorvastatin Calcium 800mg Capsule used for treatment
+MED0062, Glucophage ,Rosuvastatin Calcium,OPIOID ANALGESIC,Glenmark Pharma,injection,5ml,529.97,100,3130,198,LZ4602,2025-09-16,2028-10-03,No,H,Store below 25°C in a dry place,Rosuvastatin Calcium 5ml Injection used for treatment
+MED0063,Glimepiride,Fenofibrate,,Abbott India,Suppository,,701.47,100,197,,YI2126,2025-02-14,2026-10-03,No,,Store below 25°C in a dry place,
+MED0064, Amaryl ,Ezetimibe,ANTIHYPERTENSIVE,Biocon Ltd.,gel,200mg,361.89,20,3373,28,AJ8083,2025-07-06,2027-04-04,No,G,Store in cool and dry place,Ezetimibe 200mg Gel used for treatment
+MED0065,Januvia,Levothyroxine Sodium,Antipyretic,Abbott India,Suppository,0.5%,87.24,100ml,3496,199,CE2223,2024-01-09,2027-01-24,No,H1,Refrigerate at 2-8°C,Levothyroxine Sodium 0.5% Suppository used for treatment,,,,
+MED0066,Galvus,Carbimazole,Antitubercular,Pfizer India,Suppository,400mg,805.05,200ml,3286,21,VV1858,2025-07-11,2029-07-24,NO,H1,Store at room temperature (15-30°C),Carbimazole 400mg Suppository used for treatment
+MED0067, Trajenta ,Prednisolone,ANTIFUNGAL,Mankind Pharma,capsule,200mg,357.60,200ml,4623,181,WD9715,2024-05-21,2029-05-27,No,X,Keep in a dry place away from sunlight,Prednisolone 200mg Capsule used for treatment
+MED0068, Jardiance ,Dexamethasone,ANTIPYRETIC,MSD Pharma,drops,100ml,736.85,100ml,2959,139,ZP8405,2024-10-20,2029-12-24,No,G,Store in cool and dry place,Dexamethasone 100ml Drops used for treatment
+MED0069,Invokana,Hydrocortisone,Bronchodilator,Alkem Labs,Gel,0.5%,931.34,200ml,265,121,VU4787,2024-05-21,2029-06-09,no,G,Protect from moisture and light,Hydrocortisone 0.5% Gel used for treatment
+MED0070,Mixtard,Betamethasone,Antipsychotic,Hetero Labs,Gel,400mg,383.25,100ml,198,120,EQ9646,June 15 2025,15.06.2025,No,H,Refrigerate at 2-8°C,Betamethasone 400mg Gel used for treatment
+MED0071, Huminsulin ,Deflazacort,THYROID,Wockhardt Ltd.,powder,10mg,564.49,200ml,1155,181,TM4704,2024-07-05,2026-08-01,No,H1,Store below 25°C in a dry place,Deflazacort 10mg Powder used for treatment
+MED0072,Lantus,Prednisone,Antibiotic,Sanofi India,Inhaler,100ml,781.23,100,3817,139,RC8804,2024-09-21,2029-08-13,0,H,Store below 25°C in a dry place,Prednisone 100ml Inhaler used for treatment
+MED0073, Amlodipine ,Desloratadine,BRONCHODILATOR,AstraZeneca,suppository,2.5mg,79.32,100ml,1400,130,PI4835,2025-02-09,2027-01-09,Yes,X,Store below 25°C in a dry place,Desloratadine 2.5mg Suppository used for treatment
+MED0074, Amlopress ,Bilastine,ANTIVIRAL,Emcure Pharma,inhaler,400mg,540.56,15,3681,136,YY9263,2024-12-13,2026-01-27,No,OTC,Store below 25°C in a dry place,Bilastine 400mg Inhaler used for treatment
+MED0075,Telmisartan,Chlorpheniramine Maleate,Opioid Analgesic,Bayer India,Syrup,800mg,904.47,15,328,192,TP1938,2025-04-04,2028-12-05,Yes,H,Keep in a dry place away from sunlight,Chlorpheniramine Maleate 800mg Syrup used for treatment,,,,
+MED0076, Telma ,Hydroxyzine HCl,ANTITUBERCULAR,Ajanta Pharma,drops,50mg,140.95,100,2742,180,RO9089,2025-06-20,2027-09-10,Yes,OTC,Store at room temperature (15-30°C),Hydroxyzine HCl 50mg Drops used for treatment
+MED0077,Losartan,Promethazine HCl,,Novartis India,Inhaler,,919.72,15,4141,,JF9772,2025-01-26,2026-03-03,Yes,,Store in cool and dry place,
+MED0078,Repace,Ondansetron HCl,Antidepressant,Hetero Labs,Suspension,100mg,610.33,100ml,2256,112,LX8478,2024-09-12,2027-04-12,Y,OTC,Keep in a dry place away from sunlight,Ondansetron HCl 100mg Suspension used for treatment
+MED0079, Enalapril ,Domperidone,CORTICOSTEROID,Boehringer Ingelheim,capsule,12.5mg,381.03,60,4616,132,BD6981,2024-04-04,2026-05-04,No,H1,Store at room temperature (15-30°C),Domperidone 12.5mg Capsule used for treatment
+MED0080,Ramipril,Metoclopramide HCl,PPI,Mankind Pharma,Syrup,300mg,159.34,200ml,4323,12,NZ2451,2025/06/15,2025/06/15,Yes,X,Refrigerate at 2-8°C,Metoclopramide HCl 300mg Syrup used for treatment
+MED0081,Atenolol,Alprazolam,NSAID,Sanofi India,Solution,37.5mg,554.23,15,486,26,VE6356,2025-08-16,2027-03-03,1,G,Store in cool and dry place,Alprazolam 37.5mg Solution used for treatment
+MED0082, Metoprolol ,Clonazepam,STATIN,Sanofi India,gel,400mg,312.93,30,2800,136,DZ4870,2024-04-25,2026-12-06,Yes,H,Store below 30°C away from light,Clonazepam 400mg Gel used for treatment
+MED0083, Concor ,Diazepam,CORTICOSTEROID,MSD Pharma,patch,250mg,669.33,100,1886,92,LU9634,2024-02-22,2026-02-19,Yes,H,Store in cool and dry place,Diazepam 250mg Patch used for treatment
+MED0084,Cardivas,Lorazepam,,Cadila Healthcare,Tablet,,709.20,20,2948,,ME1766,2024-04-18,2028-08-27,Yes,,Protect from moisture and light,
+MED0085,Ecosprin-AV,Zolpidem Tartrate,Calcium Supplement,Sanofi India,Syrup,100mg,163.31,200ml,2644,82,ZE4070,2025-02-23,2026-07-02,No,G,Refrigerate at 2-8°C,Zolpidem Tartrate 100mg Syrup used for treatment,,,,
+MED0086, Clopidogrel ,Melatonin,ANXIOLYTIC,Sanofi India,ointment,0.5%,549.04,15,3170,193,LR4426,2024-12-02,2026-07-13,Yes,H,Store below 30°C away from light,Melatonin 0.5% Ointment used for treatment
+MED0087,Deplatt,Amitriptyline HCl,Iron Supplement,Mankind Pharma,Inhaler,250mg,374.58,15,2678,176,EX4530,2024-12-08,2026-09-04,NO,OTC,Store at room temperature (15-30°C),Amitriptyline HCl 250mg Inhaler used for treatment
+MED0088, Warfarin ,Fluoxetine HCl,ANTIDIABETIC,Aurobindo Pharma,gel,25mg,829.41,15,3730,37,TU8831,2024-03-26,2029-08-27,No,OTC,Keep in a dry place away from sunlight,Fluoxetine HCl 25mg Gel used for treatment
+MED0089, Heparin ,Sertraline HCl,ANTIEMETIC,Micro Labs,suspension,800mg,592.70,60,2680,90,NA6594,2024-11-25,2028-03-10,No,H1,Store at room temperature (15-30°C),Sertraline HCl 800mg Suspension used for treatment
+MED0090,Enoxaparin,Escitalopram Oxalate,Calcium Supplement,Intas Pharma,Ointment,5ml,837.46,100,4365,50,UN1443,2025/06/15,June 15 2025,No,H1,Store at room temperature (15-30°C),Escitalopram Oxalate 5ml Ointment used for treatment
+MED0091,Atorvastatin,Paroxetine HCl,,Glenmark Pharma,Tablet,,799.38,10,3622,,YP1725,2025-06-08,2027-06-14,No,,Keep in a dry place away from sunlight,
+MED0092, Atorva ,Duloxetine HCl,ANTIBIOTIC,Biocon Ltd.,gel,200mg,307.64,10,1474,72,MK5796,2025-04-03,2028-05-13,No,H,Store below 30°C away from light,Duloxetine HCl 200mg Gel used for treatment
+MED0093,Rosuvastatin,Venlafaxine HCl,Statin,Natco Pharma,Injection,50mg,200.91,200ml,4250,45,DG9055,2025-05-26,2026-06-10,yes,H1,Store at room temperature (15-30°C),Venlafaxine HCl 50mg Injection used for treatment
+MED0094, Crestor ,Olanzapine,ANTICONVULSANT,Emcure Pharma,patch,0.5%,576.40,100,3826,76,XN8538,2025-08-24,2027-04-16,Yes,OTC,Refrigerate at 2-8°C,Olanzapine 0.5% Patch used for treatment
+MED0095,Fenofibrate,Risperidone,Antimalarial,Novartis India,Ointment,150mg,961.59,30,2552,200,XF8930,2025-03-15,2027-06-01,No,H,Protect from moisture and light,Risperidone 150mg Ointment used for treatment,,,,
+MED0096,Ezetimibe,Quetiapine Fumarate,Antihypertensive,Boehringer Ingelheim,Suppository,7.5mg,240.20,20,970,67,DZ9297,2025-11-13,2026-12-04,yes,G,Keep in a dry place away from sunlight,Quetiapine Fumarate 7.5mg Suppository used for treatment
+MED0097, Thyronorm ,Aripiprazole,ANTIDIABETIC,GSK Pharma,capsule,1g,68.04,60,703,88,NB1568,2024-04-15,2026-08-01,No,H1,Store below 30°C away from light,Aripiprazole 1g Capsule used for treatment
+MED0098,Eltroxin,Lithium Carbonate,,Glenmark Pharma,Suppository,,53.71,20,4521,,CA5867,2025-10-09,2028-05-17,Yes,,Refrigerate at 2-8°C,
+MED0099,Levothyroxine,Sodium Valproate,Anxiolytic,Biocon Ltd.,Drops,15ml,382.73,60,2263,139,HN8246,2024-10-09,2027-05-10,YES,H1,Store below 25°C in a dry place,Sodium Valproate 15ml Drops used for treatment
+MED0100,Neomercazole,Carbamazepine,Thyroid,Biocon Ltd.,Ointment,0.5%,689.62,30,4343,77,MH2261,15.06.2025,2025/06/15,No,X,Keep in a dry place away from sunlight,Carbamazepine 0.5% Ointment used for treatment
+MED0101, Prednisolone ,Phenytoin Sodium,ANTIPARASITIC,AstraZeneca,patch,15ml,217.65,100,4030,161,CU6660,2024-03-07,2027-09-13,No,H,Protect from moisture and light,Phenytoin Sodium 15ml Patch used for treatment
+MED0102,Wysolone,Levetiracetam,Antiparasitic,Aurobindo Pharma,Ointment,200mg,336.72,10,2493,175,VQ3896,2024-11-05,2028-01-10,FALSE,X,Refrigerate at 2-8°C,Levetiracetam 200mg Ointment used for treatment
+MED0103, Dexamethasone ,Gabapentin,ANTIPSYCHOTIC,Zydus Cadila,tablet,0.5%,518.40,30,1843,59,FI8798,2025-12-17,2026-10-03,Yes,H1,Protect from moisture and light,Gabapentin 0.5% Tablet used for treatment
+MED0104, Hydrocortisone ,Pregabalin,ANTIDIABETIC,Aurobindo Pharma,inhaler,100ml,328.49,100ml,687,33,ZJ3977,2025-06-28,2029-04-12,Yes,X,Store in cool and dry place,Pregabalin 100ml Inhaler used for treatment
+MED0105,Betnesol,Topiramate,,Abbott India,Ointment,,748.58,20,4005,,BH4473,2025-11-14,2026-10-18,No,,Store in cool and dry place,
+MED0106, Deflazacort ,Tramadol HCl,BRONCHODILATOR,Cadila Healthcare,drops,150mg,235.01,15,3012,196,GM4114,2024-08-19,2027-02-16,Yes,X,Store below 25°C in a dry place,Tramadol HCl 150mg Drops used for treatment
+MED0107, Prednisone ,Tapentadol HCl,ANXIOLYTIC,Ipca Labs,tablet,15ml,123.38,15,2073,115,FR4641,2024-09-04,2028-10-28,No,H1,Store below 25°C in a dry place,Tapentadol HCl 15ml Tablet used for treatment
+MED0108,Cetirizine-D,Morphine Sulfate,Antibiotic,AstraZeneca,Inhaler,100ml,357.81,30,3400,174,GQ2386,2025-01-24,2029-10-08,Y,H1,Store below 30°C away from light,Morphine Sulfate 100ml Inhaler used for treatment
+MED0109, Fexofenadine ,Fentanyl Citrate,OPIOID ANALGESIC,Ipca Labs,tablet,50mg,420.95,30,3578,182,JO3603,2024-05-10,2026-01-12,No,H1,Protect from moisture and light,Fentanyl Citrate 50mg Tablet used for treatment
+MED0110,Desloratadine,Codeine Phosphate,Antipyretic,Novartis India,Suppository,37.5mg,701.46,20,3820,79,UB9288,June 15 2025,15.06.2025,Yes,H,Store below 30°C away from light,Codeine Phosphate 37.5mg Suppository used for treatment
+MED0111,Levocetirizine,Piroxicam,Anticoagulant,Emcure Pharma,Suspension,20mg,777.14,60,2803,47,UR3057,2025-06-01,2026-11-10,FALSE,OTC,Store in cool and dry place,Piroxicam 20mg Suspension used for treatment
+MED0112,Bilastine,Naproxen Sodium,,Glenmark Pharma,Ointment,,133.52,20,2945,,IF3362,2025-01-01,2026-01-26,Yes,,Refrigerate at 2-8°C,
+MED0113, Chlorpheniramine ,Etoricoxib,ANTITUBERCULAR,Biocon Ltd.,capsule,10ml,935.49,200ml,1673,77,UD1654,2025-01-07,2028-07-02,Yes,OTC,Keep in a dry place away from sunlight,Etoricoxib 10ml Capsule used for treatment
+MED0114,Hydroxyzine,Celecoxib,Antifungal,Pfizer India,Capsule,2%,717.11,30,2437,160,PB8511,2025-08-17,2026-08-11,FALSE,X,Store at room temperature (15-30°C),Celecoxib 2% Capsule used for treatment
+MED0115,Promethazine,Calcium Carbonate+Vitamin D3,Antifungal,Pfizer India,Solution,100ml,146.03,100ml,2907,105,MN4159,2025-09-10,2026-09-16,No,G,Store at room temperature (15-30°C),Calcium Carbonate+Vitamin D3 100ml Solution used for treatment,,,,
+MED0116, Ondansetron ,Cholecalciferol,ANTIHYPERTENSIVE,Wockhardt Ltd.,cream,15ml,73.02,100,1738,149,OZ1968,2024-03-06,2028-11-13,No,H,Refrigerate at 2-8°C,Cholecalciferol 15ml Cream used for treatment
+MED0117,Domperidone,Zoledronic Acid,Antiviral,Aurobindo Pharma,Capsule,300mg,476.38,60,2848,76,HD7548,2024-05-18,2027-02-14,NO,H,Protect from moisture and light,Zoledronic Acid 300mg Capsule used for treatment
+MED0118, Metoclopramide ,Alendronate Sodium,IRON SUPPLEMENT,Novartis India,tablet,15ml,253.45,100ml,3401,37,FT1270,2025-10-09,2028-01-19,No,H1,Protect from moisture and light,Alendronate Sodium 15ml Tablet used for treatment
+MED0119,Cyclizine,Ferrous Ascorbate+Folic Acid,,Sun Pharma,Powder,,791.31,200ml,567,,UJ3732,2025-10-06,2026-06-20,Yes,,Store below 30°C away from light,
+MED0120,Alprazolam,Ferrous Fumarate,Vitamin,Mankind Pharma,Tablet,62.5mg,62.37,100ml,3766,61,XE7585,June 15 2025,15.06.2025,No,OTC,Keep in a dry place away from sunlight,Ferrous Fumarate 62.5mg Tablet used for treatment
+MED0121, Clonazepam ,Iron Sucrose,ANTIHYPERTENSIVE,Boehringer Ingelheim,gel,75mg,857.74,100,4516,37,UD5145,2025-08-23,2026-05-10,No,H,Store below 30°C away from light,Iron Sucrose 75mg Gel used for treatment
+MED0122, Diazepam ,Folic Acid,CORTICOSTEROID,Boehringer Ingelheim,solution,20mg,551.25,15,429,121,XA8003,2024-10-21,2026-01-23,Yes,H1,Store at room temperature (15-30°C),Folic Acid 20mg Solution used for treatment
+MED0123,Lorazepam,Cyanocobalamin,Antiviral,MSD Pharma,Inhaler,25mg,943.32,100ml,310,141,LY7723,2024-09-28,2029-05-07,0,OTC,Store in cool and dry place,Cyanocobalamin 25mg Inhaler used for treatment
+MED0124, Zolpidem ,Methylcobalamin,ANTICONVULSANT,Cadila Healthcare,drops,650mg,632.34,20,108,114,FZ1452,2024-11-25,2027-11-07,Yes,G,Store in cool and dry place,Methylcobalamin 650mg Drops used for treatment
+MED0125,Zopiclone,Thiamine+Pyridoxine+Cyanocobalamin,Antidiabetic,Alkem Labs,Gel,1g,956.49,100ml,4457,159,FJ1994,2024-04-11,2026-06-01,Yes,X,Keep in a dry place away from sunlight,Thiamine+Pyridoxine+Cyanocobalamin 1g Gel used for treatment,,,,
+MED0126,Melatonin,Ascorbic Acid,,Zydus Cadila,Gel,,707.32,10,3196,,ZF7069,2024-02-12,2027-03-16,No,,Store in cool and dry place,
+MED0127, Amitriptyline ,Multivitamin+Multimineral,VITAMIN,Cipla Ltd.,syrup,200ml,821.25,15,2433,121,ZT2668,2024-03-17,2026-03-06,No,H,Store below 30°C away from light,Multivitamin+Multimineral 200ml Syrup used for treatment
+MED0128, Fluoxetine ,Tocopherol Acetate,ANTIEMETIC,Cipla Ltd.,gel,20mg,633.08,200ml,4238,76,YL3240,2024-04-03,2026-01-09,Yes,OTC,Store below 30°C away from light,Tocopherol Acetate 20mg Gel used for treatment
+MED0129,Sertraline,Ketoconazole,Thyroid,Pfizer India,Suspension,15ml,932.74,20,4843,155,ZT8207,2024-08-17,2028-03-17,0,H1,Refrigerate at 2-8°C,Ketoconazole 15ml Suspension used for treatment
+MED0130,Escitalopram,Terbinafine HCl,Thyroid,Boehringer Ingelheim,Inhaler,62.5mg,399.07,10,3498,155,XE6733,2025/06/15,15.06.2025,Yes,X,Keep in a dry place away from sunlight,Terbinafine HCl 62.5mg Inhaler used for treatment
+MED0131, Paroxetine ,Miconazole Nitrate,ANTICONVULSANT,Abbott India,suspension,100ml,910.66,20,1436,182,PD8223,2024-12-24,2026-04-08,No,H,Keep in a dry place away from sunlight,Miconazole Nitrate 100ml Suspension used for treatment
+MED0132,Duloxetine,Nystatin,Antitubercular,FDC Ltd.,Inhaler,62.5mg,944.35,10,3078,35,NU1070,2024-02-27,2026-09-28,TRUE,G,Refrigerate at 2-8°C,Nystatin 62.5mg Inhaler used for treatment
+MED0133,Venlafaxine,Acyclovir,,Wockhardt Ltd.,Tablet,,702.51,100,877,,SK7327,2024-09-20,2029-06-13,Yes,,Refrigerate at 2-8°C,
+MED0134, Olanzapine ,Valacyclovir HCl,ANTIDIABETIC,AstraZeneca,capsule,37.5mg,143.19,20,4734,23,WT7894,2024-07-28,2029-09-25,No,G,Store at room temperature (15-30°C),Valacyclovir HCl 37.5mg Capsule used for treatment
+MED0135,Risperidone,Oseltamivir Phosphate,Antipsychotic,Aurobindo Pharma,Gel,50mg,231.19,100,4395,51,WD5613,2025-01-24,2026-12-25,Yes,OTC,Refrigerate at 2-8°C,Oseltamivir Phosphate 50mg Gel used for treatment,,,,
+MED0136, Quetiapine ,Remdesivir,UROLOGY,Aurobindo Pharma,powder,1%,573.77,15,4721,173,XU7539,2024-10-25,2026-06-28,No,H,Protect from moisture and light,Remdesivir 1% Powder used for treatment
+MED0137, Aripiprazole ,Molnupiravir,ANTIEMETIC,GSK Pharma,powder,75mg,526.87,20,2998,166,EH4158,2025-10-28,2027-09-02,Yes,X,Store below 25°C in a dry place,Molnupiravir 75mg Powder used for treatment
+MED0138,Lithium,Ivermectin,Antidepressant,Abbott India,Gel,2%,940.67,15,4973,36,DC7131,2025-04-25,2028-07-14,NO,OTC,Protect from moisture and light,Ivermectin 2% Gel used for treatment
+MED0139, Valproate ,Albendazole,UROLOGY,Cipla Ltd.,powder,5%,102.23,200ml,4098,113,IT5785,2024-09-09,2029-11-09,No,H1,Keep in a dry place away from sunlight,Albendazole 5% Powder used for treatment
+MED0140,Carbamazepine,Mebendazole,Vitamin,Mankind Pharma,Inhaler,400mg,460.34,100,343,98,DA5179,June 15 2025,15-Jun-2025,Yes,OTC,Store at room temperature (15-30°C),Mebendazole 400mg Inhaler used for treatment
+MED0141,Phenytoin,Praziquantel,Antimalarial,MSD Pharma,Syrup,5ml,764.73,100ml,4508,14,CS4460,2025-02-01,2027-07-26,YES,H1,Store below 25°C in a dry place,Praziquantel 5ml Syrup used for treatment
+MED0142, Levetiracetam ,Hydroxychloroquine Sulfate,VITAMIN,Glenmark Pharma,inhaler,50mg,692.33,60,2833,11,YQ4643,2025-04-16,2026-10-18,Yes,H,Store below 30°C away from light,Hydroxychloroquine Sulfate 50mg Inhaler used for treatment
+MED0143, Gabapentin ,Chloroquine Phosphate,ANTIHYPERTENSIVE,AstraZeneca,solution,650mg,886.44,20,4941,42,TM6047,2025-07-15,2028-12-02,Yes,H1,Protect from moisture and light,Chloroquine Phosphate 650mg Solution used for treatment
+MED0144,Pregabalin,Artemether+Lumefantrine,Anxiolytic,Boehringer Ingelheim,Powder,62.5mg,772.52,10,1221,164,CA5047,2025-06-19,2027-12-27,YES,H,Protect from moisture and light,Artemether+Lumefantrine 62.5mg Powder used for treatment
+MED0145,Topiramate,Rifampicin,Antipsychotic,Intas Pharma,Tablet,10mg,54.79,200ml,4415,76,JL6933,2025-12-08,2029-06-17,No,H,Protect from moisture and light,Rifampicin 10mg Tablet used for treatment,,,,
+MED0146, Paracetamol-CF ,Isoniazid,ANTICONVULSANT,Hetero Labs,cream,800mg,443.90,15,1724,120,FU4895,2024-08-13,2029-03-24,No,H1,Store in cool and dry place,Isoniazid 800mg Cream used for treatment
+MED0147,Tramadol,Pyrazinamide,,Micro Labs,Suspension,,352.17,10,4813,,NY8078,2024-12-08,2029-01-20,Yes,,Refrigerate at 2-8°C,
+MED0148, Tapentadol ,Ethambutol HCl,ANTIHYPERTENSIVE,Ipca Labs,capsule,10ml,997.38,100ml,1818,83,AV5085,2025-10-24,2027-10-02,Yes,G,Refrigerate at 2-8°C,Ethambutol HCl 10ml Capsule used for treatment
+MED0149, Morphine ,Sildenafil Citrate,ANTIBIOTIC,Cipla Ltd.,drops,10ml,881.87,100ml,4529,180,XM1121,2025-01-16,2027-11-20,No,H,Store below 30°C away from light,Sildenafil Citrate 10ml Drops used for treatment
+MED0150,Fentanyl,Tadalafil,Antitubercular,Emcure Pharma,Ointment,15ml,927.14,100,2269,65,AY9244,15.06.2025,15-Jun-2025,No,X,Store in cool and dry place,Tadalafil 15ml Ointment used for treatment
+MED0151, Codeine ,Tamsulosin HCl,ANTIDIABETIC,Natco Pharma,injection,1%,160.67,20,3971,43,DW2596,2024-05-04,2026-07-14,No,H1,Store below 30°C away from light,Tamsulosin HCl 1% Injection used for treatment
+MED0152, Aceclofenac ,Finasteride,ANTIVIRAL,Alkem Labs,ointment,62.5mg,68.78,30,4190,105,AL2081,2024-05-12,2027-09-11,No,OTC,Store below 30°C away from light,Finasteride 62.5mg Ointment used for treatment
+MED0153,Piroxicam,Dutasteride,PPI,AstraZeneca,Syrup,12.5mg,525.64,20,2939,53,DQ9858,2025-08-03,2026-03-28,TRUE,X,Protect from moisture and light,Dutasteride 12.5mg Syrup used for treatment
+MED0154,Naproxen,Zinc Sulfate,,Mankind Pharma,Solution,,325.81,15,1661,,ND1618,2024-11-22,2028-10-14,No,,Keep in a dry place away from sunlight,
+MED0155,Etoricoxib,Paracetamol,Urology,Lupin Ltd.,Solution,10ml,100.77,100,1789,21,WI8119,2024-05-16,2028-08-09,Yes,OTC,Store below 30°C away from light,Paracetamol 10ml Solution used for treatment,,,,
+MED0156,Celecoxib,Ibuprofen,Bronchodilator,Glenmark Pharma,Gel,62.5mg,877.25,60,1256,166,PX8823,2025-01-02,2027-11-13,0,OTC,Protect from moisture and light,Ibuprofen 62.5mg Gel used for treatment
+MED0157, Calcium-D3 ,Diclofenac Sodium,UROLOGY,Ajanta Pharma,capsule,800mg,915.99,60,3228,96,BD6516,2025-11-21,2028-12-01,No,H1,Protect from moisture and light,Diclofenac Sodium 800mg Capsule used for treatment
+MED0158, Shelcal ,Mefenamic Acid,ANALGESIC,AstraZeneca,gel,0.5%,608.41,100,4437,162,NB1372,2024-04-13,2029-06-28,Yes,H1,Refrigerate at 2-8°C,Mefenamic Acid 0.5% Gel used for treatment
+MED0159,Calcimax,Aceclofenac,Analgesic,Torrent Pharma,Capsule,100ml,39.98,200ml,1696,182,GM5605,2024-10-22,2029-11-20,no,H,Refrigerate at 2-8°C,Aceclofenac 100ml Capsule used for treatment
+MED0160,Gemcal,Aspirin,Antipyretic,Cipla Ltd.,Patch,15ml,945.51,100,1045,124,GK9265,15.06.2025,June 15 2025,Yes,X,Store below 25°C in a dry place,Aspirin 15ml Patch used for treatment
+MED0161,Cipcal,Azithromycin,,GSK Pharma,Capsule,,342.24,200ml,4329,,IQ1951,2024-12-10,2028-02-05,No,,Store in cool and dry place,
+MED0162,OsteofosD3,Amoxicillin,Antihypertensive,GSK Pharma,Injection,50mg,503.30,60,2701,62,EE1818,2024-10-10,2029-07-03,TRUE,H1,Store below 25°C in a dry place,Amoxicillin 50mg Injection used for treatment
+MED0163, Zoledronic ,Amoxicillin+Clavulanate,ANXIOLYTIC,Ajanta Pharma,cream,200mg,714.90,20,2401,153,SX6297,2024-01-02,2029-04-02,Yes,OTC,Protect from moisture and light,Amoxicillin+Clavulanate 200mg Cream used for treatment
+MED0164, Alendronate ,Ciprofloxacin,ANALGESIC,Boehringer Ingelheim,syrup,10ml,513.49,15,76,175,VL1992,2025-11-11,2027-07-04,No,OTC,Store at room temperature (15-30°C),Ciprofloxacin 10ml Syrup used for treatment
+MED0165,Iron-Folic,Norfloxacin,Analgesic,Zydus Cadila,Ointment,250mg,342.96,20,4763,130,GW7682,2024-08-01,2027-05-07,Yes,H,Keep in a dry place away from sunlight,Norfloxacin 250mg Ointment used for treatment,,,,
+MED0166, Livogen ,Ofloxacin,ANTIDEPRESSANT,Ajanta Pharma,syrup,15ml,410.40,100,2975,37,KT2396,2025-12-14,2026-02-26,Yes,H1,Keep in a dry place away from sunlight,Ofloxacin 15ml Syrup used for treatment
+MED0167, Autrin ,Levofloxacin,ANTIBIOTIC,Intas Pharma,ointment,50mg,847.43,20,1315,59,JO3188,2024-03-09,2028-03-02,Yes,H1,Store at room temperature (15-30°C),Levofloxacin 50mg Ointment used for treatment
+MED0168,Dexorange,Metronidazole,,Abbott India,Gel,,361.44,20,4559,,MS3045,2024-12-21,2027-02-03,No,,Store below 25°C in a dry place,
+MED0169, Orofer ,Tinidazole,ANTIMALARIAL,Abbott India,patch,500mg,998.87,100,4904,191,GK8062,2024-03-04,2029-03-12,No,OTC,Store below 30°C away from light,Tinidazole 500mg Patch used for treatment
+MED0170,FolicAcid,Fluconazole,Antacid,Cipla Ltd.,Inhaler,50mg,107.02,15,2632,79,DV2222,2025/06/15,15.06.2025,Yes,G,Keep in a dry place away from sunlight,Fluconazole 50mg Inhaler used for treatment
+MED0171,Vitamin-B12,Clotrimazole,Anticonvulsant,Cipla Ltd.,Suspension,2.5mg,973.39,15,1719,98,EB3012,2025-12-04,2028-10-07,FALSE,G,Store at room temperature (15-30°C),Clotrimazole 2.5mg Suspension used for treatment
+MED0172, Methylcobalamin ,Itraconazole,ANTIPSYCHOTIC,Cipla Ltd.,injection,200ml,329.92,60,1405,32,TS6521,2025-04-12,2026-08-09,Yes,OTC,Store below 25°C in a dry place,Itraconazole 200ml Injection used for treatment
+MED0173, Neurobion ,Griseofulvin,ANTIBIOTIC,GSK Pharma,injection,37.5mg,45.59,60,2132,102,GC6510,2024-09-28,2026-12-22,Yes,H,Refrigerate at 2-8°C,Griseofulvin 37.5mg Injection used for treatment
+MED0174,BecosuleZ,Fexofenadine,Antifungal,Emcure Pharma,Solution,800mg,752.28,200ml,281,104,XL6548,2025-02-25,2026-08-10,TRUE,OTC,Store at room temperature (15-30°C),Fexofenadine 800mg Solution used for treatment
+MED0175,Limcee,Cetirizine HCl,,AstraZeneca,Inhaler,,975.82,15,1661,,TA1292,2025-09-22,2027-04-15,No,,Store in cool and dry place,
+MED0176, Celin ,Montelukast,OPIOID ANALGESIC,Hetero Labs,solution,7.5mg,691.01,30,3395,147,YY2674,2025-05-07,2026-07-16,No,OTC,Refrigerate at 2-8°C,Montelukast 7.5mg Solution used for treatment
+MED0177,Revital,Levocetirizine,Thyroid,Intas Pharma,Syrup,250mg,31.71,100,728,47,BU4126,2025-03-28,2027-06-11,yes,H,Store below 25°C in a dry place,Levocetirizine 250mg Syrup used for treatment
+MED0178, Supradyn ,Triprolidine+Pseudoephedrine,ANTICONVULSANT,FDC Ltd.,powder,62.5mg,821.01,100,405,147,IN3166,2024-05-10,2027-06-23,Yes,H,Protect from moisture and light,Triprolidine+Pseudoephedrine 62.5mg Powder used for treatment
+MED0179, Centrum ,Diphenhydramine,ANTIVIRAL,Ajanta Pharma,syrup,1g,711.32,30,1096,79,VW2780,2025-02-24,2026-02-02,Yes,X,Refrigerate at 2-8°C,Diphenhydramine 1g Syrup used for treatment
+MED0180,Zincovit,Salbutamol,NSAID,MSD Pharma,Capsule,100mg,431.78,200ml,2717,120,CH6239,2025/06/15,June 15 2025,Yes,G,Store at room temperature (15-30°C),Salbutamol 100mg Capsule used for treatment
+MED0181, AtoZ-Gold ,Theophylline+Etofylline,ANTIVIRAL,Lupin Ltd.,syrup,5ml,146.13,15,3218,56,AK1129,2024-06-19,2027-10-09,No,X,Refrigerate at 2-8°C,Theophylline+Etofylline 5ml Syrup used for treatment
+MED0182,Maxirich,Formoterol+Budesonide,,Alkem Labs,Powder,,809.18,20,4741,,DZ7570,2024-05-12,2026-10-11,No,,Refrigerate at 2-8°C,
+MED0183,Becadexamin,Salmeterol+Fluticasone,Antibiotic,Intas Pharma,Tablet,10ml,89.35,10,3693,119,ER3598,2024-12-13,2026-04-25,no,X,Store below 30°C away from light,Salmeterol+Fluticasone 10ml Tablet used for treatment
+MED0184, Evion ,Budesonide,STATIN,Zydus Cadila,capsule,100mg,992.34,100ml,1655,62,EU3235,2024-05-04,2028-01-18,No,H1,Store below 30°C away from light,Budesonide 100mg Capsule used for treatment
+MED0185,Tocotrienol,Ipratropium+Levosalbutamol,Opioid Analgesic,Ipca Labs,Ointment,650mg,796.16,100ml,1819,74,XM9300,2024-06-18,2027-11-10,Yes,H1,Store below 25°C in a dry place,Ipratropium+Levosalbutamol 650mg Ointment used for treatment,,,,
+MED0186,Ketoconazole,Pantoprazole,Opioid Analgesic,Emcure Pharma,Syrup,10mg,760.21,20,4514,123,VD7803,2024-02-27,2028-09-04,no,G,Keep in a dry place away from sunlight,Pantoprazole 10mg Syrup used for treatment
+MED0187, Terbinafine ,Pantoprazole+Domperidone,ANTICOAGULANT,Boehringer Ingelheim,patch,20mg,744.52,200ml,4945,69,LA2271,2025-10-05,2026-05-21,No,OTC,Store in cool and dry place,Pantoprazole+Domperidone 20mg Patch used for treatment
+MED0188, Clotrimazole ,Omeprazole,OPIOID ANALGESIC,Boehringer Ingelheim,powder,250mg,298.62,200ml,4514,195,VU8242,2024-05-09,2027-08-09,Yes,H,Store at room temperature (15-30°C),Omeprazole 250mg Powder used for treatment
+MED0189,Miconazole,Ranitidine HCl,,Mankind Pharma,Capsule,,341.90,60,1079,,FJ6042,2024-05-02,2029-02-26,No,,Store below 30°C away from light,
+MED0190,Nystatin,Famotidine,Antiviral,Abbott India,Suspension,10mg,535.53,200ml,1231,51,EX5259,2025/06/15,2025/06/15,No,G,Refrigerate at 2-8°C,Famotidine 10mg Suspension used for treatment
+MED0191, Acyclovir ,Sucralfate,ANTIDEPRESSANT,Micro Labs,powder,62.5mg,459.48,30,4131,90,HC9435,2024-05-28,2026-03-22,Yes,X,Store below 25°C in a dry place,Sucralfate 62.5mg Powder used for treatment
+MED0192,Valacyclovir,Aluminium+Magnesium Hydroxide,Calcium Supplement,Biocon Ltd.,Patch,200mg,159.84,10,1098,109,IQ8453,2024-06-21,2028-10-21,FALSE,H,Refrigerate at 2-8°C,Aluminium+Magnesium Hydroxide 200mg Patch used for treatment
+MED0193, Oseltamivir ,Sodium Alginate,ANTIDEPRESSANT,Lupin Ltd.,powder,62.5mg,822.87,20,4251,14,PO4214,2025-04-09,2027-01-25,No,X,Store in cool and dry place,Sodium Alginate 62.5mg Powder used for treatment
+MED0194, Remdesivir ,Metformin HCl,ANTIDIABETIC,Wockhardt Ltd.,inhaler,5%,943.35,20,2171,158,HF8558,2024-02-23,2028-04-05,No,H1,Store below 25°C in a dry place,Metformin HCl 5% Inhaler used for treatment
+MED0195,Molnupiravir,Glimepiride,Anxiolytic,Mankind Pharma,Cream,500mg,201.02,60,1773,144,SK9719,2024-03-27,2027-10-21,Yes,H1,Protect from moisture and light,Glimepiride 500mg Cream used for treatment,,,,
+MED0196,Ivermectin,Sitagliptin,,Glenmark Pharma,Injection,,749.36,10,421,,BR6289,2024-01-11,2029-05-21,Yes,,Store below 25°C in a dry place,
+MED0197, Albendazole ,Vildagliptin,ANTIPSYCHOTIC,Biocon Ltd.,capsule,1%,996.08,10,3762,180,FI2383,2025-07-25,2027-02-07,Yes,H,Store below 30°C away from light,Vildagliptin 1% Capsule used for treatment
+MED0198,Mebendazole,Linagliptin,Antihypertensive,Sun Pharma,Capsule,10ml,816.84,100ml,11,181,IY3700,2025-03-17,2027-06-05,YES,H1,Store below 25°C in a dry place,Linagliptin 10ml Capsule used for treatment
+MED0199, Praziquantel ,Empagliflozin,ANALGESIC,Novartis India,patch,200ml,342.83,15,4330,195,HZ5040,2025-07-19,2026-03-01,No,G,Refrigerate at 2-8°C,Empagliflozin 200ml Patch used for treatment
+MED0200,Hydroxychloroquine,Canagliflozin,Anxiolytic,Aurobindo Pharma,Suppository,500mg,834.67,30,4779,148,VU3622,15.06.2025,2025/06/15,No,H,Keep in a dry place away from sunlight,Canagliflozin 500mg Suppository used for treatment
+MED0201,Chloroquine,Insulin Human,Anticoagulant,Abbott India,Inhaler,12.5mg,519.70,30,4900,146,QR2341,2025-05-27,2028-04-25,NO,OTC,Store below 25°C in a dry place,Insulin Human 12.5mg Inhaler used for treatment
+MED0202, Artemether ,Insulin Glargine,UROLOGY,Hetero Labs,tablet,2%,300.46,20,621,200,KB6539,2024-03-21,2028-11-17,No,OTC,Store at room temperature (15-30°C),Insulin Glargine 2% Tablet used for treatment
+MED0203,Rifampicin,Amlodipine Besylate,,Natco Pharma,Patch,,396.99,100,3090,,FW8430,2025-08-06,2028-04-17,Yes,,Protect from moisture and light,
+MED0204,Isoniazid,Telmisartan,Bronchodilator,Pfizer India,Capsule,2%,57.28,200ml,2464,112,QR3776,2025-07-25,2026-08-21,1,X,Store in cool and dry place,Telmisartan 2% Capsule used for treatment
+MED0205,Pyrazinamide,Losartan Potassium,Iron Supplement,Aurobindo Pharma,Gel,37.5mg,848.03,15,2259,46,OF5831,2024-04-08,2028-02-04,No,OTC,Refrigerate at 2-8°C,Losartan Potassium 37.5mg Gel used for treatment,,,,
+MED0206, Ethambutol ,Enalapril Maleate,ANTACID,Cadila Healthcare,ointment,650mg,847.67,60,2249,199,KB8783,2025-08-21,2028-01-09,Yes,H,Refrigerate at 2-8°C,Enalapril Maleate 650mg Ointment used for treatment
+MED0207,Sildenafil,Ramipril,Antihypertensive,Hetero Labs,Cream,50mg,952.53,30,3123,191,FX1899,2025-11-06,2028-04-06,TRUE,H,Store below 30°C away from light,Ramipril 50mg Cream used for treatment
+MED0208, Tadalafil ,Atenolol,ANTIPARASITIC,Boehringer Ingelheim,gel,25mg,874.02,60,1530,123,RV9153,2024-04-18,2028-03-13,Yes,H,Store below 30°C away from light,Atenolol 25mg Gel used for treatment
+MED0209, Tamsulosin ,Metoprolol Succinate,ANTIPARASITIC,Abbott India,gel,25mg,743.40,60,4478,87,UG9835,2024-12-24,2029-11-10,Yes,OTC,Store at room temperature (15-30°C),Metoprolol Succinate 25mg Gel used for treatment
+MED0210,Finasteride,Bisoprolol,Vitamin,Wockhardt Ltd.,Syrup,25mg,365.68,200ml,4607,123,GK7090,June 15 2025,15.06.2025,No,H,Store below 30°C away from light,Bisoprolol 25mg Syrup used for treatment

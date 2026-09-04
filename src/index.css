@@ -1,0 +1,333 @@
+@import "tailwindcss";
+
+/* Registers the brand's semantic color tokens (--primary, --card, --border,
+   etc. defined below) as real Tailwind utilities. Without this @theme
+   block, classes like bg-primary, text-primary, bg-card, border-border,
+   and text-muted-foreground compile to nothing in Tailwind v4 — they need
+   the --color-* namespace to be picked up as utilities — so every
+   component using them silently rendered with no background/text color at
+   all (transparent, falling back to browser defaults). This is what made
+   the cookie-consent banner (and other bg-card/bg-primary surfaces) look
+   washed-out/see-through instead of a solid, on-theme panel. */
+@theme {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+}
+
+@layer base {
+  :root {
+    /* Force light-mode native form controls (select popups, date pickers,
+       scrollbars) regardless of the user's OS/browser dark-mode setting —
+       without this, selected dropdown text can render using the system's
+       dark palette and become unreadable against our light theme. */
+    color-scheme: light;
+
+    /* MediStock brand system — dark green + white, applied uniformly across navbar and pages */
+    --background: 150 20% 100%; /* pure white */
+    --foreground: 160 15% 12%; /* dark slate-green */
+
+    --card: 150 20% 100%;
+    --card-foreground: 160 15% 12%;
+
+    --popover: 150 20% 100%;
+    --popover-foreground: 160 15% 12%;
+
+    --primary: 163 88% 20%; /* dark green (emerald-800) */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 152 35% 95%; /* subtle light green */
+    --secondary-foreground: 163 20% 22%;
+
+    --muted: 152 45% 97%;
+    --muted-foreground: 160 12% 45%;
+
+    --accent: 161 80% 28%; /* emerald-600/700 */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 78% 56%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Softer hairline so panels read as elevation, not as boxed-in */
+    --border: 152 24% 90%;
+    --input: 152 45% 97%;
+    --ring: 160 84% 39%;
+    --radius: 0.5rem;
+
+    /* Secondary accent hues used to differentiate panel types across pages */
+    --accent-violet: 258 70% 58%;
+    --accent-teal: 172 66% 40%;
+    --accent-amber: 32 90% 52%;
+    --accent-rose: 350 78% 56%;
+  }
+ 
+  /* dark theme removed - app uses light theme only */
+
+  /* Ensure elements that use explicit white backgrounds are toned down in dark mode
+     so content remains legible instead of transparent or washed-out. */
+  .dark [class*="bg-white"] {
+    background-color: hsl(var(--card)) !important;
+    color: hsl(var(--card-foreground)) !important;
+  }
+  .dark [class*="bg-background"] {
+    background-color: hsl(var(--background)) !important;
+    color: hsl(var(--foreground)) !important;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    min-height: 100vh;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    /* Clean white background with a subtle dark-green accent */
+    background-image: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background)) 100%);
+    background-attachment: fixed;
+  }
+
+  /* App load fade-in (will be toggled by App component) */
+  body:not(.app-visible) {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 360ms ease, transform 360ms ease;
+  }
+  body.app-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Themed scrollbar for supported browsers */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--primary)) hsl(var(--card));
+  }
+
+  /* WebKit scrollbar styles */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--card));
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, hsl(var(--primary)), hsl(var(--secondary)));
+    border-radius: 999px;
+    border: 3px solid hsl(var(--card));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    filter: brightness(0.92);
+  }
+
+  /* Hover and toggle utility classes that use the theme palette */
+  .hoverable {
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+  }
+  .hoverable:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(5,150,105,0.08);
+  }
+
+  .btn-theme {
+    transition: background-color 0.12s ease, color 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+  .btn-theme:hover {
+    filter: brightness(0.98);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 30px rgba(5,150,105,0.08);
+  }
+
+  button,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  [role="button"],
+  .cursor-pointer {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  input[type="button"]:disabled,
+  input[type="submit"]:disabled,
+  input[type="reset"]:disabled {
+    cursor: not-allowed;
+  }
+
+  button,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+  }
+
+  button:hover:not(:disabled),
+  input[type="button"]:hover:not(:disabled),
+  input[type="submit"]:hover:not(:disabled),
+  input[type="reset"]:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+
+  /* Gentle backdrop scroll effect on large screens */
+  @media (min-width: 768px) {
+    body {
+      background-attachment: fixed;
+      background-position: center top;
+    }
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* ---------------------------------------------------------------------
+     Panel system: several distinct, reusable layout patterns that replace
+     the single repeated "boxed" panel look used throughout the app.
+     Pick the variant that fits the content instead of defaulting to one.
+  --------------------------------------------------------------------- */
+
+  /* Base elevated surface: soft shadow + faint hairline, no heavy border */
+  .panel {
+    position: relative;
+    border-radius: 1.75rem;
+    background-color: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 10px 24px -18px rgba(15, 23, 42, 0.18);
+    transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+  }
+  .panel:hover {
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06), 0 18px 34px -16px rgba(3, 105, 161, 0.28);
+    transform: translateY(-2px);
+    border-color: hsl(var(--primary) / 0.25);
+  }
+
+  /* Accent-left card: a colored spine instead of a full border, for
+     highlighting a metric or callout. Color set via data-accent. */
+  .panel-accent {
+    position: relative;
+    border-radius: 1.25rem;
+    background-color: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-left-width: 4px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+  }
+  .panel-accent:hover {
+    box-shadow: 0 14px 28px -18px rgba(15, 23, 42, 0.35);
+    transform: translateY(-2px);
+  }
+  .panel-accent[data-accent="sky"] { border-left-color: hsl(var(--primary)); }
+  .panel-accent[data-accent="violet"] { border-left-color: hsl(var(--accent-violet)); }
+  .panel-accent[data-accent="teal"] { border-left-color: hsl(var(--accent-teal)); }
+  .panel-accent[data-accent="amber"] { border-left-color: hsl(var(--accent-amber)); }
+  .panel-accent[data-accent="rose"] { border-left-color: hsl(var(--accent-rose)); }
+
+  /* Flat panel: no border at all, separated purely by tinted background —
+     used to break up sequences of bordered cards. */
+  .panel-flat {
+    border-radius: 1.5rem;
+    background-color: hsl(var(--muted));
+    transition: background-color 0.25s ease, transform 0.25s ease;
+  }
+  .panel-flat:hover {
+    background-color: hsl(var(--primary) / 0.07);
+    transform: translateY(-1px);
+  }
+
+  /* Outline-only chip panel: thin ring, transparent fill, for secondary
+     or auxiliary information blocks. */
+  .panel-outline {
+    border-radius: 1.5rem;
+    border: 1px dashed hsl(var(--border));
+    background-color: transparent;
+    transition: border-color 0.25s ease, background-color 0.25s ease;
+  }
+  .panel-outline:hover {
+    border-color: hsl(var(--primary) / 0.5);
+    background-color: hsl(var(--primary) / 0.03);
+  }
+
+  /* Divider list row: for content that reads better as a list than a
+     grid of boxes (workflow steps, log entries). */
+  .row-divider {
+    border-top: 1px solid hsl(var(--border));
+    transition: background-color 0.2s ease;
+  }
+  .row-divider:first-child {
+    border-top: none;
+  }
+  .row-divider:hover {
+    background-color: hsl(var(--primary) / 0.04);
+  }
+
+  /* Stat tile: icon-left horizontal layout for KPI numbers, paired with
+     a one-line plain-language explanation underneath. */
+  .stat-tile {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    border-radius: 1.25rem;
+    background-color: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    padding: 1.25rem;
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+  }
+  .stat-tile:hover {
+    box-shadow: 0 16px 30px -20px rgba(3, 105, 161, 0.4);
+    transform: translateY(-3px);
+  }
+
+  /* Scroll-reveal: fades/slides content in as it enters the viewport, and
+     resets when it leaves, so scrolling back up re-triggers the entrance
+     animation on the way down again. Toggled via IntersectionObserver in
+     the <Reveal> component. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+  .reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+}
