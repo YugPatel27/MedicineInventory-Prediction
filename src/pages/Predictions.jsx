@@ -485,7 +485,6 @@ export function Predictions() {
                       }
                     },
                   }}
-                  redraw
                   />
               </Suspense>
             </div>
@@ -508,14 +507,12 @@ export function Predictions() {
                         labels: ['Urgent restock', 'Plan restock', 'Sufficient stock'],
                         datasets: [{ data: [counts.urgent, counts.plan, counts.sufficient], backgroundColor: ['#ef4444', '#f59e0b', '#059669'] }],
                       }}
-                      redraw
                       options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }}
                     />
                   </div>
                   <div className="h-20">
                     <Bar
                       data={{ labels: topDemandSeries.map((s) => s.label), datasets: [{ label: 'Demand score', data: topDemandSeries.map((s) => s.value), backgroundColor: '#fb7185' }] }}
-                      redraw
                       options={{ indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } } }}
                     />
                   </div>
@@ -563,7 +560,6 @@ export function Predictions() {
                         { label: 'Projected demand', data: forecastAnalytics.stockDemandSeries.map((item) => item.predicted_demand), backgroundColor: '#f59e0b' },
                       ],
                     }}
-                    redraw
                     options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { x: { ticks: { maxRotation: 45, minRotation: 0 } } } }}
                   />
                 </Suspense>
@@ -579,7 +575,6 @@ export function Predictions() {
                       labels: forecastAnalytics.monthlyDemand.map((item) => item.label),
                       datasets: [{ label: 'Projected demand', data: forecastAnalytics.monthlyDemand.map((item) => item.value), borderColor: '#059669', backgroundColor: 'rgba(5,150,105,0.18)', fill: true, tension: 0.3 }],
                     }}
-                    redraw
                     options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }}
                   />
                 </Suspense>
@@ -609,7 +604,6 @@ export function Predictions() {
                       labels: forecastInsights.coverageSeries.map((item) => item.label),
                       datasets: [{ label: 'Stock coverage %', data: forecastInsights.coverageSeries.map((item) => item.value), backgroundColor: '#0ea5e9', borderRadius: 6 }],
                     }}
-                    redraw
                     options={{
                       indexAxis: 'y',
                       maintainAspectRatio: false,
@@ -690,7 +684,6 @@ export function Predictions() {
                       labels: monthlySeries.map((item) => item.label),
                       datasets: [{ label: 'Projected demand', data: monthlySeries.map((item) => item.value), borderColor: '#059669', backgroundColor: 'rgba(5,150,105,0.18)', tension: 0.3, fill: true }],
                     }}
-                    redraw
                     options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }}
                   />
                 </Suspense>
@@ -702,7 +695,6 @@ export function Predictions() {
                     <Suspense fallback={<div className="grid h-full place-items-center text-sm text-muted-foreground">Loading...</div>}>
                       <PolarArea
                         data={{ labels: ['Urgent', 'Plan', 'Sufficient'], datasets: [{ data: [demandBuckets.urgent, demandBuckets.plan, demandBuckets.sufficient], backgroundColor: ['#ef4444', '#f59e0b', '#059669'] }] }}
-                        redraw
                         options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }}
                       />
                     </Suspense>
@@ -714,7 +706,6 @@ export function Predictions() {
                     <Suspense fallback={<div className="grid h-full place-items-center text-sm text-muted-foreground">Loading...</div>}>
                       <Bar
                         data={{ labels: topDemandSeries.map((s) => s.label), datasets: [{ label: 'Score', data: topDemandSeries.map((s) => s.value), backgroundColor: '#60a5fa' }] }}
-                        redraw
                         options={{ indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } } }}
                       />
                     </Suspense>

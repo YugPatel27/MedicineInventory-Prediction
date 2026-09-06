@@ -75,7 +75,7 @@ export function Login() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center px-4 py-10 overflow-hidden">
+    <div className="relative min-h-screen flex items-center justify-center px-3 py-6 sm:px-4 sm:py-10 overflow-hidden">
       {/* Local background keeps the login shell fast and available offline. */}
       <div
         className="absolute inset-0 bg-cover bg-center"
@@ -86,19 +86,19 @@ export function Login() {
       {/* Green-tinted, dulled overlay so it stays subtle behind the card */}
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/80 via-emerald-800/70 to-white/90" />
 
-      <div className="relative w-full max-w-xl overflow-hidden rounded-[2rem] bg-white shadow-2xl ring-1 ring-slate-200">
-        <div className="grid gap-6 bg-gradient-to-r from-emerald-700 via-emerald-500 to-emerald-400 px-8 py-10 text-white sm:grid-cols-[1.2fr_1fr]">
+      <div className="relative w-full max-w-xl overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-slate-200 sm:rounded-[2rem]">
+        <div className="grid gap-5 bg-gradient-to-r from-emerald-800 via-emerald-700 to-emerald-500 px-5 py-7 text-white sm:grid-cols-[1.2fr_1fr] sm:gap-6 sm:px-8 sm:py-10">
           <div>
-            <BrandMark />
-            <h2 className="mt-6 text-3xl font-semibold">Welcome back</h2>
-            <p className="mt-3 text-sm text-slate-200/80">Sign in to access medicine inventory, forecasting, and expiry insights.</p>
+            <BrandMark theme="dark" />
+            <h2 className="mt-5 text-2xl font-semibold sm:mt-6 sm:text-3xl">Welcome back</h2>
+            <p className="mt-3 max-w-md text-sm leading-6 text-white/90">Sign in to access medicine inventory, forecasting, and expiry insights.</p>
           </div>
-          <div className="flex items-end justify-end">
-            <div className="rounded-3xl bg-white/10 p-4 text-white/80 text-sm">Local healthcare stack with fast inventory operations.</div>
+          <div className="hidden items-end justify-end sm:flex">
+            <div className="rounded-2xl bg-black/15 p-4 text-sm leading-5 text-white/90">Local healthcare stack with fast inventory operations.</div>
           </div>
         </div>
 
-        <div className="bg-white px-8 py-9 sm:px-10">
+        <div className="bg-white px-5 py-7 sm:px-10 sm:py-9">
           {error && <Alert type="danger">{error}</Alert>}
           <form onSubmit={handleLogin} className="space-y-5">
             <div>

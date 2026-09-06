@@ -174,18 +174,18 @@ export function Settings() {
           </div>
         </div>
 
-        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-[0.9fr_1.35fr_1fr]">
           <div>
             <p className="text-sm font-semibold text-foreground">Rows per page</p>
             <p className="mt-1 text-xs text-foreground">Applies to Inventory and Purchases tables.</p>
-            <div className="mt-3 flex gap-2 text-black">
+            <div className="mt-3 flex flex-wrap gap-2">
               {[10, 20, 50, 100].map((size) => (
                 <button
                   key={size}
                   onClick={() => updateSetting('defaultPageSize', size)}
-                  className={`rounded-xl px-3 py-2 text-xs text-black font-semibold transition-all duration-200 ${
+                    className={`rounded-xl px-3 py-2 text-xs font-semibold transition-all duration-200 ${
                     settings.defaultPageSize === size
-                      ? 'bg-primary text-black shadow-sm'
+                      ? 'bg-primary text-primary-foreground shadow-sm'
                       : 'border border-border text-foreground hover:-translate-y-0.5 hover:bg-primary/5'
                   }`}
                 >
@@ -224,7 +224,7 @@ export function Settings() {
                   onClick={() => ['sm', 'base', 'lg'].includes(opt.key) && setTextSize(opt.key)}
                   className={`rounded-xl px-3 py-2 text-xs font-semibold transition-all duration-200 ${
                     textSize === opt.key
-                      ? 'bg-primary text-black shadow-sm'
+                      ? 'bg-primary text-primary-foreground shadow-sm'
                       : 'border border-border text-muted-foreground hover:-translate-y-0.5 hover:bg-primary/5'
                   }`}
                 >
