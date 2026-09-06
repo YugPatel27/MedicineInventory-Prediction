@@ -3,6 +3,7 @@ import StockLog from '../models/StockLog.js';
 import { recordAudit } from '../utils/audit.js';
 import { trainShortageModel } from '../utils/logisticRegression.js';
 import { buildMonthlyForecastSeries, buildSeasonalForecast } from '../../shared/seasonalForecast.js';
+import { hasInventoryAccess, inventoryVisibilityFilter } from '../utils/inventoryAccess.js';
 
 const getMonthlyConsumptionMap = async (medicineIds) => {
   const endDate = new Date();
@@ -22,8 +23,11 @@ const getMonthlyConsumptionMap = async (medicineIds) => {
 
 export const runForecasting = async (req, res) => {
   try {
+    if (!hasInventoryAccess(req.user)) {
+      return res.status(403).json({ status: 'error', message: 'Inventory access has not been granted by an administrator' });
+    }
     try { await recordAudit({ req, action: 'run_forecast', target: 'predictions', details: {} }); } catch (e) { console.warn('audit failed', e); }
-    const medicines = await Medicine.find();
+    const medicines = await Medicine.find(inventoryVisibilityFilter(req.user));
 
     // Train the Logistic Regression model dynamically on the current medicines dataset
     const lrModel = trainShortageModel(medicines);

@@ -2,8 +2,11 @@ import { Router } from 'express';
 import multer from 'multer';
 import path from 'path';
 import * as importController from '../controllers/import.controller.js';
+import { verifyToken } from '../middleware/auth.middleware.js';
+import { requireAdmin } from '../middleware/auth.middleware.js';
 
 const router = Router();
+router.use(verifyToken, requireAdmin);
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'uploads/'),
   filename: (req, file, cb) => {

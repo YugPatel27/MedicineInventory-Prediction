@@ -64,7 +64,7 @@ export const login = async (req, res) => {
 
 export const register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password } = req.body;
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ status: 'error', message: 'User already exists' });
@@ -76,7 +76,7 @@ export const register = async (req, res) => {
       name,
       email,
       password,
-      role: role || 'Customer',
+      role: 'Customer',
       permissions: [],
       emailVerificationToken,
     });

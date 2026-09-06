@@ -12,14 +12,14 @@ const requireAdminOrManager = (req, res, next) => {
 };
 
 router.use(verifyToken);
+router.post('/', requireAdminOrManager, medicineController.createMedicine);
+router.put('/:id', requireAdminOrManager, medicineController.updateMedicine);
+router.delete('/:id', requireAdminOrManager, medicineController.deleteMedicine);
 router.get('/summary', medicineController.getSummary);
 router.get('/alerts', medicineController.getAlerts);
 router.post('/backfill-prices', requireAdminOrManager, medicineController.backfillPricesFromReference);
 router.get('/', medicineController.getAllMedicines);
 router.get('/:id', medicineController.getMedicineById);
-router.post('/', medicineController.createMedicine);
-router.put('/:id', medicineController.updateMedicine);
-router.delete('/:id', medicineController.deleteMedicine);
-router.post('/:id/transaction', medicineController.processStockTransaction);
+router.post('/:id/transaction', requireAdminOrManager, medicineController.processStockTransaction);
 
 export default router;

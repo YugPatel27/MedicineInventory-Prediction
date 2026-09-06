@@ -5,6 +5,7 @@ import Medicine from '../models/Medicine.js';
 import StockLog from '../models/StockLog.js';
 import { recordAudit } from '../utils/audit.js';
 import { manageStockTransaction } from '../utils/stockManager.js';
+import { inventoryVisibilityFilter } from '../utils/inventoryAccess.js';
 
 const REFERENCE_PRICE_FILE = path.resolve('server/data/medicines_reference.csv');
 
@@ -39,7 +40,7 @@ const buildAlerts = (medicines) => {
 
 export const getAllMedicines = async (req, res) => {
   try {
-    const medicines = await Medicine.find();
+    const medicines = await Medicine.find(inventoryVisibilityFilter(req.user));
     res.status(200).json({ status: 'success', data: medicines });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Internal Server Error';
@@ -49,7 +50,7 @@ export const getAllMedicines = async (req, res) => {
 
 export const getSummary = async (req, res) => {
   try {
-    const medicines = await Medicine.find();
+    const medicines = await Medicine.find(inventoryVisibilityFilter(req.user));
     const alerts = buildAlerts(medicines);
 
     const reorderGapItems = medicines.filter((medicine) => {
@@ -76,7 +77,7 @@ export const getSummary = async (req, res) => {
 
 export const getAlerts = async (req, res) => {
   try {
-    const medicines = await Medicine.find();
+    const medicines = await Medicine.find(inventoryVisibilityFilter(req.user));
     const alerts = buildAlerts(medicines);
     res.status(200).json({ status: 'success', data: alerts });
   } catch (error) {
@@ -87,7 +88,7 @@ export const getAlerts = async (req, res) => {
 
 export const getMedicineById = async (req, res) => {
   try {
-    const medicine = await Medicine.findById(req.params.id);
+    const medicine = await Medicine.findOne({ _id: req.params.id, ...inventoryVisibilityFilter(req.user) });
     if (!medicine) return res.status(404).json({ status: 'error', message: 'Medicine not found' });
     res.status(200).json({ status: 'success', data: medicine });
   } catch (error) {

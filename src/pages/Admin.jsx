@@ -19,6 +19,8 @@ export function Admin() {
   const [filter, setFilter] = useState('');
   const [deletingId, setDeletingId] = useState(null);
   const [clearing, setClearing] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [accessUpdatingId, setAccessUpdatingId] = useState(null);
 
   const [expandedLogId, setExpandedLogId] = useState(null);
   const knownOrderIds = React.useRef(new Set());
@@ -50,6 +52,38 @@ export function Admin() {
   useEffect(() => {
     fetchLogs();
   }, [role]);
+
+  useEffect(() => {
+    if (role !== 'Admin') return undefined;
+    let active = true;
+    apiClient.get('/admin/users')
+      .then(({ data }) => {
+        if (active) setUsers(Array.isArray(data?.data) ? data.data : []);
+      })
+      .catch((err) => {
+        if (active) setError(err?.response?.data?.message || 'Unable to load users.');
+      });
+    return () => { active = false; };
+  }, [role]);
+
+  const handleInventoryAccess = async (user, granted) => {
+    setAccessUpdatingId(user._id);
+    setError('');
+    setMessage('');
+    try {
+      await apiClient.patch(`/admin/users/${user._id}/inventory-access`, { granted });
+      setUsers((previous) => previous.map((item) => (
+        item._id === user._id
+          ? { ...item, permissions: granted ? [...new Set([...(item.permissions || []), 'view_inventory'])] : (item.permissions || []).filter((permission) => permission !== 'view_inventory') }
+          : item
+      )));
+      setMessage(`${granted ? 'Inventory access granted to' : 'Inventory access revoked from'} ${user.name}.`);
+    } catch (err) {
+      setError(err?.response?.data?.message || 'Unable to update inventory access.');
+    } finally {
+      setAccessUpdatingId(null);
+    }
+  };
 
   useEffect(() => {
     if (role !== 'Admin') return undefined;
@@ -204,6 +238,63 @@ export function Admin() {
             </Link>
           ))}
           {recentOrders.length === 0 && <p className="text-sm text-muted-foreground">No customer orders yet.</p>}
+        </div>
+      </section>
+
+      <section className="panel overflow-hidden">
+        <div className="border-b border-border px-5 py-4">
+          <p className="eyebrow-tag">Data access</p>
+          <h2 className="mt-1 text-lg font-semibold text-foreground">User inventory permissions</h2>
+          <p className="mt-1 text-sm text-muted-foreground">New accounts start without access to uploaded medicine data.</p>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-border text-left text-sm">
+            <thead className="bg-background/80 text-slate-500">
+              <tr>
+                <th className="px-5 py-3 font-medium">User</th>
+                <th className="px-5 py-3 font-medium">Role</th>
+                <th className="px-5 py-3 font-medium">Inventory access</th>
+                <th className="px-5 py-3 text-right font-medium">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {users.map((user) => {
+                const privileged = ['Admin', 'Manager'].includes(user.role);
+                const granted = privileged || user.permissions?.includes('view_inventory');
+                return (
+                  <tr key={user._id}>
+                    <td className="px-5 py-3">
+                      <p className="font-medium text-foreground">{user.name}</p>
+                      <p className="text-xs text-muted-foreground">{user.email}</p>
+                    </td>
+                    <td className="px-5 py-3 text-muted-foreground">{user.role}</td>
+                    <td className="px-5 py-3">
+                      <span className={granted ? 'rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700' : 'rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600'}>
+                        {granted ? 'Granted' : 'Not granted'}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3 text-right">
+                      {privileged ? (
+                        <span className="text-xs text-muted-foreground">Role access</span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handleInventoryAccess(user, !granted)}
+                          disabled={accessUpdatingId === user._id}
+                          className={granted ? 'rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-100 disabled:opacity-50' : 'rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 disabled:opacity-50'}
+                        >
+                          {accessUpdatingId === user._id ? 'Updating...' : granted ? 'Revoke access' : 'Grant access'}
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+              {users.length === 0 && (
+                <tr><td colSpan={4} className="px-5 py-6 text-center text-sm text-muted-foreground">No user accounts found.</td></tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </section>
 

@@ -4,6 +4,7 @@ import Medicine from '../models/Medicine.js';
 import StockLog from '../models/StockLog.js';
 import { manageStockTransaction } from '../utils/stockManager.js';
 import { recordAudit } from '../utils/audit.js';
+import { hasInventoryAccess } from '../utils/inventoryAccess.js';
 
 const DEFAULT_TAX_RATE = 0.05; // 5% GST, matches the billing summary shown to customers
 
@@ -38,6 +39,9 @@ function orderLookupQuery(id) {
  */
 export const createOrder = async (req, res) => {
   try {
+    if (!hasInventoryAccess(req.user)) {
+      return res.status(403).json({ status: 'error', message: 'Inventory access has not been granted by an administrator' });
+    }
     const { items, customer, paymentMethod, taxRate } = req.body;
 
     if (!Array.isArray(items) || items.length === 0) {
@@ -54,7 +58,9 @@ export const createOrder = async (req, res) => {
       if (!lookupId || !raw.quantity || raw.quantity <= 0) {
         return res.status(400).json({ status: 'error', message: 'Each cart line needs a valid medicine and quantity.' });
       }
-      const medicine = await Medicine.findOne({ $or: [{ _id: lookupId }, { medicine_id: lookupId }] });
+      const medicine = hasInventoryAccess(req.user)
+        ? await Medicine.findOne({ $or: [{ _id: lookupId }, { medicine_id: lookupId }] })
+        : null;
       if (!medicine) {
         return res.status(404).json({ status: 'error', message: `Medicine "${raw.medicine_name || lookupId}" was not found.` });
       }

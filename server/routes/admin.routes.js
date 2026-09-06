@@ -7,6 +7,8 @@ const router = Router();
 router.use(verifyToken, requireAdmin);
 
 router.get('/logs', adminController.getAuditLogs);
+router.get('/users', adminController.getUsers);
+router.patch('/users/:userId/inventory-access', adminController.setInventoryAccess);
 router.delete('/logs/:id', adminController.deleteAuditLog);
 router.delete('/logs', adminController.clearAuditLogs);
 

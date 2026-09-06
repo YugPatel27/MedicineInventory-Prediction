@@ -15,7 +15,7 @@ export const verifyToken = async (req, res, next) => {
     if (!decoded || typeof decoded !== 'object' || !decoded.id) {
       return res.status(401).json({ status: 'error', message: 'Invalid token' });
     }
-    const user = await User.findById(decoded.id).select('name email role');
+    const user = await User.findById(decoded.id).select('name email role permissions');
     if (!user) {
       return res.status(401).json({ status: 'error', message: 'User not found' });
     }

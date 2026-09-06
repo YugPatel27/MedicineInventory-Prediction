@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { verifyToken, requireAdmin } from '../middleware/auth.middleware.js';
 import Medicine from '../models/Medicine.js';
 import { recordAudit } from '../utils/audit.js';
+import { hasInventoryAccess } from '../utils/inventoryAccess.js';
 import * as orderController from '../controllers/order.controller.js';
 
 const router = Router();
@@ -19,6 +20,9 @@ router.patch('/:id', requireAdmin, orderController.updateOrder);
 // Supplier reorder request (kept as-is for the Purchases workflow) ---------
 router.post('/reorder', async (req, res) => {
   try {
+    if (!hasInventoryAccess(req.user)) {
+      return res.status(403).json({ status: 'error', message: 'Inventory access has not been granted by an administrator' });
+    }
     const { medicine_id, quantity } = req.body;
     if (!medicine_id || !quantity || quantity <= 0) {
       return res.status(400).json({ status: 'error', message: 'Invalid medicine ID or quantity' });
