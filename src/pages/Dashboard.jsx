@@ -227,7 +227,7 @@ export function Dashboard() {
 
       {/* Hero */}
       <PageHeader
-        title="Inventory prediction intelligence"
+        title="Dashboard"
         description="Keep medicine stock levels optimal, reduce expiry waste, and use local forecasting to support reorder decisions — calculated entirely from your own inventory data, on your own server."
         image={PAGE_IMAGES.analyticsOverview}
         imageAlt="Stocked pharmacy medicine shelf"
