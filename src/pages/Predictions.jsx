@@ -790,7 +790,7 @@ export function Predictions() {
         </div>
 
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-border bg-card p-4 text-sm text-muted-foreground">
-          <p>Showing {pageItems.length === 0 ? 0 : (currentPage - 1) * pageSize + 1}–{Math.min(predictions.length, currentPage * pageSize)} of {predictions.length} forecast items</p>
+          <p>Showing {pageItems.length === 0 ? 0 : (currentPage - 1) * pageSize + 1}-{Math.min(predictions.length, currentPage * pageSize)} of {predictions.length} Forecast items</p>
           <div className="flex items-center gap-2">
             <button
               type="button"
