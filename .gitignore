@@ -4,6 +4,5 @@ uploads/
 .env
 .env.*
 !.env.example
-lighthouse-*.json
 *.log
 .DS_Store
