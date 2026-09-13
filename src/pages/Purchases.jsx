@@ -131,16 +131,19 @@ export function Purchases() {
         }
       />
 
-      {/* Stats — icon-free stat-tile row with a coloured left spine per status */}
+      {/* Stats — icon-bearing stat-tile row with a coloured left spine per status */}
       <section className="grid gap-4 md:grid-cols-4">
         {[
-          { label: 'Pending', value: stats.pending, color: '#F59E0B', text: 'text-amber-600' },
-          { label: 'Confirmed', value: stats.confirmed, color: '#059669', text: 'text-emerald-600' },
-          { label: 'Shipped', value: stats.shipped, color: '#7C3AED', text: 'text-violet-600' },
-          { label: 'Received', value: stats.received, color: '#10B981', text: 'text-emerald-600' },
+          { label: 'Pending', value: stats.pending, color: '#F59E0B', text: 'text-amber-600', iconClassName: 'fa-solid fa-hourglass-half' },
+          { label: 'Confirmed', value: stats.confirmed, color: '#059669', text: 'text-emerald-600', iconClassName: 'fa-solid fa-clipboard-check' },
+          { label: 'Shipped', value: stats.shipped, color: '#7C3AED', text: 'text-violet-600', iconClassName: 'fa-solid fa-truck-fast' },
+          { label: 'Received', value: stats.received, color: '#10B981', text: 'text-emerald-600', iconClassName: 'fa-solid fa-box-open' },
         ].map((item, index) => (
           <Reveal key={item.label} delay={index * 60}>
             <div className="stat-tile" style={{ borderLeftWidth: 4, borderLeftStyle: 'solid', borderLeftColor: item.color }}>
+              <div className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground">
+                <i className={`${item.iconClassName} h-5 w-5 flex items-center justify-center`} aria-hidden="true" />
+              </div>
               <div className="min-w-0">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">{item.label}</p>
                 <p className={`mt-2 text-3xl font-semibold ${item.text}`}>{item.value}</p>

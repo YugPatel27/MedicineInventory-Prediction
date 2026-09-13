@@ -27,7 +27,10 @@ export function responseEncryption(req, res, next) {
 
   const originalJson = res.json.bind(res);
 
+  console.log('[responseEncryption] hook path:', req.path);
+
   res.json = (payload) => {
+    console.log('[responseEncryption] payload path:', req.path, 'payload type:', typeof payload, payload && payload.encrypted);
     if (!payload || typeof payload !== 'object' || payload.encrypted) {
       return originalJson(payload);
     }
@@ -39,6 +42,7 @@ export function responseEncryption(req, res, next) {
 
     try {
       const encryptedPayload = encryptPayload(payload);
+      console.log('[responseEncryption] encrypted route:', req.path);
       return originalJson({
         encrypted: true,
         algorithm,

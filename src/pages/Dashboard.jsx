@@ -127,6 +127,7 @@ export function Dashboard() {
         label: 'Medicines tracked',
         value: summary.totalMedicines,
         icon: Database,
+        iconClassName: 'fa-solid fa-capsules',
         accent: 'sky',
         iconTone: 'bg-primary/10 text-primary',
         explanation: 'The number of distinct medicines currently recorded in your inventory system.',
@@ -135,6 +136,7 @@ export function Dashboard() {
         label: 'Nearing expiry',
         value: summary.expiringSoon,
         icon: Clock3,
+        iconClassName: 'fa-solid fa-hourglass-half',
         accent: 'amber',
         iconTone: 'bg-amber-100 text-amber-700',
         explanation: 'Medicines set to expire within 30 days — review and sell or transfer these first.',
@@ -143,6 +145,7 @@ export function Dashboard() {
         label: 'Below reorder point',
         value: summary.reorderGapCount,
         icon: TrendingUp,
+        iconClassName: 'fa-solid fa-chart-line',
         accent: 'violet',
         iconTone: 'bg-violet-100 text-violet-700',
         explanation: 'Items whose stock has fallen under the safe reordering threshold and need a purchase order.',
@@ -151,6 +154,7 @@ export function Dashboard() {
         label: 'Out of stock',
         value: summary.outOfStock,
         icon: ShieldCheck,
+        iconClassName: 'fa-solid fa-box-open',
         accent: 'rose',
         iconTone: 'bg-rose-100 text-rose-700',
         explanation: 'Medicines with zero units on hand right now — these are unavailable for dispensing.',
@@ -244,7 +248,11 @@ export function Dashboard() {
             style={{ borderLeftWidth: 4, borderLeftStyle: 'solid', borderLeftColor: STAT_ACCENT_COLORS[item.accent] }}
           >
             <div className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${item.iconTone}`}>
-              <item.icon className="h-5 w-5" />
+              {item.iconClassName ? (
+                <i className={`${item.iconClassName} h-5 w-5 flex items-center justify-center`} aria-hidden="true" />
+              ) : (
+                <item.icon className="h-5 w-5" />
+              )}
             </div>
             <div className="min-w-0">
               <p className="text-3xl font-semibold leading-none text-foreground">{item.value}</p>

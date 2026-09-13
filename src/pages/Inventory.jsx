@@ -279,21 +279,25 @@ export function Inventory() {
         label: 'Total medicines',
         value: summary.totalMedicines,
         highlight: false,
+        iconClassName: 'fa-solid fa-capsules',
       },
       {
         label: 'Expiring soon',
         value: summary.expiringSoon,
         highlight: true,
+        iconClassName: 'fa-solid fa-hourglass-half',
       },
       {
         label: 'Out of stock',
         value: summary.outOfStock,
         highlight: true,
+        iconClassName: 'fa-solid fa-box-open',
       },
       {
         label: 'Low stock',
         value: summary.lowStock,
         highlight: summary.lowStock > 0,
+        iconClassName: 'fa-solid fa-chart-line',
       },
     ],
     [summary]
@@ -527,6 +531,9 @@ export function Inventory() {
         {summaryCards.map((card, index) => (
           <Reveal key={card.label} delay={index * 60}>
           <div className="stat-tile" style={{ borderLeftWidth: 4, borderLeftStyle: 'solid', borderLeftColor: card.highlight ? '#059669' : '#CBD5E1' }}>
+            <div className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${card.highlight ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-500'}`}>
+              <i className={`${card.iconClassName} h-5 w-5 flex items-center justify-center`} aria-hidden="true" />
+            </div>
             <div className="min-w-0">
               <p className="text-sm text-muted-foreground">{card.label}</p>
               <p className={`mt-2 text-3xl font-semibold ${card.highlight ? 'text-emerald-600' : 'text-foreground'}`}>

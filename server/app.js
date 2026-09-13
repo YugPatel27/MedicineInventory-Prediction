@@ -52,8 +52,20 @@ app.use('/api/predictions', predictionRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
+  const isJsonParseFailure =
+    err?.type === 'entity.parse.failed' ||
+    (err instanceof SyntaxError && err.status === 400 && 'body' in err);
+
+  if (isJsonParseFailure) {
+    console.warn('Malformed JSON request blocked:', req.method, req.originalUrl);
+    return res.status(400).json({
+      status: 'error',
+      message: 'Malformed JSON payload. Please send a valid JSON object.'
+    });
+  }
+
   console.error('Unhandled Error:', err);
-  res.status(err.status || 500).json({
+  res.status(err.status || err.statusCode || 500).json({
     status: 'error',
     message: err.message || 'Internal Server Error'
   });

@@ -216,9 +216,14 @@ export function Admin() {
 
       <section className="panel-accent p-5" data-accent="teal">
         <div className="flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <p className="eyebrow-tag">Order monitor</p>
-            <h2 className="mt-1 text-lg font-semibold text-foreground">Recent customer orders</h2>
+          <div className="flex items-center gap-3">
+            <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+              <i className="fa-solid fa-chart-line h-5 w-5 flex items-center justify-center" aria-hidden="true" />
+            </span>
+            <div>
+              <p className="eyebrow-tag">Order monitor</p>
+              <h2 className="mt-1 text-lg font-semibold text-foreground">Recent customer orders</h2>
+            </div>
           </div>
           <span className="text-xs text-muted-foreground">Updates automatically every 8 seconds</span>
         </div>

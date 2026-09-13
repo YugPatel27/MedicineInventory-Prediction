@@ -314,25 +314,25 @@ export function Reports() {
   const kpiCards = useMemo(() => {
     if (reportType === 'suppliers') {
       return [
-        { label: 'Suppliers', value: summary.totalSuppliers, icon: Box, color: '#059669', iconTone: 'bg-primary/10 text-primary' },
-        { label: 'Medicines covered', value: summary.medicinesCovered, icon: BarChart3, color: '#059669', iconTone: 'bg-primary/10 text-primary' },
-        { label: 'Avg items / supplier', value: summary.avgMedicinesPerSupplier, icon: Filter, color: '#F59E0B', iconTone: 'bg-amber-100 text-amber-700' },
-        { label: 'Est. stock value (Rs.)', value: summary.estStockValue.toLocaleString(), icon: TrendingUp, color: '#0EA5E9', iconTone: 'bg-sky-100 text-sky-700' },
+        { label: 'Suppliers', value: summary.totalSuppliers, icon: Box, iconClassName: 'fa-solid fa-truck', color: '#059669', iconTone: 'bg-primary/10 text-primary' },
+        { label: 'Medicines covered', value: summary.medicinesCovered, icon: BarChart3, iconClassName: 'fa-solid fa-capsules', color: '#059669', iconTone: 'bg-primary/10 text-primary' },
+        { label: 'Avg items / supplier', value: summary.avgMedicinesPerSupplier, icon: Filter, iconClassName: 'fa-solid fa-filter', color: '#F59E0B', iconTone: 'bg-amber-100 text-amber-700' },
+        { label: 'Est. stock value (Rs.)', value: summary.estStockValue.toLocaleString(), icon: TrendingUp, iconClassName: 'fa-solid fa-money-bill-wave', color: '#0EA5E9', iconTone: 'bg-sky-100 text-sky-700' },
       ];
     }
     if (reportType === 'audit') {
       return [
-        { label: 'Total log entries', value: summary.totalLogs, icon: ShieldCheck, color: '#059669', iconTone: 'bg-primary/10 text-primary' },
-        { label: 'Unique users', value: summary.uniqueUsers, icon: Activity, color: '#0EA5E9', iconTone: 'bg-sky-100 text-sky-700' },
-        { label: 'Top action', value: summary.topAction, icon: AlertTriangle, color: '#F59E0B', iconTone: 'bg-amber-100 text-amber-700' },
-        { label: 'Admin actions', value: summary.adminActions, icon: Clock3, color: '#F43F5E', iconTone: 'bg-rose-100 text-rose-700' },
+        { label: 'Total log entries', value: summary.totalLogs, icon: ShieldCheck, iconClassName: 'fa-solid fa-clipboard-list', color: '#059669', iconTone: 'bg-primary/10 text-primary' },
+        { label: 'Unique users', value: summary.uniqueUsers, icon: Activity, iconClassName: 'fa-solid fa-users', color: '#0EA5E9', iconTone: 'bg-sky-100 text-sky-700' },
+        { label: 'Top action', value: summary.topAction, icon: AlertTriangle, iconClassName: 'fa-solid fa-bolt', color: '#F59E0B', iconTone: 'bg-amber-100 text-amber-700' },
+        { label: 'Admin actions', value: summary.adminActions, icon: Clock3, iconClassName: 'fa-solid fa-clock', color: '#F43F5E', iconTone: 'bg-rose-100 text-rose-700' },
       ];
     }
     return [
-      { label: 'Total medicines', value: summary.totalMedicines, icon: Database, color: '#059669', iconTone: 'bg-primary/10 text-primary' },
-      { label: 'Total stock', value: summary.totalStock, icon: BarChart3, color: '#059669', iconTone: 'bg-primary/10 text-primary' },
-      { label: 'Expiring soon', value: summary.expiringSoon, icon: Calendar, color: '#F59E0B', iconTone: 'bg-amber-100 text-amber-700' },
-      { label: 'Out of stock', value: summary.outOfStock, icon: Filter, color: '#F43F5E', iconTone: 'bg-rose-100 text-rose-700' },
+      { label: 'Total medicines', value: summary.totalMedicines, icon: Database, iconClassName: 'fa-solid fa-capsules', color: '#059669', iconTone: 'bg-primary/10 text-primary' },
+      { label: 'Total stock', value: summary.totalStock, icon: BarChart3, iconClassName: 'fa-solid fa-chart-column', color: '#059669', iconTone: 'bg-primary/10 text-primary' },
+      { label: 'Expiring soon', value: summary.expiringSoon, icon: Calendar, iconClassName: 'fa-solid fa-hourglass-half', color: '#F59E0B', iconTone: 'bg-amber-100 text-amber-700' },
+      { label: 'Out of stock', value: summary.outOfStock, icon: Filter, iconClassName: 'fa-solid fa-box-open', color: '#F43F5E', iconTone: 'bg-rose-100 text-rose-700' },
     ];
   }, [reportType, summary]);
 
@@ -458,7 +458,11 @@ export function Reports() {
           <Reveal key={item.label} delay={index * 60}>
             <div className="stat-tile" style={{ borderLeftWidth: 4, borderLeftStyle: 'solid', borderLeftColor: item.color }}>
               <div className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${item.iconTone}`}>
-                <item.icon className="h-5 w-5" />
+                {item.iconClassName ? (
+                  <i className={`${item.iconClassName} h-5 w-5 flex items-center justify-center`} aria-hidden="true" />
+                ) : (
+                  <item.icon className="h-5 w-5" />
+                )}
               </div>
               <div className="min-w-0">
                 <p className="text-3xl font-semibold leading-none text-foreground">{item.value}</p>
