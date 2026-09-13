@@ -1,6 +1,8 @@
 import axios from 'axios';
+import CryptoJS from 'crypto-js';
 
 const apiBaseURL = import.meta.env.VITE_API_URL || '/api';
+const encryptionKey = import.meta.env.VITE_API_RESPONSE_ENCRYPTION_KEY || '12345678901234567890123456789012';
 let refreshPromise = null;
 
 export const apiClient = axios.create({
@@ -32,7 +34,34 @@ apiClient.interceptors.request.use(
 );
 
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    const payload = response?.data;
+    if (payload && payload.encrypted === true && payload.encryptedData && payload.iv) {
+      try {
+        const key = CryptoJS.enc.Utf8.parse(encryptionKey.padEnd(32, '0').slice(0, 32));
+        const iv = CryptoJS.enc.Base64.parse(payload.iv);
+        const decrypted = CryptoJS.AES.decrypt(payload.encryptedData, key, {
+          iv,
+          mode: CryptoJS.mode.CBC,
+          padding: CryptoJS.pad.Pkcs7,
+        });
+
+        const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
+        if (!decryptedText) {
+          throw new Error('Empty decrypted response');
+        }
+
+        response.data = JSON.parse(decryptedText);
+      } catch (decryptError) {
+        console.error('API response decryption failed:', decryptError);
+        response.data = {
+          status: 'error',
+          message: 'Encrypted API response could not be decrypted.'
+        };
+      }
+    }
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
     const isRefreshRequest = originalRequest?.url?.includes('/auth/refresh');
@@ -56,7 +85,7 @@ apiClient.interceptors.response.use(
         localStorage.setItem('mips-access-token', newAccessToken);
         originalRequest.headers = originalRequest.headers || {};
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        
+
         return apiClient(originalRequest);
       } catch (refreshError) {
         localStorage.removeItem('mips-access-token');
