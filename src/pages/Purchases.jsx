@@ -195,7 +195,7 @@ export function Purchases() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-muted/60">
-                  <th className="px-6 py-4 text-left font-semibold">PO#</th>
+                  <th className="px-6 py-4 text-left font-semibold">PO#(Purchase Order)</th>
                   <th className="px-6 py-4 text-left font-semibold">Medicine</th>
                   <th className="px-6 py-4 text-left font-semibold">Supplier</th>
                   <th className="px-6 py-4 text-left font-semibold">Qty</th>
