@@ -312,6 +312,63 @@ export const ChevronDown = (props) => (
   </SvgWrapper>
 );
 
+const iconMap = {
+  menu: Menu,
+  home: Home,
+  dashboard: Home,
+  database: Database,
+  box: Box,
+  'box-open': Box,
+  'bar-chart-3': BarChart3,
+  'trending-up': TrendingUp,
+  trend: TrendingUp,
+  upload: UploadCloud,
+  calendar: Calendar,
+  filter: Filter,
+  settings: Settings,
+  info: Info,
+  activity: Activity,
+  shield: ShieldCheck,
+  clock: Clock3,
+  'clock-3': Clock3,
+  check: CheckCircle2,
+  file: FileText,
+  download: Download,
+  refresh: RefreshCcw,
+  plus: Plus,
+  search: Search,
+  cart: ShoppingCart,
+  truck: Truck,
+  package: PackageCheck,
+  alert: AlertTriangle,
+  user: UserCircle,
+  bell: Bell,
+  logout: LogOut,
+  chart: BarChart3,
+  'chart-line': TrendingUp,
+  'hourglass-half': Clock3,
+  'capsules': Database,
+  'triangle-exclamation': AlertTriangle,
+  'calendar-days': Calendar,
+  'circle-check': CheckCircle2,
+  'bullseye': Activity,
+  'clipboard-check': CheckCircle2,
+  'truck-fast': Truck,
+  'clipboard-list': FileText,
+  'money-bill-wave': TrendingUp,
+  'gauge-high': BarChart3,
+  'boxes-stacked': Box,
+  'scale-balanced': Settings,
+  sitemap: FileText,
+};
+
+export function AppIcon({ name, className = 'h-5 w-5', ...props }) {
+  const iconName = String(name || 'box').trim().toLowerCase();
+  const normalizedName = iconName.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const Icon = iconMap[normalizedName] || Box;
+  return <Icon className={className} {...props} />;
+}
+
 export default {
   Menu,
   Sun,
@@ -354,4 +411,5 @@ export default {
   X,
   UserCircle,
   ChevronDown,
+  AppIcon,
 };

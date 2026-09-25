@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useCart } from '../context/CartContext';
@@ -33,11 +33,19 @@ export function Checkout() {
   });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [orderSuccess, setOrderSuccess] = useState(null);
+  const redirectTimerRef = useRef(null);
 
   useEffect(() => {
     document.title = 'Secure Checkout — MediStock';
-    if (items.length === 0) navigate('/cart', { replace: true });
-  }, [items.length, navigate]);
+    if (items.length === 0 && !orderSuccess) navigate('/cart', { replace: true });
+  }, [items.length, navigate, orderSuccess]);
+
+  useEffect(() => () => {
+    if (redirectTimerRef.current) {
+      clearTimeout(redirectTimerRef.current);
+    }
+  }, []);
 
   const taxAmount = subtotal * TAX_RATE;
   const grandTotal = subtotal + taxAmount;
@@ -50,6 +58,7 @@ export function Checkout() {
       setError('Please fill in recipient name, phone, address, city and PIN code.');
       return;
     }
+
     setSubmitting(true);
     try {
       const payload = {
@@ -63,8 +72,14 @@ export function Checkout() {
         taxRate: TAX_RATE,
       };
       const { data } = await apiClient.post('/orders', payload);
+      const orderNumber = data?.data?.orderNumber;
+      setOrderSuccess({ orderNumber, message: 'Order placed successfully. Redirecting you to the order summary...' });
       clearCart();
-      navigate(`/orders/${data.data.orderNumber}`, { state: { justPlaced: true } });
+
+      if (redirectTimerRef.current) clearTimeout(redirectTimerRef.current);
+      redirectTimerRef.current = window.setTimeout(() => {
+        navigate(`/orders/${orderNumber}`, { state: { justPlaced: true } });
+      }, 420);
     } catch (err) {
       console.error('Place order failed', err);
       setError(err?.response?.data?.message || 'Unable to place the order. Please try again.');
@@ -84,6 +99,20 @@ export function Checkout() {
       />
 
       {error && <Alert type="danger">{error}</Alert>}
+      {orderSuccess && (
+        <Alert type="success" title="Order placed successfully">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <span>{orderSuccess.message}</span>
+            <button
+              type="button"
+              onClick={() => navigate(`/orders/${orderSuccess.orderNumber}`, { state: { justPlaced: true } })}
+              className="inline-flex items-center rounded-lg bg-emerald-700 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-emerald-800"
+            >
+              View order
+            </button>
+          </div>
+        </Alert>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-3">
         <Reveal className="panel space-y-5 p-6 lg:col-span-2">

@@ -4,7 +4,7 @@ import { apiClient } from '../api/axios';
 import Alert from '../components/Alert';
 import { SmartMedicineEntry } from '../components/SmartMedicineEntry';
 import TransactionModal from '../components/TransactionModal';
-import { Download, FileText, RefreshCcw, Plus, Search, UploadCloud, ShoppingCart } from '../components/Icons';
+import { AppIcon, Download, FileText, RefreshCcw, Plus, Search, UploadCloud, ShoppingCart } from '../components/Icons';
 import { useSelector } from 'react-redux';
 import { useAppSettings } from '../context/AppSettingsContext';
 import { useCart } from '../context/CartContext';
@@ -279,25 +279,25 @@ export function Inventory() {
         label: 'Total medicines',
         value: summary.totalMedicines,
         highlight: false,
-        iconClassName: 'fa-solid fa-capsules',
+        iconName: 'database',
       },
       {
         label: 'Expiring soon',
         value: summary.expiringSoon,
         highlight: true,
-        iconClassName: 'fa-solid fa-hourglass-half',
+        iconName: 'hourglass-half',
       },
       {
         label: 'Out of stock',
         value: summary.outOfStock,
         highlight: true,
-        iconClassName: 'fa-solid fa-box-open',
+        iconName: 'box-open',
       },
       {
         label: 'Low stock',
         value: summary.lowStock,
         highlight: summary.lowStock > 0,
-        iconClassName: 'fa-solid fa-chart-line',
+        iconName: 'chart-line',
       },
     ],
     [summary]
@@ -428,7 +428,7 @@ export function Inventory() {
           <div className="flex flex-wrap items-center gap-3">
             <button onClick={() => navigate('/cart')} className={`${actionBtnBase} bg-amber-400 text-emerald-950 hover:bg-amber-300`}>
               <ShoppingCart className="h-4 w-4" />
-              Go to Cart
+              Quick Billing
             </button>
             <button onClick={handleExportPDF} className={`${actionBtnBase} bg-white text-emerald-700 hover:bg-emerald-50`}>
               <FileText className="h-4 w-4" />
@@ -488,8 +488,9 @@ export function Inventory() {
               <button
                 type="button"
                 onClick={() => navigate('/cart')}
-                className="inline-flex items-center rounded-lg bg-emerald-700 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-emerald-800"
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-400 px-3.5 py-1.5 text-xs font-bold text-emerald-950 shadow-sm ring-1 ring-amber-500/40 transition hover:scale-[1.02] hover:shadow-md"
               >
+                <ShoppingCart className="h-3.5 w-3.5" />
                 View cart
               </button>
             )}
@@ -527,20 +528,20 @@ export function Inventory() {
         </div>
       )}
 
-      <section className="grid gap-4 lg:grid-cols-4">
+      <section className="grid gap-3 lg:grid-cols-4">
         {summaryCards.map((card, index) => (
           <Reveal key={card.label} delay={index * 60}>
-          <div className="stat-tile" style={{ borderLeftWidth: 4, borderLeftStyle: 'solid', borderLeftColor: card.highlight ? '#059669' : '#CBD5E1' }}>
-            <div className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${card.highlight ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-500'}`}>
-              <i className={`${card.iconClassName} h-5 w-5 flex items-center justify-center`} aria-hidden="true" />
+          <div className="stat-tile p-4" style={{ borderLeftWidth: 4, borderLeftStyle: 'solid', borderLeftColor: card.highlight ? '#059669' : '#CBD5E1' }}>
+            <div className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${card.highlight ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-500'}`}>
+              <AppIcon name={card.iconName} className="h-4 w-4" aria-hidden="true" />
             </div>
             <div className="min-w-0">
               <p className="text-sm text-muted-foreground">{card.label}</p>
-              <p className={`mt-2 text-3xl font-semibold ${card.highlight ? 'text-emerald-600' : 'text-foreground'}`}>
+              <p className={`mt-2 text-2xl font-semibold ${card.highlight ? 'text-emerald-600' : 'text-foreground'}`}>
                 {card.value}
               </p>
               {card.caption ? (
-                <p className="mt-1 text-xs uppercase tracking-[0.2em] text-muted-foreground">{card.caption}</p>
+                <p className="mt-1 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{card.caption}</p>
               ) : null}
             </div>
           </div>
@@ -549,14 +550,14 @@ export function Inventory() {
       </section>
 
       {batchSegments.length > 0 && (
-        <section className="panel-accent p-6" data-accent="teal">
+        <section className="panel-accent p-4" data-accent="teal">
           <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <p className="eyebrow-tag">Batch segmentation</p>
-              <h2 className="mt-2 text-2xl font-semibold text-foreground">Batch groups with FEFO visibility - First Expiry First Out</h2>
+              <h2 className="mt-2 text-xl font-semibold text-foreground">Batch groups with FEFO visibility - First Expiry First Out</h2>
             </div>
           </div>
-          <div className="mt-5 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-4 grid gap-3 lg:grid-cols-2 xl:grid-cols-3">
             {batchSegments.map((segment) => {
               const mainBatch = segment.earliestExpiry;
               return (
@@ -592,14 +593,14 @@ export function Inventory() {
         </section>
       )}
 
-      <section className="panel-accent p-6" data-accent="sky">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <section className="panel-accent p-4" data-accent="sky">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="eyebrow-tag">Inventory directory</p>
-            <h2 className="mt-2 text-2xl font-semibold text-foreground">Find a medicine</h2>
+            <h2 className="mt-2 text-xl font-semibold text-foreground">Find a medicine</h2>
             <p className="mt-1 text-sm text-muted-foreground">Search by medicine name or internal ID to manage stock and billing.</p>
           </div>
-          <div className="flex w-full items-center gap-3 rounded-xl border border-border bg-background px-4 py-3 shadow-sm lg:w-[min(100%,34rem)]">
+          <div className="flex w-full items-center gap-3 rounded-xl border border-border bg-background px-3 py-2.5 shadow-sm lg:w-[min(100%,34rem)]">
             <Search className="h-4 w-4 text-muted-foreground" />
             <input
               type="search"
@@ -616,10 +617,10 @@ export function Inventory() {
       </section>
 
       <section className="overflow-hidden panel">
-        <div className="flex flex-wrap items-end justify-between gap-3 border-b border-border px-6 py-5">
+        <div className="flex flex-wrap items-end justify-between gap-3 border-b border-border px-4 py-4">
           <div>
             <p className="eyebrow-tag">Stock register</p>
-            <h2 className="mt-1 text-xl font-semibold text-foreground">Current medicines</h2>
+            <h2 className="mt-1 text-lg font-semibold text-foreground">Current medicines</h2>
           </div>
           <p className="text-sm text-muted-foreground">{filteredMedicines.length} matching record{filteredMedicines.length === 1 ? '' : 's'}</p>
         </div>
@@ -627,13 +628,13 @@ export function Inventory() {
           <table className="min-w-full divide-y divide-border text-left text-sm">
             <thead className="bg-emerald-50/70 text-slate-600">
               <tr>
-                <th className="px-4 py-4 font-medium">ID</th>
-                <th className="px-4 py-4 font-medium">Name</th>
-                <th className="px-4 py-4 font-medium">Stock</th>
-                <th className="px-4 py-4 font-medium">Price</th>
-                <th className="px-4 py-4 font-medium">Status</th>
-                <th className="px-4 py-4 font-medium">Expiry</th>
-                <th className="px-4 py-4 font-medium">Actions</th>
+                <th className="px-3 py-3 font-medium">ID</th>
+                <th className="px-3 py-3 font-medium">Name</th>
+                <th className="px-3 py-3 font-medium">Stock</th>
+                <th className="px-3 py-3 font-medium">Price</th>
+                <th className="px-3 py-3 font-medium">Status</th>
+                <th className="px-3 py-3 font-medium">Expiry</th>
+                <th className="px-3 py-3 font-medium">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -658,15 +659,15 @@ export function Inventory() {
                   const isFefoBatch = medicineBatchGroup.length > 1 && sortedBatchGroup[0] && (String(sortedBatchGroup[0]._id ?? sortedBatchGroup[0].medicine_id ?? '') === String(medicine._id ?? medicine.medicine_id ?? ''));
                   return (
                     <tr key={medicine._id ?? medicine.medicine_id} className="hover:bg-slate-50 transition-colors">
-                      <td className="px-4 py-4 font-medium">{medicine.medicine_id}</td>
-                      <td className="px-4 py-4 text-muted-foreground">
+                      <td className="px-3 py-3 font-medium">{medicine.medicine_id}</td>
+                      <td className="px-3 py-3 text-muted-foreground">
                         <div className="flex flex-col gap-1">
                           <span>{medicine.medicine_name}</span>
                           {medicine.batch_number && <span className="text-xs text-slate-500">Batch {medicine.batch_number}</span>}
                         </div>
                       </td>
-                      <td className="px-4 py-4 font-semibold text-foreground">{medicine.stock_quantity}</td>
-                      <td className="px-4 py-4 font-semibold text-foreground">
+                      <td className="px-3 py-3 font-semibold text-foreground">{medicine.stock_quantity}</td>
+                      <td className="px-3 py-3 font-semibold text-foreground">
                         {medicine.unit_price > 0 ? (
                           formatMoney(currency, medicine.unit_price)
                         ) : (
@@ -675,13 +676,13 @@ export function Inventory() {
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-4">
-                        <span className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${statusClass}`}>
+                      <td className="px-3 py-3">
+                        <span className={`inline-flex rounded-full border px-2.5 py-1 text-[11px] font-semibold ${statusClass}`}>
                           {medicine.status}
                         </span>
                       </td>
-                      <td className="px-4 py-4">
-                        <div className={`rounded-2xl border px-3 py-2 text-sm ${getBatchAgeColor(medicine)}`}>
+                      <td className="px-3 py-3">
+                        <div className={`rounded-xl border px-2.5 py-1.5 text-xs ${getBatchAgeColor(medicine)}`}>
                           <div className="flex items-center justify-between gap-2">
                             <span>{formatDisplayDate(medicine.expiry_date)}</span>
                             <div className="flex items-center gap-2">
@@ -696,7 +697,7 @@ export function Inventory() {
                           )}
                         </div>
                       </td>
-                      <td className="px-4 py-4 flex flex-wrap gap-2">
+                      <td className="px-3 py-3 flex flex-wrap gap-1.5">
                         {['Admin', 'Manager'].includes(role) && (
                           <button
                             type="button"
@@ -736,11 +737,20 @@ export function Inventory() {
                           type="button"
                           onClick={() => {
                             if (!medicine.unit_price || medicine.unit_price <= 0) {
-                              setNotification({ type: 'danger', message: `${medicine.medicine_name} has no selling price set. Edit the medicine to add one before billing it.` });
+                              setNotification({
+                                type: 'danger',
+                                title: 'Billing not ready',
+                                message: `${medicine.medicine_name} has no selling price. Update it before sending to billing.`,
+                              });
                               return;
                             }
                             addToCart(medicine, 1);
-                            setNotification({ type: 'success', title: 'Added to cart', message: `${medicine.medicine_name} is ready for billing.`, cart: true });
+                            setNotification({
+                              type: 'success',
+                              title: 'Added to cart',
+                              message: `${medicine.medicine_name} is queued for Quick Billing.`,
+                              cart: true,
+                            });
                           }}
                           disabled={!medicine.stock_quantity || medicine.stock_quantity <= 0}
                           title="Add to cart for billing"
@@ -767,7 +777,7 @@ export function Inventory() {
         </div>
       </section>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 panel p-4 text-sm text-muted-foreground">
+      <div className="flex flex-wrap items-center justify-between gap-3 panel p-3 text-sm text-muted-foreground">
         <p>Showing {pageItems.length === 0 ? 0 : (currentPage - 1) * pageSize + 1}–{Math.min(filteredMedicines.length, currentPage * pageSize)} of {filteredMedicines.length} medicines</p>
         <div className="flex items-center gap-2">
           <button

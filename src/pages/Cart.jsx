@@ -24,7 +24,7 @@ export function Cart() {
   const grandTotal = subtotal + taxAmount;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <PageHeader
         eyebrow="Billing"
         title="Your Selection"
@@ -34,7 +34,7 @@ export function Cart() {
         actions={
           <Link
             to="/inventory"
-            className="inline-flex w-fit items-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-emerald-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-emerald-50"
+            className="inline-flex w-fit items-center gap-2 rounded-2xl bg-white px-3.5 py-2.5 text-sm font-semibold text-emerald-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-emerald-50"
           >
             Back to Inventory
           </Link>
@@ -42,29 +42,29 @@ export function Cart() {
       />
 
       {items.length === 0 ? (
-        <Reveal className="panel flex flex-col items-center gap-3 p-14 text-center">
-          <ShoppingCart className="h-10 w-10 text-muted-foreground" />
+        <Reveal className="panel flex flex-col items-center gap-2 p-10 text-center">
+          <ShoppingCart className="h-9 w-9 text-muted-foreground" />
           <p className="text-lg font-semibold">Your cart is empty</p>
           <p className="max-w-md text-sm text-muted-foreground">
             Add medicines from the Inventory page to start a new bill.
           </p>
-          <Link to="/inventory" className="mt-2 rounded-2xl bg-primary px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary/90">
+          <Link to="/inventory" className="mt-2 rounded-2xl bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary/90">
             Browse Inventory
           </Link>
         </Reveal>
       ) : (
-        <div className="grid gap-6 lg:grid-cols-3">
-          <div className="space-y-4 lg:col-span-2">
+        <div className="grid gap-4 lg:grid-cols-3">
+          <div className="space-y-3 lg:col-span-2">
             {items.map((item) => (
-              <Reveal key={item.medicineId} className="panel flex flex-wrap items-center justify-between gap-4 p-5">
+              <Reveal key={item.medicineId} className="panel flex flex-wrap items-center justify-between gap-3 p-4">
                 <div className="min-w-0 flex-1">
                   <p className="font-semibold text-foreground">{item.medicine_name}</p>
-                  <p className="mt-1 text-xs uppercase tracking-wide text-muted-foreground">
+                  <p className="mt-1 text-[11px] uppercase tracking-wide text-muted-foreground">
                     {item.medicine_id} {item.batch_number ? `· Batch ${item.batch_number}` : ''}
                   </p>
                   <p className="mt-1 text-xs text-muted-foreground">{formatMoney(currency, item.unit_price)} / unit · {item.stock_quantity} in stock</p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5">
                   <div className="flex items-center gap-1 rounded-xl border border-border bg-white px-1.5 py-1">
                     <button
                       type="button"
@@ -83,7 +83,7 @@ export function Cart() {
                       <Plus className="h-3.5 w-3.5" />
                     </button>
                   </div>
-                  <p className="w-24 text-right font-semibold text-primary">{formatMoney(currency, item.unit_price * item.quantity)}</p>
+                  <p className="w-20 text-right text-sm font-semibold text-primary">{formatMoney(currency, item.unit_price * item.quantity)}</p>
                   <button
                     type="button"
                     onClick={() => removeFromCart(item.medicineId)}
@@ -97,20 +97,20 @@ export function Cart() {
             ))}
           </div>
 
-          <Reveal className="panel h-fit space-y-4 p-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Order Summary</p>
+          <Reveal className="panel h-fit space-y-3 p-4">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Order Summary</p>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span className="font-medium">{formatMoney(currency, subtotal)}</span></div>
               <div className="flex justify-between"><span className="text-muted-foreground">GST ({Math.round(TAX_RATE * 100)}%)</span><span className="font-medium">{formatMoney(currency, taxAmount)}</span></div>
             </div>
-            <div className="flex justify-between border-t border-border pt-3 text-base font-semibold">
+            <div className="flex justify-between border-t border-border pt-2 text-base font-semibold">
               <span>Total Payable</span>
               <span className="text-primary">{formatMoney(currency, grandTotal)}</span>
             </div>
             <button
               type="button"
               onClick={() => navigate('/checkout')}
-              className="w-full rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+              className="w-full rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
             >
               Proceed to Checkout →
             </button>

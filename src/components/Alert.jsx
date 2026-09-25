@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { CheckCircle2, AlertTriangle, XCircle, Info } from './Icons';
 
 const VARIANTS = {
@@ -41,7 +42,14 @@ export function Alert({ type = 'info', title, children }) {
   const Icon = v.icon;
 
   return (
-    <div role="alert" className={`relative overflow-hidden rounded-2xl border ${v.ring} ${v.bg} pl-5 pr-4 py-3.5 text-sm ${v.text}`}>
+    <motion.div
+      role="alert"
+      initial={{ opacity: 0, y: -8, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -8, scale: 0.98 }}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
+      className={`relative overflow-hidden rounded-2xl border ${v.ring} ${v.bg} pl-5 pr-4 py-3.5 text-sm shadow-sm ${v.text}`}
+    >
       <span className={`absolute left-0 top-0 h-full w-1.5 ${v.bar}`} aria-hidden />
       <div className="flex items-start gap-3">
         <Icon className={`mt-0.5 h-4.5 w-4.5 shrink-0 ${v.iconColor}`} />
@@ -50,7 +58,7 @@ export function Alert({ type = 'info', title, children }) {
           <div className={title ? 'mt-1 leading-6' : 'leading-6'}>{children}</div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

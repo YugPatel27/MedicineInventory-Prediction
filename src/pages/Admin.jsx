@@ -6,7 +6,7 @@ import { SEO } from '../components/SEO';
 import Alert from '../components/Alert';
 import { PageHeader } from '../components/PageHeader';
 import { PAGE_IMAGES } from '../assets/pageImages';
-import { Trash2 } from '../components/Icons';
+import { AppIcon, Trash2 } from '../components/Icons';
 
 export function Admin() {
   const role = useSelector((state) => state.auth.user?.role || 'User');
@@ -218,7 +218,7 @@ export function Admin() {
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div className="flex items-center gap-3">
             <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
-              <i className="fa-solid fa-chart-line h-5 w-5 flex items-center justify-center" aria-hidden="true" />
+              <AppIcon name="chart-line" className="h-5 w-5" aria-hidden="true" />
             </span>
             <div>
               <p className="eyebrow-tag">Order monitor</p>

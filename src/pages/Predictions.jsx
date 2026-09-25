@@ -6,6 +6,7 @@ import Alert from '../components/Alert';
 import { Reveal } from '../components/Reveal';
 import { PageHeader } from '../components/PageHeader';
 import { PAGE_IMAGES } from '../assets/pageImages';
+import { AppIcon } from '../components/Icons';
 import { buildMonthlyForecastSeries, buildSeasonalForecast } from '../../shared/seasonalForecast.js';
 
 function normalizeRecommendation(value) {
@@ -650,15 +651,15 @@ export function Predictions() {
 
       <section className="grid gap-4 md:grid-cols-4">
         {[
-          { label: 'Urgent', value: counts.urgent, color: '#F43F5E', text: 'text-rose-600', caption: 'Needs restock immediately', iconClassName: 'fa-solid fa-triangle-exclamation' },
-          { label: 'Planned', value: counts.plan, color: '#F59E0B', text: 'text-amber-600', caption: 'Good candidate for restock planning', iconClassName: 'fa-solid fa-calendar-days' },
-          { label: 'Sufficient', value: counts.sufficient, color: '#059669', text: 'text-emerald-600', caption: 'Stock is sufficient for now', iconClassName: 'fa-solid fa-circle-check' },
-          { label: 'Accuracy', value: accuracy ? `${accuracy}%` : '—', color: '#6366F1', text: 'text-indigo-600', caption: 'Forecast accuracy (>80%)', iconClassName: 'fa-solid fa-bullseye' },
+          { label: 'Urgent', value: counts.urgent, color: '#F43F5E', text: 'text-rose-600', caption: 'Needs restock immediately', iconName: 'triangle-exclamation' },
+          { label: 'Planned', value: counts.plan, color: '#F59E0B', text: 'text-amber-600', caption: 'Good candidate for restock planning', iconName: 'calendar-days' },
+          { label: 'Sufficient', value: counts.sufficient, color: '#059669', text: 'text-emerald-600', caption: 'Stock is sufficient for now', iconName: 'circle-check' },
+          { label: 'Accuracy', value: accuracy ? `${accuracy}%` : '—', color: '#6366F1', text: 'text-indigo-600', caption: 'Forecast accuracy (>80%)', iconName: 'bullseye' },
         ].map((item, index) => (
           <Reveal key={item.label} delay={index * 60}>
             <div className="stat-tile flex-col items-start" style={{ borderLeftWidth: 4, borderLeftStyle: 'solid', borderLeftColor: item.color }}>
               <div className="flex items-center gap-2">
-                <i className={`${item.iconClassName} h-4 w-4 flex items-center justify-center ${item.text}`} aria-hidden="true" />
+                <AppIcon name={item.iconName} className={`h-4 w-4 ${item.text}`} aria-hidden="true" />
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">{item.label}</p>
               </div>
               <p className={`mt-2 text-3xl font-semibold ${item.text}`}>{item.value}</p>

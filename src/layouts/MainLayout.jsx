@@ -5,7 +5,7 @@ import { logout } from '../store/slices/authSlice';
 import { apiClient } from '../api/axios';
 import { useCart } from '../context/CartContext';
 import { BrandMark } from '../components/BrandMark';
-import { Menu, LogOut, Home, BarChart3, UploadCloud, Settings, Database, ShoppingCart, PackageCheck, X, UserCircle, ChevronDown } from '../components/Icons';
+import { Menu, LogOut, Home, BarChart3, UploadCloud, Settings, Database, ShoppingCart, PackageCheck, X, UserCircle, ChevronDown, AppIcon } from '../components/Icons';
 import { ScrollToTop } from '../components/ScrollToTop';
 
 const navigationItems = [
@@ -377,31 +377,31 @@ export function MainLayout() {
               <ul className="mt-4 space-y-2.5 text-sm">
                 <li>
                   <Link to="/dashboard" className="inline-flex items-center gap-2.5 text-emerald-100/90 transition hover:text-white">
-                    <i className="fa-solid fa-gauge-high w-4 text-center text-emerald-300" aria-hidden="true" />
+                    <AppIcon name="gauge-high" className="h-4 w-4 text-emerald-300" aria-hidden="true" />
                     Dashboard
                   </Link>
                 </li>
                 <li>
                   <Link to="/inventory" className="inline-flex items-center gap-2.5 text-emerald-100/90 transition hover:text-white">
-                    <i className="fa-solid fa-boxes-stacked w-4 text-center text-emerald-300" aria-hidden="true" />
+                    <AppIcon name="boxes-stacked" className="h-4 w-4 text-emerald-300" aria-hidden="true" />
                     Inventory
                   </Link>
                 </li>
                 <li>
                   <Link to="/purchases" className="inline-flex items-center gap-2.5 text-emerald-100/90 transition hover:text-white">
-                    <i className="fa-solid fa-truck-fast w-4 text-center text-emerald-300" aria-hidden="true" />
+                    <AppIcon name="truck-fast" className="h-4 w-4 text-emerald-300" aria-hidden="true" />
                     Purchases
                   </Link>
                 </li>
                 <li>
                   <Link to="/reports" className="inline-flex items-center gap-2.5 text-emerald-100/90 transition hover:text-white">
-                    <i className="fa-solid fa-chart-column w-4 text-center text-emerald-300" aria-hidden="true" />
+                    <AppIcon name="chart" className="h-4 w-4 text-emerald-300" aria-hidden="true" />
                     Reports
                   </Link>
                 </li>
                 <li>
                   <Link to="/predictions" className="inline-flex items-center gap-2.5 text-emerald-100/90 transition hover:text-white">
-                    <i className="fa-solid fa-chart-line w-4 text-center text-emerald-300" aria-hidden="true" />
+                    <AppIcon name="chart-line" className="h-4 w-4 text-emerald-300" aria-hidden="true" />
                     Forecast
                   </Link>
                 </li>
@@ -413,19 +413,19 @@ export function MainLayout() {
               <ul className="mt-4 space-y-2.5 text-sm">
                 <li>
                   <Link to="/settings" className="inline-flex items-center gap-2.5 text-emerald-100/90 transition hover:text-white">
-                    <i className="fa-solid fa-sliders w-4 text-center text-emerald-300" aria-hidden="true" />
+                    <AppIcon name="settings" className="h-4 w-4 text-emerald-300" aria-hidden="true" />
                     Settings
                   </Link>
                 </li>
                 <li>
                   <Link to="/legal" className="inline-flex items-center gap-2.5 text-emerald-100/90 transition hover:text-white">
-                    <i className="fa-solid fa-scale-balanced w-4 text-center text-emerald-300" aria-hidden="true" />
+                    <AppIcon name="scale-balanced" className="h-4 w-4 text-emerald-300" aria-hidden="true" />
                     Legal &amp; privacy
                   </Link>
                 </li>
                 <li>
                   <Link to="/sitemap" className="inline-flex items-center gap-2.5 text-emerald-100/90 transition hover:text-white">
-                    <i className="fa-solid fa-sitemap w-4 text-center text-emerald-300" aria-hidden="true" />
+                    <AppIcon name="sitemap" className="h-4 w-4 text-emerald-300" aria-hidden="true" />
                     Sitemap
                   </Link>
                 </li>
