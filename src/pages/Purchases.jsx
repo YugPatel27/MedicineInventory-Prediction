@@ -6,7 +6,7 @@ import { Reveal } from '../components/Reveal';
 import { PageHeader } from '../components/PageHeader';
 import { PAGE_IMAGES } from '../assets/pageImages';
 import { useAppSettings } from '../context/AppSettingsContext';
-import { Plus } from '../components/Icons';
+import { AppIcon, Plus } from '../components/Icons';
 
 export function Purchases() {
   const { settings } = useAppSettings();

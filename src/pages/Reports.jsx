@@ -7,6 +7,7 @@ import { PageHeader } from '../components/PageHeader';
 import { PAGE_IMAGES } from '../assets/pageImages';
 import { useAppSettings } from '../context/AppSettingsContext';
 import {
+  AppIcon,
   Download,
   Calendar,
   BarChart3,
